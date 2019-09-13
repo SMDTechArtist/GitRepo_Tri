@@ -32,9 +32,7 @@ GLuint programID;
 
 void sendDataToOpenGL()
 {
-
-
-
+	
 	GLfloat Triangle_1[] =
 	{
 		+0.0f, +1.0f,
@@ -45,14 +43,14 @@ void sendDataToOpenGL()
 		+0.0f, +0.0f, +1.0f,
 	};
 
-	/*GLfloat Triangle_2[] =
+	/*GLfloat Triangle_2[]
 	{
-		+1.0f, +0.0f,
+		+0.5f, +0.5f,
 		+0.0f, +0.0f, +1.0f,
-		-1.0f, +1.0f,
-		+0.0f, +0.0f, +1.0f,
-		+1.0f, +1.0f,
-		+0.0f, +0.0f, +1.0f,
+		+0.0f, -0.5f,
+		+1.0f, +0.0f, +1.0f,
+		-0.5f, -0.5f,
+		+1.0f, +0.0f, +1.0f,
 	};
 	*/
 
@@ -68,6 +66,7 @@ void sendDataToOpenGL()
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (char*)(sizeof(float) * 2));
 	*/
+
 	GLuint Triangle_1ID;
 	glGenBuffers(1, &Triangle_1ID);
 	glBindBuffer(GL_ARRAY_BUFFER, Triangle_1ID);
