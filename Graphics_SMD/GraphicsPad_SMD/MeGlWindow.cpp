@@ -226,4 +226,3 @@ void MeGlWindow::paintGL()
 	repaint();
 };*/
 //Help
-
