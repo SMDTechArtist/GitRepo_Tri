@@ -33,7 +33,7 @@ GLuint programID;
 void sendDataToOpenGL()
 {
 	
-	GLfloat Triangle_1[] =
+	GLfloat Triangle[] =
 	{
 		+0.0f, +1.0f,
 		+0.0f, +0.0f, +1.0f,
@@ -43,34 +43,12 @@ void sendDataToOpenGL()
 		+0.0f, +0.0f, +1.0f,
 	};
 
-	/*GLfloat Triangle_2[]
-	{
-		+0.5f, +0.5f,
-		+0.0f, +0.0f, +1.0f,
-		+0.0f, -0.5f,
-		+1.0f, +0.0f, +1.0f,
-		-0.5f, -0.5f,
-		+1.0f, +0.0f, +1.0f,
-	};
-	*/
+	
 
-	//GLuint VertexBufferID;
-	//glGenBuffers(1, &VertexBufferID);
-	//glBindBuffer(GL_ARRAY_BUFFER, VertexBufferID);
-	/*GLuint NewVertexBufferID;
-	glGenBuffers(1, &NewVertexBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, NewVertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (char*)(sizeof(float) * 2));
-	*/
-
-	GLuint Triangle_1ID;
-	glGenBuffers(1, &Triangle_1ID);
-	glBindBuffer(GL_ARRAY_BUFFER, Triangle_1ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle_1), Triangle_1, GL_STATIC_DRAW);
+	GLuint TriangleID;
+	glGenBuffers(1, &TriangleID);
+	glBindBuffer(GL_ARRAY_BUFFER, TriangleID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle), Triangle, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
 	glEnableVertexAttribArray(1);
@@ -88,6 +66,33 @@ void sendDataToOpenGL()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }
+
+
+void MeGlWindow::paintGL()
+{
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+	
+	GLint dominatingColorUniformLocation = 
+		glGetUniformLocation(programID, "dominatingColor");
+	GLint yFlipUniformLocation =
+		glGetUniformLocation(programID, "yFlip");
+	vec3 dominatingColor(0.0f, 1.0f, 0.0f);
+
+
+	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
+	glUniform1f(yFlipUniformLocation, 1.0f);
+	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, 0);
+
+	dominatingColor.g = 0;
+	dominatingColor.b = 1;
+
+	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
+	glUniform1f(yFlipUniformLocation, -1.0f);
+	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, 0);
+}
+
+
 
 string readShaderCode(const char* fileName)
 {
@@ -191,17 +196,7 @@ void MeGlWindow::initializeGL()
 
 
 
-void MeGlWindow::paintGL()
-{
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-	vec3 dominatingColor(1.0f, 0.0f, 0.0f);
-	GLint dominatingColorUniformLocation = glGetUniformLocation(programID, "dominatingColor");
-	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
-	//glViewport(0, 0, width(), height());
-	//glDrawArrays(GL_TRIANGLES, 0, 6);
-	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, 0);
-}
 
 /*void MeGlWindow::myUpdate()
 {
