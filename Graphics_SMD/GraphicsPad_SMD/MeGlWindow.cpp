@@ -4,6 +4,7 @@
 #include <fstream>
 #include <glfw3.h>
 #include <glm\glm.hpp>
+#include <QtGui\qkeyevent>
 using namespace std;
 using glm::vec2;
 using glm::vec3;
@@ -91,6 +92,25 @@ void MeGlWindow::paintGL()
 	glUniform1f(yFlipUniformLocation, -1.0f);
 	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, 0);
 }
+
+/*void MeGlWindow::keyPressEvent(QKeyEvent* e);
+{
+	switch (e->key())
+	{
+	case Qt::Key::Key_W:
+		Triangle.moveUp();
+		break;
+	case Qt::Key::Key_S:
+		Triangle.moveDown();
+		break;
+	case Qt::Key::Key_D:
+		Triangle.strafeRight();
+		break;
+	case Qt::Key::Key_A:
+		Triangle.strafeLeft();
+		break;
+	}
+}*/
 
 
 
