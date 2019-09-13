@@ -16,7 +16,7 @@ using glm::vec4;
 const uint NUM_VERTICES_PER_TRI = 3;
 const uint NUM_FLOATS_PER_VERTICE = 6;
 const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
-GLuint programID; 
+GLuint programID;
 
 
 //struct Vector
@@ -32,7 +32,7 @@ GLuint programID;
 
 void sendDataToOpenGL()
 {
-	GLfloat verts[] =
+	/*GLfloat verts[] =
 	{
 		+0.0f, +0.0f,
 		+1.0f, +0.0f, +1.0f,
@@ -47,11 +47,34 @@ void sendDataToOpenGL()
 		-0.5f, -0.5f,
 		+1.0f, +0.0f, +1.0f,
 
+	};*/
+
+
+	GLfloat Triangle_1[] =
+	{
+		+0.0f, +1.0f,
+		+0.0f, +0.0f, +1.0f,
+		+1.0f, -1.0f,
+		+0.0f, +0.0f, +1.0f,
+		-1.0f, -1.0f,
+		+0.0f, +0.0f, +1.0f,
 	};
+
+	/*GLfloat Triangle_2[]
+	{
+		+0.5f, +0.5f,
+		+0.0f, +0.0f, +1.0f,
+		+0.0f, -0.5f,
+		+1.0f, +0.0f, +1.0f,
+		-0.5f, -0.5f,
+		+1.0f, +0.0f, +1.0f,
+	};
+	*/
+
 	//GLuint VertexBufferID;
 	//glGenBuffers(1, &VertexBufferID);
 	//glBindBuffer(GL_ARRAY_BUFFER, VertexBufferID);
-	GLuint NewVertexBufferID;
+	/*GLuint NewVertexBufferID;
 	glGenBuffers(1, &NewVertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, NewVertexBufferID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
@@ -59,9 +82,20 @@ void sendDataToOpenGL()
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (char*)(sizeof(float) * 2));
+	*/
 
+	GLuint Triangle_1ID;
+	glGenBuffers(1, &Triangle_1ID);
+	glBindBuffer(GL_ARRAY_BUFFER, Triangle_1ID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle_1), Triangle_1, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (char*)(sizeof(float) * 2));
 
-	GLushort indices[] = { 0,5,4, 2,1,3 };
+	GLushort indices[] = { 0,1,2 };
+
+	//GLushort indices[] = { 0,5,4, 2,1,3 };
 
 	//GLuint indexBufferID;
 	//glGenBuffers(1, &indexBufferID);
@@ -75,7 +109,7 @@ void sendDataToOpenGL()
 string readShaderCode(const char* fileName)
 {
 	ifstream meInput(fileName);
-	if (! meInput.good())
+	if (!meInput.good())
 	{
 		cout << "File failed to load..." << fileName;
 		exit(1);
@@ -148,12 +182,12 @@ void installShaders()
 	if (!checkShaderStatus(vertexShaderID) || !checkShaderStatus(fragmentShaderID))
 		return;
 
-	GLuint programID = glCreateProgram();
+	programID = glCreateProgram();
 	glAttachShader(programID, vertexShaderID);
 	glAttachShader(programID, fragmentShaderID);
 	glLinkProgram(programID);
 
-	if( ! checkProgramStatus(programID))
+	if (!checkProgramStatus(programID))
 		return;
 
 	glUseProgram(programID);
@@ -161,7 +195,7 @@ void installShaders()
 }
 
 
-//keyboard input here
+//keyboard input here??????
 
 void MeGlWindow::initializeGL()
 {
@@ -169,7 +203,7 @@ void MeGlWindow::initializeGL()
 	sendDataToOpenGL();
 	installShaders();
 
-	
+
 }
 
 
@@ -178,16 +212,18 @@ void MeGlWindow::paintGL()
 {
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-	//vec4 dominatingColor(1.0f, 0.0f, 0.0f, 0.0f);
-	//GLint dominatingColorUniformLocation = glGetUniformLocation(programID, "dominatingColor");
-	//glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
+	vec3 dominatingColor(1.0f, 0.0f, 0.0f);
+	GLint dominatingColorUniformLocation = glGetUniformLocation(programID, "dominatingColor");
+	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
 	//glViewport(0, 0, width(), height());
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, 0);
 }
 
-//void MeGlWindow::myUpdate()
-//{
-	//clock.newFram();
-	//repaint();
-//}
+/*void MeGlWindow::myUpdate()
+{
+	clock.newFram();
+	repaint();
+};*/
+//Help
+

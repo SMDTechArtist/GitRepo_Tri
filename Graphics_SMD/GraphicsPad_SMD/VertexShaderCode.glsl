@@ -15,4 +15,3 @@ void main()
 	theColor = vertexColor;
 };
 
-//I have tried both vec3 and vec4 in uniforming the color, nothing works. Only vertexColor works. 
