@@ -163,6 +163,7 @@
     <ClCompile Include="MeGlWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Vertex.h" />
     <ClInclude Include="MeGlWindow.h" />
   </ItemGroup>
   <ItemGroup>
