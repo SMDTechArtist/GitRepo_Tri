@@ -9,7 +9,6 @@ protected:
 	void initializeGL();
 	void paintGL();
 public:
-	
 };
 
 #endif

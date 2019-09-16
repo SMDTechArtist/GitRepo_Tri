@@ -18,12 +18,17 @@ const uint NUM_FLOATS_PER_VERTICE = 6;
 const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 GLuint programID;
 
+
 struct Vertex
 {
+	glm::vec3 position;
+	glm::vec3 color;
+	/*
 	glm::vec3 triangle1Position; // Tri 1
 	glm::vec3 triangle2Position; // Tri 2
 	glm::vec3 triangle1Color; // Tri 1
 	glm::vec3 triangle2Color; // Tri 2
+	*/
 };
 
 
@@ -43,57 +48,43 @@ void sendDataToOpenGL()
 		
 		glm::vec3(-0.2f, -0.2f, +0.0f),
 		glm::vec3(+0.0f, +0.0f, +1.0f),
-	};	
+	};
+
+	/*GLfloat Triangle[] =
+	{
+		+0.0f, +1.0f,
+		+0.0f, +0.0f, +1.0f,
+		+1.0f, -1.0f,
+		+0.0f, +0.0f, +1.0f,
+		-1.0f, -1.0f,
+		+0.0f, +0.0f, +1.0f,
+	};*/
 
 	
 
-	GLuint triangleBufferID;
-	glGenBuffers(1, &triangleBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, triangleBufferID);
+	GLuint TriangleBufferID;
+	glGenBuffers(1, &TriangleBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, TriangleBufferID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle), Triangle, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0);
 	glEnableVertexAttribArray(1);
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE,0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (char*)(sizeof(float) * 2));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char*)(sizeof(float) * 3));
 
 
 
 	GLushort indices[] = { 0,1,2 };
 
-	GLuint indexArrayBufferID;
-	glGenBuffers(1, &indexArrayBufferID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexArrayBufferID);
+	//GLushort indices[] = { 0,5,4, 2,1,3 };
+
+	//GLuint indexBufferID;
+	//glGenBuffers(1, &indexBufferID);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+	GLuint indexBufferID;
+	glGenBuffers(1, &indexBufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }
-
-/*void sendAnotherTriToOpenGL()
-{
-
-}*/
-
-
-/*void MeGlWindow::keyPressEvent(QKeyEvent* e);
-{
-	switch (e->key())
-	{
-	case Qt::Key::Key_W:
-		Triangle.moveUp();
-		break;
-	case Qt::Key::Key_S:
-		Triangle.moveDown();
-		break;
-	case Qt::Key::Key_D:
-		Triangle.strafeRight();
-		break;
-	case Qt::Key::Key_A:
-		Triangle.strafeLeft();
-		break;
-	}
-}*/
-
-
 
 string readShaderCode(const char* fileName)
 {
@@ -183,6 +174,9 @@ void installShaders()
 
 }
 
+
+//keyboard input here??????
+
 void MeGlWindow::initializeGL()
 {
 	glewInit();
@@ -192,47 +186,24 @@ void MeGlWindow::initializeGL()
 
 }
 
+
+
 void MeGlWindow::paintGL()
 {
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	//glViewport(0, 0, width(), height());
-	//sendAnotherTriToOpenGL();
-	//glDrawArrays();
-	vec3 dominatingColor(0.0f, 1.0f, 0.0f);
-	GLint dominatingColorUniformLocation =
-		glGetUniformLocation(programID, "dominatingColor");
+
+	vec3 dominatingColor(1.0f, 0.0f, 0.0f);
+	GLint dominatingColorUniformLocation = glGetUniformLocation(programID, "dominatingColor");
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
-	//GLint yFlipUniformLocation =
-		//glGetUniformLocation(programID, "yFlip"); //This is were the yflip Location is set replace with Offset location and "offset"
-
-
-	//glUniform1f(yFlipUniformLocation, 1.0f); //Offset Uniform Location instead of yflip
+	//glViewport(0, 0, width(), height());
+	//glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, 0);
-
-
-	//dominatingColor.g = 0;
-	//dominatingColor.b = 1;
-
-	//glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
-	//glUniform1f(yFlipUniformLocation, -1.0f);  //insted of Yflip us the offset
-	//glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, 0);
 }
-
-//keyboard input here??????
-
-
-
-
-
-
-
-
-
 
 /*void MeGlWindow::myUpdate()
 {
 	clock.newFram();
 	repaint();
 };*/
-
+//Help
 
