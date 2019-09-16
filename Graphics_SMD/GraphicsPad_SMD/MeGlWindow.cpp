@@ -36,11 +36,11 @@ void sendDataToOpenGL()
 	
 	GLfloat Triangle[] =
 	{
-		+0.0f, +1.0f,
+		+0.0f, +0.25f,
 		+0.0f, +0.0f, +1.0f,
-		+1.0f, -1.0f,
+		+0.25f, -0.25f,
 		+0.0f, +0.0f, +1.0f,
-		-1.0f, -1.0f,
+		-0.25f, -0.25f,
 		+0.0f, +0.0f, +1.0f,
 	};
 
@@ -77,19 +77,19 @@ void MeGlWindow::paintGL()
 	GLint dominatingColorUniformLocation = 
 		glGetUniformLocation(programID, "dominatingColor");
 	GLint yFlipUniformLocation =
-		glGetUniformLocation(programID, "yFlip");
+		glGetUniformLocation(programID, "yFlip"); //This is were the yflip Location is set replace with Offset location and "offset"
 	vec3 dominatingColor(0.0f, 1.0f, 0.0f);
 
 
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
-	glUniform1f(yFlipUniformLocation, 1.0f);
+	glUniform1f(yFlipUniformLocation, 1.0f); //Offset Uniform Location instead of yflip
 	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, 0);
 
 	dominatingColor.g = 0;
 	dominatingColor.b = 1;
 
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
-	glUniform1f(yFlipUniformLocation, -1.0f);
+	glUniform1f(yFlipUniformLocation, -1.0f);  //insted of Yflip us the offset
 	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, 0);
 }
 
@@ -223,5 +223,3 @@ void MeGlWindow::initializeGL()
 	clock.newFram();
 	repaint();
 };*/
-//Help
-
