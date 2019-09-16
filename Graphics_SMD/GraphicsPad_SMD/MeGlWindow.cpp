@@ -4,7 +4,8 @@
 #include <fstream>
 #include <glfw3.h>
 #include <glm\glm.hpp>
-#include <QtGui\qkeyevent>
+#include <QtGui/qkeysequence.h>
+#include <Qt\qevent.h>
 //#include <Vertex.h>
 
 using namespace std;
@@ -21,16 +22,15 @@ GLuint programID;
 
 struct Vertex
 {
-	glm::vec3 position;
-	glm::vec3 color;
-	/*
-	glm::vec3 triangle1Position; // Tri 1
+	glm::vec3 position; //This works
+	glm::vec3 Color;  //This works
+
+	/*glm::vec3 triangle1Position; // Tri 1
 	glm::vec3 triangle2Position; // Tri 2
 	glm::vec3 triangle1Color; // Tri 1
 	glm::vec3 triangle2Color; // Tri 2
 	*/
 };
-
 
 
 
@@ -174,6 +174,18 @@ void installShaders()
 
 }
 
+struct Tri_1
+{
+	glm::vec2 tri1Position;
+	glm::vec3 tri1Color;
+};
+
+struct Tri_2
+{
+	glm::vec2 tri2Position;
+	glm::vec3 tri2Color;
+};
+
 
 //keyboard input here??????
 
@@ -198,6 +210,11 @@ void MeGlWindow::paintGL()
 	//glViewport(0, 0, width(), height());
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, 0);
+}
+
+void MeGlWindow::keyPressEvent(QKeyEvent* e)
+{
+
 }
 
 /*void MeGlWindow::myUpdate()
