@@ -36,7 +36,6 @@ GLuint programID;
 };*/
 		
 
-	
 
 
 
@@ -46,13 +45,31 @@ struct Vertex
 	//glm::vec3 position; //This works
 	//glm::vec3 Color;  //This works
 
-	glm::vec3 triangle1Position; // Tri 1
-	glm::vec3 triangle2Position; // Tri 2
-	glm::vec3 triangle1Color; // Tri 1
-	glm::vec3 triangle2Color; // Tri 2
+	glm::vec3 position; // Tri 1
+	glm::vec3 Color; // Tri 1
+	
+	//glm::vec3 triangle2Position; // Tri 2
+	//glm::vec3 triangle2Color; // Tri 2
 
 };
 
+struct moveUp
+{
+
+};
+
+struct moveDown
+{
+
+};
+struct moveLeft
+{
+
+};
+struct moveRight
+{
+
+};
 
 
 
@@ -229,14 +246,24 @@ void MeGlWindow::paintGL()
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, 0);
 }
-
+vec2 TrianglePosition(0.0f, 0.0f);
 void MeGlWindow::keyPressEvent(QKeyEvent* e)
 {
-	switch (e->key())
+	/*switch (e->key())
 	{
 	case Qt::Key::Key_W:
+		TrianglePosition.moveUp();
 		break;
-	}
+	case Qt::Key::Key_S:
+		TrianglePosition.moveDown();
+		break;
+	case Qt::Key::Key_A:
+		TrianglePosition.moveULeft();
+		break;
+	case Qt::Key::Key_D:
+		TrianglePosition.moveURight();
+		break;
+	}*/
 }
 
 /*void MeGlWindow::myUpdate()
