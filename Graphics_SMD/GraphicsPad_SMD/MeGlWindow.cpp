@@ -6,9 +6,10 @@
 #include <glm\glm.hpp>
 #include <QtGui/qkeysequence.h>
 #include <Qt\qevent.h>
-//#include <Vertex.h>
+#include <Pr>
 
 using namespace std;
+
 using glm::vec2;
 using glm::vec3;
 using glm::vec4;
@@ -39,7 +40,7 @@ GLuint programID;
 
 
 
-struct Vertex
+/*struct Vertex
 {
 
 	//glm::vec3 position; //This works
@@ -51,7 +52,7 @@ struct Vertex
 	//glm::vec3 triangle2Position; // Tri 2
 	//glm::vec3 triangle2Color; // Tri 2
 
-};
+};*/
 
 struct moveUp
 {
@@ -222,7 +223,6 @@ void installShaders()
 
 
 
-//keyboard input here??????
 
 void MeGlWindow::initializeGL()
 {
@@ -249,7 +249,7 @@ void MeGlWindow::paintGL()
 vec2 TrianglePosition(0.0f, 0.0f);
 void MeGlWindow::keyPressEvent(QKeyEvent* e)
 {
-	/*switch (e->key())
+	switch (e->key())
 	{
 	case Qt::Key::Key_W:
 		TrianglePosition.moveUp();
@@ -263,7 +263,7 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 	case Qt::Key::Key_D:
 		TrianglePosition.moveURight();
 		break;
-	}*/
+	}
 }
 
 /*void MeGlWindow::myUpdate()
