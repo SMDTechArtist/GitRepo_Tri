@@ -20,16 +20,37 @@ const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 GLuint programID;
 
 
+/*struct Vertex
+{
+	GLuint Tri_1
+	{
+		glm::vec2 tri1Position;
+		glm::vec3 tri1Color;
+	};
+
+	GLuint Tri_2
+	{
+		glm::vec2 tri2Position;
+		glm::vec3 tri2Color;
+	};
+};*/
+		
+
+	
+
+
+
 struct Vertex
 {
-	glm::vec3 position; //This works
-	glm::vec3 Color;  //This works
 
-	/*glm::vec3 triangle1Position; // Tri 1
+	//glm::vec3 position; //This works
+	//glm::vec3 Color;  //This works
+
+	glm::vec3 triangle1Position; // Tri 1
 	glm::vec3 triangle2Position; // Tri 2
 	glm::vec3 triangle1Color; // Tri 1
 	glm::vec3 triangle2Color; // Tri 2
-	*/
+
 };
 
 
@@ -42,10 +63,10 @@ void sendDataToOpenGL()
 	{
 		glm::vec3(+0.0f, +0.2f, +0.0f),
 		glm::vec3(+0.0f, +0.0f, +1.0f),
-		
+
 		glm::vec3(+0.2f, -0.2f, +0.0f),
 		glm::vec3(+0.0f, +0.0f, +1.0f),
-		
+
 		glm::vec3(-0.2f, -0.2f, +0.0f),
 		glm::vec3(+0.0f, +0.0f, +1.0f),
 	};
@@ -66,11 +87,18 @@ void sendDataToOpenGL()
 	glGenBuffers(1, &TriangleBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, TriangleBufferID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle), Triangle, GL_STATIC_DRAW);
+	
+	//Tri_1 Attribute Pointer, which points to the location 0 and 1 in vertex shader doc
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char*)(sizeof(float) * 3));
 
+	//Tri_2 Attribute Pointer, which points to the location 2 and 3 in vertex shader doc
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0);
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char*)(sizeof(float) * 3));
 
 
 	GLushort indices[] = { 0,1,2 };
@@ -174,17 +202,7 @@ void installShaders()
 
 }
 
-struct Tri_1
-{
-	glm::vec2 tri1Position;
-	glm::vec3 tri1Color;
-};
 
-struct Tri_2
-{
-	glm::vec2 tri2Position;
-	glm::vec3 tri2Color;
-};
 
 
 //keyboard input here??????
@@ -214,7 +232,11 @@ void MeGlWindow::paintGL()
 
 void MeGlWindow::keyPressEvent(QKeyEvent* e)
 {
-
+	switch (e->key())
+	{
+	case Qt::Key::Key_W:
+		break;
+	}
 }
 
 /*void MeGlWindow::myUpdate()
