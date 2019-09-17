@@ -40,19 +40,7 @@ GLuint programID;
 
 
 
-/*struct Vertex
-{
 
-	//glm::vec3 position; //This works
-	//glm::vec3 Color;  //This works
-
-	glm::vec3 position; // Tri 1
-	glm::vec3 Color; // Tri 1
-	
-	//glm::vec3 triangle2Position; // Tri 2
-	//glm::vec3 triangle2Color; // Tri 2
-
-};*/
 
 struct moveUp
 {
@@ -72,12 +60,22 @@ struct moveRight
 
 };
 
+/*struct Tris
+{
 
+	glm::vec2 tri1Position; //Tri 1 position
+	glm::vec3 tri1Color;  //Tri 1 color
+
+
+	glm::vec2 triangle2Position; // Tri 2 position
+	glm::vec3 triangle2Color; // Tri 2 color
+
+};*/
 
 void sendDataToOpenGL()
 {
 	
-	Vertex Triangle[] =
+	/*Vertex Triangle[] =
 	{
 		glm::vec3(+0.0f, +0.2f, +0.0f),
 		glm::vec3(+0.0f, +0.0f, +1.0f),
@@ -89,48 +87,95 @@ void sendDataToOpenGL()
 		glm::vec3(+0.0f, +0.0f, +1.0f),
 	};
 
-	/*GLfloat Triangle[] =
-	{
-		+0.0f, +1.0f,
-		+0.0f, +0.0f, +1.0f,
-		+1.0f, -1.0f,
-		+0.0f, +0.0f, +1.0f,
-		-1.0f, -1.0f,
-		+0.0f, +0.0f, +1.0f,
-	};*/
-
 	
 
+	
+	//Vertex Triangles Buffer
 	GLuint TriangleBufferID;
 	glGenBuffers(1, &TriangleBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, TriangleBufferID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle), Triangle, GL_STATIC_DRAW);
 	
-	//Tri_1 Attribute Pointer, which points to the location 0 and 1 in vertex shader doc
+	//Vertex Triangles Attribute pointers
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char*)(sizeof(float) * 3));
+	*/
 
-	//Tri_2 Attribute Pointer, which points to the location 2 and 3 in vertex shader doc
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0);
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char*)(sizeof(float) * 3));
+	GLuint TriangleBufferID;
+	glGenBuffers(1, &TriangleBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, TriangleBufferID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle), Triangle, GL_STATIC_DRAW);
+	Vertex Triangles Attribute pointers
+		glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char*)(sizeof(float) * 3));
+	
 
 
-	GLushort indices[] = { 0,1,2 };
+	/*GLushort indices[] = { 0,1,2 };
 
-	//GLushort indices[] = { 0,5,4, 2,1,3 };
+	GLushort indices[] = { 0,5,4, 2,1,3 };
 
-	//GLuint indexBufferID;
-	//glGenBuffers(1, &indexBufferID);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+	GLuint indexBufferID;
+	glGenBuffers(1, &indexBufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 	GLuint indexBufferID;
 	glGenBuffers(1, &indexBufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	*/
+
+
+	/*Tris trisPosColor[] =
+	{
+		glm::vec2(+0.0f, +0.0f),
+		glm::vec3(+0.0f, +0.0f, +1.0f),
+
+		glm::vec2(+0.5f, +0.5f),
+		glm::vec3(+0.0f, +1.0f, +0.0f),
+	};
+
+	//trisPosColor buffer
+	GLuint trisPosColorBufferID;
+	glGenBuffers(1, &trisPosColorBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, trisPosColorBufferID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(trisPosColor), trisPosColor, GL_STATIC_DRAW);
+
+	//twoTris Attribute pointer
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char*)(sizeof(float) * 3));
+	*/
+
+
 }
+
+void sendAnotherTriToOpenGL()
+{
+
+}
+
+void MeGlWindow::paintGL()
+{
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	glViewport(0, 0, width(), height());
+	sendAnotherTriToOpenGL();
+	//glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	vec3 dominatingColor(1.0f, 0.0f, 0.0f);
+	GLint dominatingColorUniformLocation = glGetUniformLocation(programID, "dominatingColor");
+	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
+
+
+	//glViewport(0, 0, width(), height());
+	//glDrawArrays(GL_TRIANGLES, 0, 6);
+	//glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, 0);
+}
+
 
 string readShaderCode(const char* fileName)
 {
@@ -235,17 +280,6 @@ void MeGlWindow::initializeGL()
 
 
 
-void MeGlWindow::paintGL()
-{
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-	vec3 dominatingColor(1.0f, 0.0f, 0.0f);
-	GLint dominatingColorUniformLocation = glGetUniformLocation(programID, "dominatingColor");
-	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
-	//glViewport(0, 0, width(), height());
-	//glDrawArrays(GL_TRIANGLES, 0, 6);
-	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, 0);
-}
 vec2 TrianglePosition(0.0f, 0.0f);
 /*void MeGlWindow::keyPressEvent(QKeyEvent* e)
 {
