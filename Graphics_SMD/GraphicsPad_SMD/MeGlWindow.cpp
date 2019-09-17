@@ -6,7 +6,7 @@
 #include <glm\glm.hpp>
 #include <QtGui/qkeysequence.h>
 #include <Qt\qevent.h>
-#include <Pr>
+#include <Vertex.h>
 
 using namespace std;
 
@@ -249,7 +249,7 @@ void MeGlWindow::paintGL()
 vec2 TrianglePosition(0.0f, 0.0f);
 void MeGlWindow::keyPressEvent(QKeyEvent* e)
 {
-	switch (e->key())
+	/*switch (e->key())
 	{
 	case Qt::Key::Key_W:
 		TrianglePosition.moveUp();
@@ -263,7 +263,7 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 	case Qt::Key::Key_D:
 		TrianglePosition.moveURight();
 		break;
-	}
+	}*/
 }
 
 /*void MeGlWindow::myUpdate()
