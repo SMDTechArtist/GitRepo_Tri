@@ -9,7 +9,7 @@
 
 
 
-
+class QKeyEvent;
 
 class MeGlWindow : public QGLWidget
 {

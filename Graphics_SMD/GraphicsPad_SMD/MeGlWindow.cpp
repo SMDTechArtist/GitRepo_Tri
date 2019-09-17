@@ -247,9 +247,9 @@ void MeGlWindow::paintGL()
 	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, 0);
 }
 vec2 TrianglePosition(0.0f, 0.0f);
-void MeGlWindow::keyPressEvent(QKeyEvent* e)
+/*void MeGlWindow::keyPressEvent(QKeyEvent* e)
 {
-	/*switch (e->key())
+	switch (e->key())
 	{
 	case Qt::Key::Key_W:
 		TrianglePosition.moveUp();
@@ -263,7 +263,27 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 	case Qt::Key::Key_D:
 		TrianglePosition.moveURight();
 		break;
-	}*/
+	}
+}*/
+
+void MeGlWindow::keyPressEvent(QKeyEvent* e)
+{
+	if (e->key() == Qt::Key_W)
+	{
+		TrianglePosition.y += 1;
+	}
+	if (e->key() == Qt::Key_S)
+	{
+		TrianglePosition.y += 1;
+	}
+	if (e->key() == Qt::Key_D)
+	{
+		TrianglePosition.y += 1;
+	}
+	if (e->key() == Qt::Key_A)
+	{
+		TrianglePosition.y += 1;
+	}
 }
 
 /*void MeGlWindow::myUpdate()
