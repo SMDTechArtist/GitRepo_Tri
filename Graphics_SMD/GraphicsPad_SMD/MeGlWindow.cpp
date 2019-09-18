@@ -14,27 +14,33 @@ using glm::vec2;
 using glm::vec3;
 using glm::vec4;
 
+const float MOVEMENT_SPEED = 0.1f; //Distance Tirangle will move
+uint numTris = 0; //number of triangles veriable
 
 const uint NUM_VERTICES_PER_TRI = 3;
 const uint NUM_FLOATS_PER_VERTICE = 6;
 const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
+const uint TRIANFLE_BYTE_SIZE = NUM_VERTICES_PER_TRI * NUM_FLOATS_PER_VERTICE * sizeof(float);
 GLuint programID;
 
 
-/*struct Vertex
-{
-	GLuint Tri_1
-	{
-		glm::vec2 tri1Position;
-		glm::vec3 tri1Color;
-	};
+vec2 Triangle1Position(0.0f, 0.0f);
 
-	GLuint Tri_2
+
+
+struct MakeTri
+{
+
+	glm::vec2 triPos
+		//glm::vec3 triColor;
+	
+
+	/*GLuint Tri_2
 	{
 		glm::vec2 tri2Position;
 		glm::vec3 tri2Color;
-	};
-};*/
+	};*/
+};
 		
 
 
@@ -42,9 +48,9 @@ GLuint programID;
 
 
 
-struct moveUp
+/*struct moveUp
 {
-
+	Triangle1Position += triPos
 };
 
 struct moveDown
@@ -106,9 +112,8 @@ void sendDataToOpenGL()
 	GLuint TriangleBufferID;
 	glGenBuffers(1, &TriangleBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, TriangleBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle), Triangle, GL_STATIC_DRAW);
-	Vertex Triangles Attribute pointers
-		glEnableVertexAttribArray(0);
+	glBufferData(GL_ARRAY_BUFFER, 10000, NULL, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char*)(sizeof(float) * 3));
@@ -154,9 +159,27 @@ void sendDataToOpenGL()
 
 }
 
-void sendAnotherTriToOpenGL()
+void sendAnotherTriToOpenGL() //Triangle 2?
 {
+	
+	const GLfloat THIS_TRI_X = -1 + numTris * MOVEMENT_SPEED; 
+	//this generates new triangles.
+	//-1 is added to NUM_Tri verytime. Then X_ Delta moves that triangel over .1f
+	//X_Delta could be replaced with Triangle Position for KeyMovement?
 
+	GLfloat thisTri[] =
+	{
+		THIS_TRI_X, 0.0f, 0.0f, //triangle point position. By using THIS_TRI_X we can move the triangle over in the X. could use this for key input movement.
+		0.0f, 1.0f, 0.0f, //Color info green
+
+		THIS_TRI_X + MOVEMENT_SPEED, 0.0f, 0.0f, //triangle point position
+		0.0f, 1.0f, 0.0f, //Color info green
+
+		THIS_TRI_X, 0.0f, 0.0f, //triangle point position
+		0.0f, 1.0f, 0.0f, //Color info green
+	};
+	glBufferSubData(GL_ARRAY_BUFFER,
+		numTris * TRIANGLE_BYTE_SIZE, TRIANGLE_BYTE_SIZE, thisTri),
 }
 
 void MeGlWindow::paintGL()
@@ -280,10 +303,10 @@ void MeGlWindow::initializeGL()
 
 
 
-vec2 TrianglePosition(0.0f, 0.0f);
-/*void MeGlWindow::keyPressEvent(QKeyEvent* e)
+
+void MeGlWindow::keyPressEvent(QKeyEvent* e)
 {
-	switch (e->key())
+	/*switch (e->key())
 	{
 	case Qt::Key::Key_W:
 		TrianglePosition.moveUp();
@@ -297,28 +320,28 @@ vec2 TrianglePosition(0.0f, 0.0f);
 	case Qt::Key::Key_D:
 		TrianglePosition.moveURight();
 		break;
-	}
-}*/
+	}*/
+}
 
-void MeGlWindow::keyPressEvent(QKeyEvent* e)
+/*void MeGlWindow::keyPressEvent(QKeyEvent* e)
 {
 	if (e->key() == Qt::Key_W)
 	{
-		TrianglePosition.y += 1;
+		Triangle1Position.y += 1;
 	}
 	if (e->key() == Qt::Key_S)
 	{
-		TrianglePosition.y += 1;
+		Triangle1Position.y += 1;
 	}
 	if (e->key() == Qt::Key_D)
 	{
-		TrianglePosition.y += 1;
+		Triangle1Position.y += 1;
 	}
 	if (e->key() == Qt::Key_A)
 	{
-		TrianglePosition.y += 1;
+		Triangle1Position.y += 1;
 	}
-}
+}*/
 
 /*void MeGlWindow::myUpdate()
 {
