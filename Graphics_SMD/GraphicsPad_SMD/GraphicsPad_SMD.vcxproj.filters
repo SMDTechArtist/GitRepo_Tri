@@ -6,7 +6,7 @@
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
     <Filter Include="Primatives">
-      <UniqueIdentifier>{6b706fbe-e68d-42b9-8090-2c69b9b18478}</UniqueIdentifier>
+      <UniqueIdentifier>{8b72446b-f4fb-4762-acbd-42455cc4ef6b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
