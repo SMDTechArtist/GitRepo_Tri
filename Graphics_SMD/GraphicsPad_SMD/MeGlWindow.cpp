@@ -6,7 +6,7 @@
 #include <glm\glm.hpp>
 #include <QtGui/qkeysequence.h>
 #include <Qt\qevent.h>
-#include <Vertex.h>
+//#include <Vertex.h>
 
 using namespace std;
 
@@ -16,12 +16,12 @@ using glm::vec4;
 
 
 //const float MOVEMENT_SPEED = 0.1f; //Distance Tirangle will move
-uint numTris = 0; //number of triangles veriable
+GLuint numTris = 0; //number of triangles veriable
 
-const uint NUM_VERTICES_PER_TRI = 3;
-const uint NUM_FLOATS_PER_VERTICE = 6;
-const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
-const uint TRIANGLE_BYTE_SIZE = NUM_VERTICES_PER_TRI * NUM_FLOATS_PER_VERTICE * sizeof(float);
+const GLuint NUM_VERTICES_PER_TRI = 3;
+const GLuint NUM_FLOATS_PER_VERTICE = 6;
+const GLuint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
+const GLuint TRIANGLE_BYTE_SIZE = NUM_VERTICES_PER_TRI * NUM_FLOATS_PER_VERTICE * sizeof(float);
 GLuint programID;
 
 const float MOVEMENT_SPEED = 0.1f;
@@ -29,67 +29,53 @@ static const glm::vec3 Triangle1Movement(0.0f, 0.0f, -1.0f);
 static const glm::vec3 UP(0.0f, 1.0f, 0.0f);
 
 
-struct MakeTri
+glm::vec3 tri1Pos; //Tri 1 position
+glm::vec3 tri2Pos; // Tri 2 position
+//glm::vec3 triangle2Color; // Tri 2 color
+
+struct Vertex
 {
 	glm::vec3 position;
 	glm::vec3 Color;
-	//glm::vec2 tri1Pos;
-	//glm::vec3 tri1Color;
-	//glm::vec2 oldTri1Position;
-
-
-	//glm::vec2 tri2Position;
-	//glm::vec3 tri2Color;
-	//glm::vec2 oldTri2Position;
-
 };
 		
 
 
-/*struct Tris
-{
-
-	glm::vec2 tri1Position; //Tri 1 position
-	glm::vec3 tri1Color;  //Tri 1 color
 
 
-	glm::vec2 triangle2Position; // Tri 2 position
-	glm::vec3 triangle2Color; // Tri 2 color
 
-};*/
 
 void sendDataToOpenGL()
 {
-	
-	/*Vertex Triangle[] =
+	Vertex Triangles[] = //was verts
 	{
-		glm::vec3(+0.0f, +0.2f, +0.0f),
-		glm::vec3(+0.0f, +0.0f, +1.0f),
-
-		glm::vec3(+0.2f, -0.2f, +0.0f),
-		glm::vec3(+0.0f, +0.0f, +1.0f),
-
-		glm::vec3(-0.2f, -0.2f, +0.0f),
+		glm::vec3(-0.25f, +0.0f, +0.0f),
+		glm::vec3(+1.0f, +0.0f, +0.0f),
+		
+		glm::vec3(+0.25f, +0.0f, +0.0f),
+		glm::vec3(+0.0f, +1.0f, +0.0f),
+		 
+		glm::vec3(+0.0f,  -0.5f, +0.0f),
 		glm::vec3(+0.0f, +0.0f, +1.0f),
 	};
 
-	
-
-	
-	//Vertex Triangles Buffer
-	GLuint TriangleBufferID;
-	glGenBuffers(1, &TriangleBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, TriangleBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle), Triangle, GL_STATIC_DRAW);
-	
-	//Vertex Triangles Attribute pointers
+	GLuint vertexBufferID;
+	glGenBuffers(1, &vertexBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangles), Triangles, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char*)(sizeof(float) * 3));
-	*/
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (char*)(sizeof(float) * 2));
 
-	GLuint TriangleBufferID;
+	GLushort indices[] = { 0,1,2 };
+
+	GLuint indexBufferID;
+	glGenBuffers(1, &indexBufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	/*GLuint TriangleBufferID;
 	glGenBuffers(1, &TriangleBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, TriangleBufferID);
 	glBufferData(GL_ARRAY_BUFFER, 10000, NULL, GL_STATIC_DRAW);
@@ -97,21 +83,14 @@ void sendDataToOpenGL()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char*)(sizeof(float) * 3));
+	*/
+
+
 	
 
+	//GLushort indices[] = { 0,5,4, 2,1,3 };
 
-	/*GLushort indices[] = { 0,1,2 };
 
-	GLushort indices[] = { 0,5,4, 2,1,3 };
-
-	GLuint indexBufferID;
-	glGenBuffers(1, &indexBufferID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-	GLuint indexBufferID;
-	glGenBuffers(1, &indexBufferID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-	*/
 
 
 	/*Tris trisPosColor[] =
@@ -139,7 +118,7 @@ void sendDataToOpenGL()
 
 }
 
-void sendAnotherTriToOpenGL() //Triangle 2?
+/*void sendAnotherTriToOpenGL() //Triangle 2?
 {
 	
 	const GLfloat THIS_TRI_X = -1 + numTris * MOVEMENT_SPEED; 
@@ -163,13 +142,13 @@ void sendAnotherTriToOpenGL() //Triangle 2?
 	};
 	glBufferSubData(GL_ARRAY_BUFFER,
 		numTris * TRIANGLE_BYTE_SIZE, TRIANGLE_BYTE_SIZE, thisTri),
-}
+}*/
+
 
 void MeGlWindow::paintGL()
 {
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, width(), height());
-	sendAnotherTriToOpenGL();
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	vec3 dominatingColor(1.0f, 0.0f, 0.0f);
@@ -186,7 +165,7 @@ void MeGlWindow::paintGL()
 string readShaderCode(const char* fileName)
 {
 	ifstream meInput(fileName);
-	if (!meInput.good())
+	if (!meInput.good())tri1Pos += MOVEMENT_SPEED * Triangle1Movement;
 	{
 		cout << "File failed to load..." << fileName;
 		exit(1);
@@ -293,20 +272,21 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 	switch (e->key())
 	{
 	case Qt::Key::Key_W:
-		position += MOVEMENT_SPEED * UP;
+		tri1Pos.y += 0.05f; 
 		break;
 	case Qt::Key::Key_S:
-		position += -MOVEMENT_SPEED * UP;
+		tri1Pos.y -= 0.05f;
 		break;
 	case Qt::Key::Key_A:
-		position += -MOVEMENT_SPEED * Triangle1Movement;
+		tri1Pos.x -= 0.05f;
 		break;
 	case Qt::Key::Key_D:
-		position += MOVEMENT_SPEED * Triangle1Movement;
-		break;
+		tri1Pos.x += 0.05f;
 	}
 	repaint();
 }
+
+
 /*void MeGlWindow::keyPressEvent(QKeyEvent* e)
 {
 	if (e->key() == Qt::Key_W)
