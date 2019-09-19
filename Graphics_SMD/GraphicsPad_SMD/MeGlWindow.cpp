@@ -272,16 +272,16 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 	switch (e->key())
 	{
 	case Qt::Key::Key_W:
-		tri1Pos.y += 0.05f; 
+		tri1Pos.y += MOVEMENT_SPEED;
 		break;
 	case Qt::Key::Key_S:
-		tri1Pos.y -= 0.05f;
+		tri1Pos.y -= MOVEMENT_SPEED;
 		break;
 	case Qt::Key::Key_A:
-		tri1Pos.x -= 0.05f;
+		tri1Pos.x -= MOVEMENT_SPEED;
 		break;
 	case Qt::Key::Key_D:
-		tri1Pos.x += 0.05f;
+		tri1Pos.x += MOVEMENT_SPEED;
 	}
 	repaint();
 }
