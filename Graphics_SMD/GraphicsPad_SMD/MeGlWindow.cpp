@@ -25,8 +25,8 @@ const GLuint TRIANGLE_BYTE_SIZE = NUM_VERTICES_PER_TRI * NUM_FLOATS_PER_VERTICE 
 GLuint programID;
 
 const float MOVEMENT_SPEED = 0.1f;
-static const glm::vec3 Triangle1Movement(0.0f, 0.0f, -1.0f);
-static const glm::vec3 UP(0.0f, 1.0f, 0.0f);
+//static const glm::vec3 Triangle1Movement(0.0f, 0.0f, -1.0f);
+//static const glm::vec3 UP(0.0f, 1.0f, 0.0f);
 
 
 glm::vec3 tri1Pos; //Tri 1 position
