@@ -38,36 +38,13 @@ struct MakeTri
 	//glm::vec2 oldTri1Position;
 
 
-	glm::vec2 tri2Position;
+	//glm::vec2 tri2Position;
 	//glm::vec3 tri2Color;
 	//glm::vec2 oldTri2Position;
 
 };
 		
 
-
-
-
-
-void Camera::strafeLeft()
-{
-	position += -MOVEMENT_SPEED * Triangle1Movement;
-}
-
-void Camera::strafeRight()
-{
-	position += MOVEMENT_SPEED * Triangle1Movement;
-}
-
-void Camera::moveUp()
-{
-	position += MOVEMENT_SPEED * UP;
-}
-
-void Camera::moveDown()
-{
-	position += -MOVEMENT_SPEED * UP;
-}
 
 /*struct Tris
 {
@@ -316,16 +293,16 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 	switch (e->key())
 	{
 	case Qt::Key::Key_W:
-		thisTri.moveUp();
+		position += MOVEMENT_SPEED * UP;
 		break;
 	case Qt::Key::Key_S:
-		thisTri.moveDown();
+		position += -MOVEMENT_SPEED * UP;
 		break;
 	case Qt::Key::Key_A:
-		thisTri.strafeLeft();
+		position += -MOVEMENT_SPEED * Triangle1Movement;
 		break;
 	case Qt::Key::Key_D:
-		thisTri.strafeRight();
+		position += MOVEMENT_SPEED * Triangle1Movement;
 		break;
 	}
 	repaint();
