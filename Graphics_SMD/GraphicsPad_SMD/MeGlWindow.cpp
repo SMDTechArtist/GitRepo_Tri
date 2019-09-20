@@ -156,18 +156,18 @@ void MeGlWindow::paintGL()
 	GLint yFlipUniformLocation = glGetUniformLocation(programID, "yFlip");
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
 	glUniform3fv(offsetUniformLocation, 1, &offset[0]);
-	glUniform1f(yFlipUniformLocation, 1.0f);
+	
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 
 
 	dominatingColor.b = 0;
-	offset.y = tri1Pos.y;
+	offset.y = tri2Pos.y;
 	offset.x = tri2Pos.x;
 	//offset.x = -0.5f;
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
 	glUniform3fv(offsetUniformLocation, 1, &offset[0]);
-	glUniform1f(yFlipUniformLocation, -1.0f);
+	
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 }
