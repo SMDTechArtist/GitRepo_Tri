@@ -39,7 +39,7 @@ struct Vertex
 	glm::vec3 Color;
 };
 		
-//
+
 
 
 
@@ -149,23 +149,35 @@ void MeGlWindow::paintGL()
 {
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, width(), height());
-	//glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	vec3 dominatingColor(1.0f, 0.0f, 0.0f);
+	vec3 dominatingColor(1.0f, 0.0f, 1.0f);
+	vec3 offset(tri1Pos.x, tri1Pos.y, 0);
+
 	GLint dominatingColorUniformLocation = glGetUniformLocation(programID, "dominatingColor");
+	GLint offsetUniformLocation = glGetUniformLocation(programID, "offset");
+	GLint yFlipUniformLocation = glGetUniformLocation(programID, "yFlip");
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
+	glUniform3fv(offsetUniformLocation, 1, &offset[0]);
+	glUniform1f(yFlipUniformLocation, 1.0f);
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 
 
-	//glViewport(0, 0, width(), height());
-	//glDrawArrays(GL_TRIANGLES, 0, 6);
-	//glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, 0);
+	dominatingColor.b = 0;
+	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
+	glUniform3fv(offsetUniformLocation, 1, &offset[0]);
+	glUniform1f(yFlipUniformLocation, -1.0f);
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 }
+
+
 
 
 string readShaderCode(const char* fileName)
 {
 	ifstream meInput(fileName);
-	if (!meInput.good())tri1Pos += MOVEMENT_SPEED * Triangle1Movement;
+	if (!meInput.good())
 	{
 		cout << "File failed to load..." << fileName;
 		exit(1);
@@ -217,6 +229,9 @@ bool checkProgramStatus(GLuint programID)
 	return true;
 }
 
+
+
+
 void installShaders()
 {
 	GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -229,8 +244,6 @@ void installShaders()
 	temp = readShaderCode("FragmentShaderCode.glsl");
 	adapter[0] = temp.c_str();
 	glShaderSource(fragmentShaderID, 1, adapter, 0);
-
-
 
 	glCompileShader(vertexShaderID);
 	glCompileShader(fragmentShaderID);
