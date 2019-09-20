@@ -51,10 +51,8 @@ void sendDataToOpenGL()
 	{
 		glm::vec2(-0.25f, +0.0f),
 		
-		
 		glm::vec2(+0.25f, +0.0f),
 		
-		 
 		glm::vec2(+0.0f,  -0.5f),
 		
 	};
@@ -164,9 +162,9 @@ void MeGlWindow::paintGL()
 
 
 	dominatingColor.b = 0;
-	//offset.y = tri1Pos.y
-	//offset.x = tri2Pos.x
-	offset.x = -0.5f;
+	offset.y = tri1Pos.y;
+	offset.x = tri2Pos.x;
+	//offset.x = -0.5f;
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
 	glUniform3fv(offsetUniformLocation, 1, &offset[0]);
 	glUniform1f(yFlipUniformLocation, -1.0f);
