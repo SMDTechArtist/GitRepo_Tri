@@ -29,8 +29,8 @@ const float MOVEMENT_SPEED = 0.1f;
 //static const glm::vec3 UP(0.0f, 1.0f, 0.0f);
 
 
-glm::vec3 tri1Pos; //Tri 1 position
-glm::vec3 tri2Pos; // Tri 2 position
+glm::vec2 tri1Pos(+0.0f, 0.0f); //Tri 1 position
+glm::vec2 tri2Pos(+0.0f, 0.5f); // Tri 2 position
 //glm::vec3 triangle2Color; // Tri 2 color
 
 struct Vertex
@@ -47,16 +47,16 @@ struct Vertex
 
 void sendDataToOpenGL()
 {
-	Vertex Triangles[] = //was verts
+	glm::vec2 Triangles[] = //was verts
 	{
-		glm::vec3(-0.25f, +0.0f, +0.0f),
-		glm::vec3(+1.0f, +0.0f, +0.0f),
+		glm::vec2(-0.25f, +0.0f),
 		
-		glm::vec3(+0.25f, +0.0f, +0.0f),
-		glm::vec3(+0.0f, +1.0f, +0.0f),
+		
+		glm::vec2(+0.25f, +0.0f),
+		
 		 
-		glm::vec3(+0.0f,  -0.5f, +0.0f),
-		glm::vec3(+0.0f, +0.0f, +1.0f),
+		glm::vec2(+0.0f,  -0.5f),
+		
 	};
 
 	GLuint vertexBufferID;
@@ -64,9 +64,9 @@ void sendDataToOpenGL()
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangles), Triangles, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (char*)(sizeof(float) * 2));
+	//glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (char*)(sizeof(float) * 2));
 
 	GLushort indices[] = { 0,1,2 };
 
@@ -164,6 +164,9 @@ void MeGlWindow::paintGL()
 
 
 	dominatingColor.b = 0;
+	//offset.y = tri1Pos.y
+	//offset.x = tri2Pos.x
+	offset.x = -0.5f;
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
 	glUniform3fv(offsetUniformLocation, 1, &offset[0]);
 	glUniform1f(yFlipUniformLocation, -1.0f);
@@ -238,10 +241,10 @@ void installShaders()
 	GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
 	const GLchar* adapter[1];
-	string temp = readShaderCode("VertexShaderCode.glsl");
+	string temp = readShaderCode("..\\VertexShaderCode.glsl");
 	adapter[0] = temp.c_str();
 	glShaderSource(vertexShaderID, 1, adapter, 0);
-	temp = readShaderCode("FragmentShaderCode.glsl");
+	temp = readShaderCode("..\\FragmentShaderCode.glsl");
 	adapter[0] = temp.c_str();
 	glShaderSource(fragmentShaderID, 1, adapter, 0);
 
@@ -295,6 +298,20 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 		break;
 	case Qt::Key::Key_D:
 		tri1Pos.x += MOVEMENT_SPEED;
+		break;
+		//Arrows
+	case Qt::Key::Key_Up:
+		tri2Pos.y += MOVEMENT_SPEED;
+		break;
+	case Qt::Key::Key_Down:
+		tri2Pos.y -= MOVEMENT_SPEED;
+		break;
+	case Qt::Key::Key_Right:
+		tri2Pos.x -= MOVEMENT_SPEED;
+		break;
+	case Qt::Key::Key_Left:
+		tri2Pos.x += MOVEMENT_SPEED;
+		break;
 	}
 	repaint();
 }

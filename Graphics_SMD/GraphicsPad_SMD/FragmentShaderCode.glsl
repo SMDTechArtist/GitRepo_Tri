@@ -7,6 +7,5 @@ uniform vec3 dominatingColor;
 void main()
 {
 	daColor = dominatingColor;
-
 }
 
