@@ -29,9 +29,8 @@ const float MOVEMENT_SPEED = 0.1f;
 
 
 glm::vec2 tri1Pos(+0.0f, 0.0f); //Tri 1 position
-//glm::vec2 tri2Pos(+0.1f, 0.1f); // Tri 2 position
+glm::vec2 tri2Pos(+0.1f, 0.1f); // Tri 2 position
 
-glm::vec2 tri(+0.0f, 0.0f);
 
 struct Vertex
 {
@@ -83,7 +82,6 @@ void MeGlWindow::paintGL()
 
 	vec3 dominatingColor(0.0f, 0.0f, 1.0f);
 	vec3 offset(tri1Pos.x, tri1Pos.y, 0);
-
 	
 
 
@@ -98,11 +96,10 @@ void MeGlWindow::paintGL()
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 
 
-
-	//dominatingColor.r = 1;
+	dominatingColor.r = 1;
 
 	
-	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]); //Keep this where it is. If you move above drawing, you will get two triangles. 
+	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
 	glUniform3fv(offsetUniformLocation, 1, &offset[0]);
 	
 
@@ -239,6 +236,25 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 }
 
 
+/*void MeGlWindow::keyPressEvent(QKeyEvent* e)
+{
+	if (e->key() == Qt::Key_W)
+	{
+		Triangle1Position.y += 1;
+	}
+	if (e->key() == Qt::Key_S)
+	{
+		Triangle1Position.y += 1;
+	}
+	if (e->key() == Qt::Key_D)
+	{
+		Triangle1Position.y += 1;
+	}
+	if (e->key() == Qt::Key_A)
+	{
+		Triangle1Position.y += 1;
+	}
+}*/
 
 /*void MeGlWindow::myUpdate()
 {
