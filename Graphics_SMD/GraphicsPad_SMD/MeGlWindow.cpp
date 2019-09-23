@@ -6,6 +6,8 @@
 #include <glm\glm.hpp>
 #include <QtGui/qkeysequence.h>
 #include <Qt\qevent.h>
+#include <cassert>
+#include <Qt\qtimer.h>
 
 
 using namespace std;
@@ -23,6 +25,7 @@ const GLuint NUM_FLOATS_PER_VERTICE = 6;
 const GLuint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 const GLuint TRIANGLE_BYTE_SIZE = NUM_VERTICES_PER_TRI * NUM_FLOATS_PER_VERTICE * sizeof(float);
 GLuint programID;
+GLuint shaderID;
 
 const float MOVEMENT_SPEED = 0.1f;
 
@@ -54,6 +57,8 @@ void sendDataToOpenGL()
 		
 	};
 
+
+
 	GLuint vertexBufferID;
 	glGenBuffers(1, &vertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
@@ -68,6 +73,11 @@ void sendDataToOpenGL()
 	glGenBuffers(1, &indexBufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	connect(&myTimer, SIGNAL(timeout()),
+
+
+
 
 
 
@@ -121,6 +131,17 @@ string readShaderCode(const char* fileName)
 		std::istreambuf_iterator<char>(meInput),
 		std::istreambuf_iterator<char>());
 }
+
+/*string checkNumAttribs( GLuint checkAttribs)
+{
+	GLint numAttribs;
+	glGetProgramInterfaceiv(checkAttribs, GL_ACTIVE_ATTRIBUTES, &numAttribs);
+
+	GLenum Properties[] = 
+	{
+		GL_
+	}
+}*/
 
 bool checkShaderStatus(GLuint shaderID)
 {
