@@ -1,14 +1,14 @@
 /****************************************************************************
-** Meta object code from reading C++ file 'MyGlWindow.h'
+** Meta object code from reading C++ file 'MeGlWindow.h'
 **
 ** Created by: The Qt Meta Object Compiler version 63 (Qt 4.8.5)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "MyGlWindow.h"
+#include "MeGlWindow.h"
 #if !defined(Q_MOC_OUTPUT_REVISION)
-#error "The header file 'MyGlWindow.h' doesn't include <QObject>."
+#error "The header file 'MeGlWindow.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 63
 #error "This file was generated using the moc from 4.8.5. It"
 #error "cannot be used with the include files from this version of Qt."
@@ -16,7 +16,7 @@
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
-static const uint qt_meta_data_MyGlWindow[] = {
+static const uint qt_meta_data_MeGlWindow[] = {
 
  // content:
        6,       // revision
@@ -35,15 +35,15 @@ static const uint qt_meta_data_MyGlWindow[] = {
        0        // eod
 };
 
-static const char qt_meta_stringdata_MyGlWindow[] = {
-    "MyGlWindow\0\0myUpdate()\0"
+static const char qt_meta_stringdata_MeGlWindow[] = {
+    "MeGlWindow\0\0myUpdate()\0"
 };
 
-void MyGlWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void MeGlWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
         Q_ASSERT(staticMetaObject.cast(_o));
-        MyGlWindow *_t = static_cast<MyGlWindow *>(_o);
+        MeGlWindow *_t = static_cast<MeGlWindow *>(_o);
         switch (_id) {
         case 0: _t->myUpdate(); break;
         default: ;
@@ -52,33 +52,33 @@ void MyGlWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
     Q_UNUSED(_a);
 }
 
-const QMetaObjectExtraData MyGlWindow::staticMetaObjectExtraData = {
+const QMetaObjectExtraData MeGlWindow::staticMetaObjectExtraData = {
     0,  qt_static_metacall 
 };
 
-const QMetaObject MyGlWindow::staticMetaObject = {
-    { &QGLWidget::staticMetaObject, qt_meta_stringdata_MyGlWindow,
-      qt_meta_data_MyGlWindow, &staticMetaObjectExtraData }
+const QMetaObject MeGlWindow::staticMetaObject = {
+    { &QGLWidget::staticMetaObject, qt_meta_stringdata_MeGlWindow,
+      qt_meta_data_MeGlWindow, &staticMetaObjectExtraData }
 };
 
 #ifdef Q_NO_DATA_RELOCATION
-const QMetaObject &MyGlWindow::getStaticMetaObject() { return staticMetaObject; }
+const QMetaObject &MeGlWindow::getStaticMetaObject() { return staticMetaObject; }
 #endif //Q_NO_DATA_RELOCATION
 
-const QMetaObject *MyGlWindow::metaObject() const
+const QMetaObject *MeGlWindow::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->metaObject : &staticMetaObject;
 }
 
-void *MyGlWindow::qt_metacast(const char *_clname)
+void *MeGlWindow::qt_metacast(const char *_clname)
 {
     if (!_clname) return 0;
-    if (!strcmp(_clname, qt_meta_stringdata_MyGlWindow))
-        return static_cast<void*>(const_cast< MyGlWindow*>(this));
+    if (!strcmp(_clname, qt_meta_stringdata_MeGlWindow))
+        return static_cast<void*>(const_cast< MeGlWindow*>(this));
     return QGLWidget::qt_metacast(_clname);
 }
 
-int MyGlWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int MeGlWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QGLWidget::qt_metacall(_c, _id, _a);
     if (_id < 0)
