@@ -8,9 +8,8 @@
 #include <Qt\qevent.h>
 #include <cassert>
 #include <Qt\qtimer.h>
-#include <Qt\qmetaobject.h>
-#include <Qt\qobject.h>
-#include <MeGlWinw_moc.cpp>
+
+
 
 
 
