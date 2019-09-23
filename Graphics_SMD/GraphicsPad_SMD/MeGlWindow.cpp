@@ -74,16 +74,17 @@ void sendDataToOpenGL()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	connect(&myTimer, SIGNAL(timeout()),
-
-
-
-
+	/*connect(&myTimer, SIGNAL(timeout()),
+		this, SLOT(myUpdate()));
+	myTimer.start(0);*/
 
 
 }
 
+void MeGlWindow::myUpdate()
+{
 
+}
 
 void MeGlWindow::paintGL()
 {
@@ -229,7 +230,9 @@ void MeGlWindow::initializeGL()
 	sendDataToOpenGL();
 	installShaders();
 
-
+	connect(&myTimer, SIGNAL(timeout()),
+		this, SLOT(myUpdate()));
+	myTimer.start(0);
 }
 
 

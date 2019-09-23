@@ -8,6 +8,7 @@
 #include <Qt\qevent.h>
 #include <cassert>
 #include <Qt\qtimer.h>
+#include <Qt\qmetaobject.h>
 
 
 
@@ -15,6 +16,7 @@ class QKeyEvent;
 
 class MeGlWindow : public QGLWidget
 {
+	Q_OBJECT
 	QTimer myTimer;
 protected:
 	void initializeGL();
@@ -22,7 +24,9 @@ protected:
 	void keyPressEvent(QKeyEvent*);
 
 
-public:
+private slots:
+	void myUpdate();
+
 };
 
 #endif
