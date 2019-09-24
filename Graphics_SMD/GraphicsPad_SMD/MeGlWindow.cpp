@@ -152,7 +152,7 @@ void MeGlWindow::paintGL()
 
 	glBindBuffer(GL_ARRAY_BUFFER, boundaryVertexBufferID);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_LINES, 0, 4);
 }
 
 
