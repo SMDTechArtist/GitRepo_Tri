@@ -31,7 +31,7 @@ const float MOVEMENT_SPEED = 0.1f;
 
 
 
-glm::vec2 tri1Pos(+0.0f, 0.0f); //Tri 1 position
+//glm::vec2 tri1Pos(+0.0f, 0.0f); //Tri 1 position
 //glm::vec2 tri2Pos(+0.1f, 0.1f); // Tri 2 position
 
 
@@ -65,7 +65,13 @@ namespace
 	const unsigned int NUM_TRI_VERTS = sizeof(triangleVerts) / sizeof(*triangleVerts);
 	const unsigned int NUM_BOUNDARY_VERTS = sizeof(bounaryVerts) / sizeof(*bounaryVerts);
 	
-	
+
+	//Making Buffer Variables
+	GLuint triVertexBufferID;
+	GLuint boundaryiVertexBufferID;
+
+	glm::vec2 transformedVerts[NUM_TRI_VERTS];
+	glm::vec2 tri1Pos(+0.0f, 0.0f);
 
 }
 
@@ -74,10 +80,18 @@ void sendDataToOpenGL()
 	
 
 
-	GLuint vertexBufferID;
-	glGenBuffers(1, &vertexBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVerts), triangleVerts, GL_STATIC_DRAW);
+	//Buffer for Tri 
+	glGenBuffers(1, &triVertexBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, triVertexBufferID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVerts), triangleVerts, GL_DYNAMIC_DRAW);
+	
+	//Buffer for Boundary 
+	glGenBuffers(1, &boundaryiVertexBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, boundaryiVertexBufferID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(bounaryVerts), bounaryVerts, GL_STATIC_DRAW);
+	
+
+
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 	glEnableVertexAttribArray(1);
@@ -88,6 +102,9 @@ void sendDataToOpenGL()
 	glGenBuffers(1, &indexBufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+
+
 
 
 
@@ -105,30 +122,27 @@ void MeGlWindow::paintGL()
 	
 
 
-
-
 	GLint dominatingColorUniformLocation = glGetUniformLocation(programID, "dominatingColor");
 	//GLint offsetUniformLocation = glGetUniformLocation(programID, "offset");
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
 	//glUniform3fv(offsetUniformLocation, 1, &offset[0]);
-	
 
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 
-
 	//dominatingColor.r = 1;
 
-	
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
 	//glUniform3fv(offsetUniformLocation, 1, &offset[0]);
 	
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVerts), NULL, GL_DYNAMIC_DRAW);// this should reattach the triangleVerts buffer
+
 	glm::vec2 translatedVerts[NUM_TRI_VERTS];
 	for (unsigned int i = 0; i < NUM_TRI_VERTS; i++)
 	{
 		translatedVerts[i] = triangleVerts[i] + tri1Pos;
 	}
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(translatedVerts), translatedVerts);
-
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
