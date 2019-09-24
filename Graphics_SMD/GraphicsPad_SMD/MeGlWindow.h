@@ -23,6 +23,7 @@ protected:
 	void initializeGL();
 	void paintGL();
 	void keyPressEvent(QKeyEvent*);
+	void handleBoundaries();
 
 
 private slots:

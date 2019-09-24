@@ -10,6 +10,7 @@
 #include <Qt\qtimer.h>
 
 
+
 using namespace std;
 
 using glm::vec2;
@@ -26,6 +27,9 @@ const GLuint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 const GLuint TRIANGLE_BYTE_SIZE = NUM_VERTICES_PER_TRI * NUM_FLOATS_PER_VERTICE * sizeof(float);
 GLuint programID;
 GLuint shaderID;
+GLuint TriIndexBufferID;
+GLuint boundaryIndexBufferID;
+
 
 const float MOVEMENT_SPEED = 0.1f;
 
@@ -53,19 +57,20 @@ namespace
 		glm::vec3(+0.0f,  -0.15f, +1.0f),
 	};
 
+	GLushort triIndices[] = { 0,1,2 };
+
 	glm::vec3 bounaryVerts[] =
 	{
 		glm::vec3(+0.0f, +1.0f, +0.0f), //0
 		glm::vec3(-1.0f, +0.0f, +0.0f), //1
-		glm::vec3(-1.0f, +0.0f, +0.0f), //2
-		glm::vec3(+0.0f, -1.0f, +0.0f), //3
-		glm::vec3(+0.0f, -1.0f, +0.0f), //4
-		glm::vec3(+1.0f, +0.0f, +0.0f), //5
-		glm::vec3(+1.0f, +0.0f, +0.0f), //6
-		glm::vec3(+0.0f, +1.0f, +0.0f), //7 (8)
+		glm::vec3(+0.0f, -1.0f, +0.0f), //2
+		glm::vec3(+1.0f, +0.0f, +0.0f), //3
+
 
 
 	};
+
+	GLushort boundaryIndice[] = { 0, 1, 1, 2, 2, 3, 3, 0 };
 
 	const unsigned int NUM_TRI_VERTS = sizeof(triangleVerts) / sizeof(*triangleVerts);
 	const unsigned int NUM_BOUNDARY_VERTS = sizeof(bounaryVerts) / sizeof(*bounaryVerts);
@@ -101,15 +106,20 @@ void sendDataToOpenGL()
 	//glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 	//glEnableVertexAttribArray(1);
 	
-	GLushort indices[] = { 0,1,2 };
+	
 
-	GLuint indexBufferID;
-	glGenBuffers(1, &indexBufferID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	
+	glGenBuffers(1, &TriIndexBufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, TriIndexBufferID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(triIndices), triIndices, GL_STATIC_DRAW);
 
 
+	
 
+	
+	glGenBuffers(1, &boundaryIndexBufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, boundaryIndexBufferID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(boundaryIndice), boundaryIndice, GL_STATIC_DRAW);
 
 
 
@@ -157,7 +167,7 @@ void MeGlWindow::paintGL()
 
 	glBindBuffer(GL_ARRAY_BUFFER, boundaryVertexBufferID);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glDrawArrays(GL_LINES, 0, 8);
+	glDrawElements(GL_LINES, 8, GL_UNSIGNED_SHORT, 0);
 }
 
 
@@ -303,6 +313,15 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 	repaint();
 }
 
+void MeGlWindow::handleBoundaries()
+{
+	const vec3 first = bounaryVerts[0];
+	const vec3 second = bounaryVerts[1];
+
+	vec3 wall = second - first;
+	//vec3 normal = wall.perpCcwXy();
+	//https://www.youtube.com/watch?v=plpXkJg8oDc&list=PLRwVmtr-pp04XomGtm-abzb-2M1xszjFx&index=144	//Maybe have to watch math videos before setting this up. 	// Figure out what the equivelent of perpCcwXy (Perpendicular clockwise on the XY) is or what library to find it in. 
+}
 
 /*void MeGlWindow::keyPressEvent(QKeyEvent* e)
 {
