@@ -55,10 +55,15 @@ namespace
 
 	glm::vec3 bounaryVerts[] =
 	{
-		glm::vec3(+0.0f, +1.0f, +0.0f),
-		glm::vec3(-1.0f, +0.0f, + 0.0f),
-		glm::vec3(+0.0f, -1.0f, +0.0f),
-		glm::vec3(+1.0f, +0.0f, +0.0f),
+		glm::vec3(+0.0f, +1.0f, +0.0f), //0
+		glm::vec3(-1.0f, +0.0f, +0.0f), //1
+		glm::vec3(-1.0f, +0.0f, +0.0f), //2
+		glm::vec3(+0.0f, -1.0f, +0.0f), //3
+		glm::vec3(+0.0f, -1.0f, +0.0f), //4
+		glm::vec3(+1.0f, +0.0f, +0.0f), //5
+		glm::vec3(+1.0f, +0.0f, +0.0f), //6
+		glm::vec3(+0.0f, +1.0f, +0.0f), //7 (8)
+
 
 	};
 
@@ -152,7 +157,7 @@ void MeGlWindow::paintGL()
 
 	glBindBuffer(GL_ARRAY_BUFFER, boundaryVertexBufferID);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glDrawArrays(GL_LINES, 0, 4);
+	glDrawArrays(GL_LINES, 0, 8);
 }
 
 
