@@ -161,6 +161,7 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir);$(ProjectDir)..\Middleware\Qt\Include;$(ProjectDir)..\Middleware\glew\Include;$(ProjectDir)..\Middleware\GLFW\include</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="MeGlWindow.cpp" />
+    <ClCompile Include="MeGlWindow_moc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MeGlWindow.h" />
