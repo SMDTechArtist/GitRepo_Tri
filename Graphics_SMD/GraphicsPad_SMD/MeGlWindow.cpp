@@ -46,11 +46,11 @@ namespace
 {
 	glm::vec3 triangleVerts[] = //was verts
 	{
-		glm::vec3(+0.1f, +0.14f, +0.0f),
+		glm::vec3(+0.1f, +0.14f, +1.0f),
 
-		glm::vec3(+0.15f, +0.0f, +0.0f),
+		glm::vec3(+0.15f, +0.0f, +1.0f),
 
-		glm::vec3(+0.0f,  -0.15f, +0.0f),
+		glm::vec3(+0.0f,  -0.15f, +1.0f),
 	};
 
 	glm::vec3 bounaryVerts[] =
@@ -68,7 +68,7 @@ namespace
 
 	//Making Buffer Variables
 	GLuint triVertexBufferID;
-	GLuint boundaryiVertexBufferID;
+	GLuint boundaryVertexBufferID;
 
 	glm::vec3 transformedVerts[NUM_TRI_VERTS];
 	glm::vec3 tri1Pos(+0.0f, 0.0f, +0.0f);
@@ -86,8 +86,8 @@ void sendDataToOpenGL()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVerts), triangleVerts, GL_DYNAMIC_DRAW);
 	
 	//Buffer for Boundary 
-	glGenBuffers(1, &boundaryiVertexBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, boundaryiVertexBufferID);
+	glGenBuffers(1, &boundaryVertexBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, boundaryVertexBufferID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(bounaryVerts), bounaryVerts, GL_STATIC_DRAW);
 	
 
@@ -121,34 +121,36 @@ void MeGlWindow::paintGL()
 	//vec3 offset(tri1Pos.x, tri1Pos.y, 0);
 	
 
-
 	GLint dominatingColorUniformLocation = glGetUniformLocation(programID, "dominatingColor");
 	//GLint offsetUniformLocation = glGetUniformLocation(programID, "offset");
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
 	//glUniform3fv(offsetUniformLocation, 1, &offset[0]);
-
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
-
 	//dominatingColor.r = 1;
-
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
 	//glUniform3fv(offsetUniformLocation, 1, &offset[0]);
+
+	
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVerts), NULL, GL_DYNAMIC_DRAW);// this should reattach the triangleVerts buffer to the ARRAY_BUFFER binding point
 	
 	
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVerts), NULL, GL_DYNAMIC_DRAW);// this should reattach the triangleVerts buffer
+	
+	glBindBuffer(GL_ARRAY_BUFFER, triVertexBufferID);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);  // Add late if something doesn't work right. But makes Tri weird right now.
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);  // Add late if something doesn't work right. But makes Tri weird right now.
 	
-
 	glm::vec3 translatedVerts[NUM_TRI_VERTS];
 	for (unsigned int i = 0; i < NUM_TRI_VERTS; i++)
 	{
 		translatedVerts[i] = triangleVerts[i] + tri1Pos;
 	}
-	
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(translatedVerts), translatedVerts);
+	
 	glDrawArrays(GL_TRIANGLES, 0, 3);
+
+	
 
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 }
@@ -230,8 +232,6 @@ bool checkProgramStatus(GLuint programID)
 }
 
 
-
-
 void installShaders()
 {
 	GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -265,8 +265,6 @@ void installShaders()
 
 
 
-
-
 void MeGlWindow::initializeGL()
 {
 	glewInit();
@@ -277,8 +275,6 @@ void MeGlWindow::initializeGL()
 		this, SLOT(myUpdate()));
 	myTimer.start(0);
 }
-
-
 
 
 
