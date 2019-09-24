@@ -78,7 +78,7 @@ namespace
 void sendDataToOpenGL()
 {
 	
-
+	//glEnableVertexAttribArray(0);
 
 	//Buffer for Tri 
 	glGenBuffers(1, &triVertexBufferID);
@@ -132,27 +132,27 @@ void MeGlWindow::paintGL()
 
 	
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVerts), NULL, GL_DYNAMIC_DRAW);// this should reattach the triangleVerts buffer to the ARRAY_BUFFER binding point
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVerts), NULL, GL_DYNAMIC_DRAW);// this should reattach the triangleVerts buffer to the ARRAY_BUFFER binding point
 	
 	
 
 	
 	glBindBuffer(GL_ARRAY_BUFFER, triVertexBufferID);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);  // Add late if something doesn't work right. But makes Tri weird right now.
-	
 	glm::vec3 translatedVerts[NUM_TRI_VERTS];
 	for (unsigned int i = 0; i < NUM_TRI_VERTS; i++)
 	{
 		translatedVerts[i] = triangleVerts[i] + tri1Pos;
 	}
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(translatedVerts), translatedVerts);
-	
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);  // Add late if something doesn't work right. But makes Tri weird right now.
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	
 
-	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, boundaryVertexBufferID);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 
