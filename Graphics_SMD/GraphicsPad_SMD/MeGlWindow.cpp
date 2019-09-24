@@ -31,8 +31,8 @@ const float MOVEMENT_SPEED = 0.1f;
 
 
 
-glm::vec2 tri1Pos(+0.0f, 0.0f); //Tri 1 position
-glm::vec2 tri2Pos(+0.1f, 0.1f); // Tri 2 position
+//glm::vec2 tri1Pos(+0.0f, 0.0f); //Tri 1 position
+//glm::vec2 tri2Pos(+0.1f, 0.1f); // Tri 2 position
 
 
 struct Vertex
@@ -42,12 +42,24 @@ struct Vertex
 };
 		
 
+namespace
+{
+	glm::vec2 Triangles[] = //was verts
+	{
+		glm::vec2(-0.25f, +0.0f),
 
+		glm::vec2(+0.25f, +0.0f),
 
+		glm::vec2(+0.0f,  -0.5f),
+	};
+	const unsigned int NUM_VERTS = sizeof(Triangles) / sizeof(*Triangles);
+	glm::vec2 tri1Pos(+0.0f, 0.0f); //Tri 1 position
+
+}
 
 void sendDataToOpenGL()
 {
-	glm::vec2 Triangles[] = //was verts
+	/*glm::vec2 Triangles[] = //was verts
 	{
 		glm::vec2(-0.25f, +0.0f),
 		
@@ -55,7 +67,7 @@ void sendDataToOpenGL()
 		
 		glm::vec2(+0.0f,  -0.5f),
 		
-	};
+	};*/
 
 
 
@@ -74,17 +86,11 @@ void sendDataToOpenGL()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	/*connect(&myTimer, SIGNAL(timeout()),
-		this, SLOT(myUpdate()));
-	myTimer.start(0);*/
 
 
 }
 
-void MeGlWindow::myUpdate()
-{
-
-}
+int debugCount = 0;
 
 void MeGlWindow::paintGL()
 {
@@ -92,31 +98,46 @@ void MeGlWindow::paintGL()
 	glViewport(0, 0, width(), height());
 
 	vec3 dominatingColor(0.0f, 0.0f, 1.0f);
-	vec3 offset(tri1Pos.x, tri1Pos.y, 0);
+	//vec3 offset(tri1Pos.x, tri1Pos.y, 0);
 	
 
 
 
 
 	GLint dominatingColorUniformLocation = glGetUniformLocation(programID, "dominatingColor");
-	GLint offsetUniformLocation = glGetUniformLocation(programID, "offset");
+	//GLint offsetUniformLocation = glGetUniformLocation(programID, "offset");
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
-	glUniform3fv(offsetUniformLocation, 1, &offset[0]);
+	//glUniform3fv(offsetUniformLocation, 1, &offset[0]);
 	
 
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 
 
-	dominatingColor.r = 1;
+	//dominatingColor.r = 1;
 
 	
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
-	glUniform3fv(offsetUniformLocation, 1, &offset[0]);
+	//glUniform3fv(offsetUniformLocation, 1, &offset[0]);
 	
+	glm::vec2 translatedVerts[NUM_VERTS];
+	for (unsigned int i = 0; i < NUM_VERTS; i++)
+	{
+		translatedVerts[i] = Triangles[i] + tri1Pos;
+	}
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(translatedVerts), translatedVerts);
 
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+
+	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 }
 
+
+void MeGlWindow::myUpdate()
+{
+	glm::vec2 velocity(0.0001f, 0.0001f); //Change the num of zeros to slow or speed the velocity of tri1
+	tri1Pos = tri1Pos + velocity;
+	repaint();
+}
 
 
 
