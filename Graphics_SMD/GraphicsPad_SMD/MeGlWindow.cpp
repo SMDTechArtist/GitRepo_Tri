@@ -44,21 +44,21 @@ struct Vertex
 
 namespace
 {
-	glm::vec2 triangleVerts[] = //was verts
+	glm::vec3 triangleVerts[] = //was verts
 	{
-		glm::vec2(+0.1f, +0.14f),
+		glm::vec3(+0.1f, +0.14f, +0.0f),
 
-		glm::vec2(+0.15f, +0.0f),
+		glm::vec3(+0.15f, +0.0f, +0.0f),
 
-		glm::vec2(+0.0f,  -0.15f),
+		glm::vec3(+0.0f,  -0.15f, +0.0f),
 	};
 
-	glm::vec2 bounaryVerts[] =
+	glm::vec3 bounaryVerts[] =
 	{
-		glm::vec2(+0.0f, +1.0f),
-		glm::vec2(-1.0f, +0.0f),
-		glm::vec2(+0.0f, -1.0f),
-		glm::vec2(+1.0f, +0.0f),
+		glm::vec3(+0.0f, +1.0f, +0.0f),
+		glm::vec3(-1.0f, +0.0f, + 0.0f),
+		glm::vec3(+0.0f, -1.0f, +0.0f),
+		glm::vec3(+1.0f, +0.0f, +0.0f),
 
 	};
 
@@ -70,8 +70,8 @@ namespace
 	GLuint triVertexBufferID;
 	GLuint boundaryiVertexBufferID;
 
-	glm::vec2 transformedVerts[NUM_TRI_VERTS];
-	glm::vec2 tri1Pos(+0.0f, 0.0f);
+	glm::vec3 transformedVerts[NUM_TRI_VERTS];
+	glm::vec3 tri1Pos(+0.0f, 0.0f, +0.0f);
 
 }
 
@@ -92,9 +92,9 @@ void sendDataToOpenGL()
 	
 
 
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
-	glEnableVertexAttribArray(1);
+	//glEnableVertexAttribArray(0);
+	//glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+	//glEnableVertexAttribArray(1);
 	
 	GLushort indices[] = { 0,1,2 };
 
@@ -134,14 +134,19 @@ void MeGlWindow::paintGL()
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
 	//glUniform3fv(offsetUniformLocation, 1, &offset[0]);
 	
+	
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVerts), NULL, GL_DYNAMIC_DRAW);// this should reattach the triangleVerts buffer
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);  // Add late if something doesn't work right. But makes Tri weird right now.
+	
 
-	glm::vec2 translatedVerts[NUM_TRI_VERTS];
+	glm::vec3 translatedVerts[NUM_TRI_VERTS];
 	for (unsigned int i = 0; i < NUM_TRI_VERTS; i++)
 	{
 		translatedVerts[i] = triangleVerts[i] + tri1Pos;
 	}
+	
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(translatedVerts), translatedVerts);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -151,7 +156,7 @@ void MeGlWindow::paintGL()
 
 void MeGlWindow::myUpdate()
 {
-	glm::vec2 velocity(0.0001f, 0.0001f); //Change the num of zeros to slow or speed the velocity of tri1
+	glm::vec3 velocity(0.0001f, 0.0001f, +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
 	tri1Pos = tri1Pos + velocity;
 	repaint();
 }
