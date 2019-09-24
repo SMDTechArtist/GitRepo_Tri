@@ -31,7 +31,7 @@ const float MOVEMENT_SPEED = 0.1f;
 
 
 
-//glm::vec2 tri1Pos(+0.0f, 0.0f); //Tri 1 position
+glm::vec2 tri1Pos(+0.0f, 0.0f); //Tri 1 position
 //glm::vec2 tri2Pos(+0.1f, 0.1f); // Tri 2 position
 
 
@@ -44,37 +44,40 @@ struct Vertex
 
 namespace
 {
-	glm::vec2 Triangles[] = //was verts
+	glm::vec2 triangleVerts[] = //was verts
 	{
-		glm::vec2(-0.25f, +0.0f),
+		glm::vec2(+0.1f, +0.14f),
 
-		glm::vec2(+0.25f, +0.0f),
+		glm::vec2(+0.15f, +0.0f),
 
-		glm::vec2(+0.0f,  -0.5f),
+		glm::vec2(+0.0f,  -0.15f),
 	};
-	const unsigned int NUM_VERTS = sizeof(Triangles) / sizeof(*Triangles);
-	glm::vec2 tri1Pos(+0.0f, 0.0f); //Tri 1 position
+
+	glm::vec2 bounaryVerts[] =
+	{
+		glm::vec2(+0.0f, +1.0f),
+		glm::vec2(-1.0f, +0.0f),
+		glm::vec2(+0.0f, -1.0f),
+		glm::vec2(+1.0f, +0.0f),
+
+	};
+
+	const unsigned int NUM_TRI_VERTS = sizeof(triangleVerts) / sizeof(*triangleVerts);
+	const unsigned int NUM_BOUNDARY_VERTS = sizeof(bounaryVerts) / sizeof(*bounaryVerts);
+	
+	
 
 }
 
 void sendDataToOpenGL()
 {
-	/*glm::vec2 Triangles[] = //was verts
-	{
-		glm::vec2(-0.25f, +0.0f),
-		
-		glm::vec2(+0.25f, +0.0f),
-		
-		glm::vec2(+0.0f,  -0.5f),
-		
-	};*/
-
+	
 
 
 	GLuint vertexBufferID;
 	glGenBuffers(1, &vertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangles), Triangles, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVerts), triangleVerts, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 	glEnableVertexAttribArray(1);
@@ -119,10 +122,10 @@ void MeGlWindow::paintGL()
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
 	//glUniform3fv(offsetUniformLocation, 1, &offset[0]);
 	
-	glm::vec2 translatedVerts[NUM_VERTS];
-	for (unsigned int i = 0; i < NUM_VERTS; i++)
+	glm::vec2 translatedVerts[NUM_TRI_VERTS];
+	for (unsigned int i = 0; i < NUM_TRI_VERTS; i++)
 	{
-		translatedVerts[i] = Triangles[i] + tri1Pos;
+		translatedVerts[i] = triangleVerts[i] + tri1Pos;
 	}
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(translatedVerts), translatedVerts);
 
