@@ -21,10 +21,10 @@ using glm::vec4;
 
 
 
-const GLuint NUM_VERTICES_PER_TRI = 3;
+const GLuint NUM_VERTICES_PER_POLY = 5;
 const GLuint NUM_FLOATS_PER_VERTICE = 6;
 const GLuint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
-const GLuint TRIANGLE_BYTE_SIZE = NUM_VERTICES_PER_TRI * NUM_FLOATS_PER_VERTICE * sizeof(float);
+const GLuint POLYGON_BYTE_SIZE = NUM_VERTICES_PER_POLY * NUM_FLOATS_PER_VERTICE * sizeof(float);
 GLuint programID;
 GLuint shaderID;
 GLuint TriIndexBufferID;
@@ -48,7 +48,7 @@ struct Vertex
 
 namespace
 {
-	glm::vec3 triangleVerts[] = //was verts
+	glm::vec3 PolyVerts[] = //was verts
 	{
 		glm::vec3(+0.0f, +0.1f, +1.0f),
 		glm::vec3(+0.1f, +0.1f, +1.0f),
@@ -57,7 +57,7 @@ namespace
 		glm::vec3(+0.0f, -0.1f, +1.0f),
 	};
 
-	GLushort triIndices[] = { 0,1,2,3,4 };
+	GLushort PolyIndices[] = { 0,1,2,3,4 };
 
 	glm::vec3 bounaryVerts[] =
 	{
@@ -72,15 +72,15 @@ namespace
 
 	GLushort boundaryIndice[] = { 0, 1, 1, 2, 2, 3, 3, 0 };
 
-	const unsigned int NUM_TRI_VERTS = sizeof(triangleVerts) / sizeof(*triangleVerts);
+	const unsigned int NUM_POLY_VERTS = sizeof(PolyVerts) / sizeof(*PolyVerts);
 	const unsigned int NUM_BOUNDARY_VERTS = sizeof(bounaryVerts) / sizeof(*bounaryVerts);
 	
 
 	//Making Buffer Variables
-	GLuint triVertexBufferID;
+	GLuint polyVertexBufferID;
 	GLuint boundaryVertexBufferID;
 
-	glm::vec3 transformedVerts[NUM_TRI_VERTS];
+	glm::vec3 transformedVerts[NUM_POLY_VERTS];
 	glm::vec3 tri1Pos(+0.0f, 0.0f, +0.0f);
 
 }
@@ -91,9 +91,9 @@ void sendDataToOpenGL()
 	//glEnableVertexAttribArray(0);
 
 	//Buffer for Tri 
-	glGenBuffers(1, &triVertexBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, triVertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVerts), triangleVerts, GL_DYNAMIC_DRAW);
+	glGenBuffers(1, &polyVertexBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, polyVertexBufferID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(PolyVerts), PolyVerts, GL_DYNAMIC_DRAW);
 	
 	//Buffer for Boundary 
 	glGenBuffers(1, &boundaryVertexBufferID);
@@ -111,7 +111,7 @@ void sendDataToOpenGL()
 	
 	glGenBuffers(1, &TriIndexBufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, TriIndexBufferID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(triIndices), triIndices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(PolyIndices), PolyIndices, GL_STATIC_DRAW);
 
 
 	
@@ -147,16 +147,16 @@ void MeGlWindow::paintGL()
 
 	
 
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVerts), NULL, GL_DYNAMIC_DRAW);// this should reattach the triangleVerts buffer to the ARRAY_BUFFER binding point
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(PolyVerts), NULL, GL_DYNAMIC_DRAW);// this should reattach the PolyVerts buffer to the ARRAY_BUFFER binding point
 	
 	
 
 	
-	glBindBuffer(GL_ARRAY_BUFFER, triVertexBufferID);
-	glm::vec3 translatedVerts[NUM_TRI_VERTS];
-	for (unsigned int i = 0; i < NUM_TRI_VERTS; i++)
+	glBindBuffer(GL_ARRAY_BUFFER, polyVertexBufferID);
+	glm::vec3 translatedVerts[NUM_POLY_VERTS];
+	for (unsigned int i = 0; i < NUM_POLY_VERTS; i++)
 	{
-		translatedVerts[i] = triangleVerts[i] + tri1Pos;
+		translatedVerts[i] = PolyVerts[i] + tri1Pos;
 	}
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(translatedVerts), translatedVerts);
 	glEnableVertexAttribArray(0);
