@@ -50,14 +50,14 @@ namespace
 {
 	glm::vec3 triangleVerts[] = //was verts
 	{
-		glm::vec3(+0.1f, +0.14f, +1.0f),
-
+		glm::vec3(+0.0f, +0.1f, +1.0f),
+		glm::vec3(+0.1f, +0.1f, +1.0f),
 		glm::vec3(+0.15f, +0.0f, +1.0f),
-
-		glm::vec3(+0.0f,  -0.15f, +1.0f),
+		glm::vec3(-0.1f, -0.1f, +1.0f),
+		glm::vec3(+0.0f, -0.1f, +1.0f),
 	};
 
-	GLushort triIndices[] = { 0,1,2 };
+	GLushort triIndices[] = { 0,1,2,3,4 };
 
 	glm::vec3 bounaryVerts[] =
 	{
@@ -161,7 +161,7 @@ void MeGlWindow::paintGL()
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(translatedVerts), translatedVerts);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);  // Add late if something doesn't work right. But makes Tri weird right now.
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_POLYGON, 0, 5);
 
 	
 
