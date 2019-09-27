@@ -298,7 +298,36 @@ float randComponent()
 // depending on what randSign() returns, the random function is X by +1 or -1.
 
 
+const vec3 first = bounaryVerts[0];
+const vec3 second = bounaryVerts[1];
+//dotProduct
+int dotProduct(int first[], int second[])
+{
+	int product = 0; 
 
+	for (int i = 0; i < sizeof(bounaryVerts); i++)
+		product = product + first[i] * second[i];
+	return product;
+
+	cout << "product is: ";
+	cout << product;
+	exit(1);
+}
+
+
+void MeGlWindow::handleBoundaries()
+{
+
+	vec3 wall = second - first;
+	//vec3 normal = wall.perpCcwXy();
+	vec3 respectiveShipPosition = PolyPos - first;
+	//float dotResult = normal.dot(respectiveShipPosition);
+	//qDebug() << dotResult;
+
+
+	//vec3 normal = wall.perpCcwXy();
+	//https://www.youtube.com/watch?v=plpXkJg8oDc&list=PLRwVmtr-pp04XomGtm-abzb-2M1xszjFx&index=144	//Maybe have to watch math videos before setting this up. 	// Figure out what the equivelent of perpCcwXy (Perpendicular clockwise on the XY) is or what library to find it in. 
+}
 
 void MeGlWindow::initializeGL()
 {
@@ -376,48 +405,6 @@ const vec3 perpCcw()
 //	return fist.x * second.x + first.y * second.y + fist.z * second.z;
 //}
 
-const vec3 first = bounaryVerts[0];
-const vec3 second = bounaryVerts[1];
-//dotProduct
-const int dot()
-{
-	return first.x * second.x + first.y * second.y + first.z * second.z;
-}
-/*int dot(int first[], int second[])
-{
-	int dotP = 0;
-
-	for (int i = 0; i < sizeof(bounaryVerts); i++)
-		dotP = dotP + first[i] * second[i];
-	return dotP;
-
-	cout << "dot is: ";
-	cout << dot;
-	exit(1);
-}*/
-//const vec3 perpCcwXy()
-//{
-	//return vec3(-y, x, +0.0);
-//}
-const vec3 perpCcwXy()
-{
-	vec3 NegY(+1.0f, -1.0f, +1.0f);
-	return vec3 (first.x * NegY.x, first.y * NegY.y, first.z * NegY.z);
-}
-
-
-void MeGlWindow::handleBoundaries()
-{
-	
-	vec3 wall = second - first;
-	//vec3 normal = wall.perpCcwXy();
-	vec3 respectiveShipPosition = PolyPos - first;
-	//float dotResult = normal.dot(respectiveShipPosition);
-	//qDebug() << dotResult;
-
-
-	
-}
 /*void MeGlWindow::keyPressEvent(QKeyEvent* e)
 {
 	if (e->key() == Qt::Key_W)
