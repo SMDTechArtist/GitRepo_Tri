@@ -285,14 +285,15 @@ void installShaders()
 
 int randSign()
 {
-	return rand() % 2 == 0 ? 1 : -1;
+	return rand() % 2 == 0 ? 1 : -1; // this makes it so that our random number goes into quodrents other then just (+,+)
+	//it says for the random number generated (rand()) do a mod 2 (% 2) if the mod to is == to 0 then return +1 otherwise (?) return -1
 }
 
 float randComponent()
 {
 	return rand() % 100 * 0.000001 * randSign();
 }
-
+// depending on what randSign() returns, the random function is X by +1 or -1.
 void MeGlWindow::initializeGL()
 {
 	glewInit();
@@ -306,7 +307,7 @@ void MeGlWindow::initializeGL()
 
 	srand(time(0));
 	
-	float floaty = randComponent();
+	float floaty = randComponent(); //used for bug checking to see what the value of our RandComponent is. 
 
 	velocity = glm::vec3(randComponent(), randComponent(), +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
 
