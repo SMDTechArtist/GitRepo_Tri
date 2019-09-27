@@ -8,7 +8,7 @@
 #include <Qt\qevent.h>
 #include <cassert>
 #include <Qt\qtimer.h>
-
+#include <ctime>
 
 
 using namespace std;
@@ -16,7 +16,8 @@ using namespace std;
 using glm::vec2;
 using glm::vec3;
 using glm::vec4;
-
+//v1 = rand() % 100;         // v1 in the range 0 to 99
+//v3 = rand() % 30 + 1985;   // v3 in the range 1985-2014
 
 
 
@@ -29,13 +30,14 @@ GLuint programID;
 GLuint shaderID;
 GLuint TriIndexBufferID;
 GLuint boundaryIndexBufferID;
-
+//glm::vec3 
 
 const float MOVEMENT_SPEED = 0.1f;
+glm::vec3 velocity;
 
 
 
-//glm::vec2 tri1Pos(+0.0f, 0.0f); //Tri 1 position
+//glm::vec2 PolyPos(+0.0f, 0.0f); //Tri 1 position
 //glm::vec2 tri2Pos(+0.1f, 0.1f); // Tri 2 position
 
 
@@ -81,7 +83,7 @@ namespace
 	GLuint boundaryVertexBufferID;
 
 	glm::vec3 transformedVerts[NUM_POLY_VERTS];
-	glm::vec3 tri1Pos(+0.0f, 0.0f, +0.0f);
+	glm::vec3 PolyPos(+0.0f, 0.0f, +0.0f);
 
 }
 
@@ -133,7 +135,7 @@ void MeGlWindow::paintGL()
 	glViewport(0, 0, width(), height());
 
 	vec3 dominatingColor(0.0f, 0.0f, 1.0f);
-	//vec3 offset(tri1Pos.x, tri1Pos.y, 0);
+	//vec3 offset(PolyPos.x, PolyPos.y, 0);
 	
 
 	GLint dominatingColorUniformLocation = glGetUniformLocation(programID, "dominatingColor");
@@ -156,7 +158,7 @@ void MeGlWindow::paintGL()
 	glm::vec3 translatedVerts[NUM_POLY_VERTS];
 	for (unsigned int i = 0; i < NUM_POLY_VERTS; i++)
 	{
-		translatedVerts[i] = PolyVerts[i] + tri1Pos;
+		translatedVerts[i] = PolyVerts[i] + PolyPos;
 	}
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(translatedVerts), translatedVerts);
 	glEnableVertexAttribArray(0);
@@ -168,14 +170,17 @@ void MeGlWindow::paintGL()
 	glBindBuffer(GL_ARRAY_BUFFER, boundaryVertexBufferID);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glDrawElements(GL_LINES, 8, GL_UNSIGNED_SHORT, 0);
+
+	
 }
 
 
 void MeGlWindow::myUpdate()
 {
-	glm::vec3 velocity(0.0001f, 0.0001f, +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
-	tri1Pos = tri1Pos + velocity;
+	//glm::vec3 velocity(rand() % 100 * 0.00001, rand() % 100 * 0.0001f, +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
+	PolyPos = PolyPos + velocity;
 	repaint();
+
 }
 
 
@@ -278,7 +283,15 @@ void installShaders()
 
 }
 
+int randSign()
+{
+	return rand() % 2 == 0 ? 1 : -1;
+}
 
+float randComponent()
+{
+	return rand() % 100 * 0.000001 * randSign();
+}
 
 void MeGlWindow::initializeGL()
 {
@@ -286,9 +299,17 @@ void MeGlWindow::initializeGL()
 	sendDataToOpenGL();
 	installShaders();
 
+
 	connect(&myTimer, SIGNAL(timeout()),
 		this, SLOT(myUpdate()));
 	myTimer.start(0);
+
+	srand(time(0));
+	
+	float floaty = randComponent();
+
+	velocity = glm::vec3(randComponent(), randComponent(), +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
+
 }
 
 
@@ -298,16 +319,16 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 	switch (e->key())
 	{
 	case Qt::Key::Key_W:
-		tri1Pos.y += MOVEMENT_SPEED;
+		PolyPos.y += MOVEMENT_SPEED;
 		break;
 	case Qt::Key::Key_S:
-		tri1Pos.y -= MOVEMENT_SPEED;
+		PolyPos.y -= MOVEMENT_SPEED;
 		break;
 	case Qt::Key::Key_A:
-		tri1Pos.x -= MOVEMENT_SPEED;
+		PolyPos.x -= MOVEMENT_SPEED;
 		break;
 	case Qt::Key::Key_D:
-		tri1Pos.x += MOVEMENT_SPEED;
+		PolyPos.x += MOVEMENT_SPEED;
 		break;
 	}
 	repaint();
