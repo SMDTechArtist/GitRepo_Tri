@@ -376,13 +376,6 @@ const vec3 perpCcw()
 //	return fist.x * second.x + first.y * second.y + fist.z * second.z;
 //}
 
-const vec3 first = bounaryVerts[0];
-const vec3 second = bounaryVerts[1];
-//dotProduct
-const int dot()
-{
-	return first.x * second.x + first.y * second.y + first.z * second.z;
-}
 /*int dot(int first[], int second[])
 {
 	int dotP = 0;
@@ -399,21 +392,106 @@ const int dot()
 //{
 	//return vec3(-y, x, +0.0);
 //}
-const vec3 perpCcwXy()
+
+
+
+
+
+
+/*const vec3 Perpendicularity()
 {
-	vec3 NegY(+1.0f, -1.0f, +1.0f);
-	return vec3 (first.x * NegY.x, first.y * NegY.y, first.z * NegY.z);
+	vec3 meVector (0, 0, 0);
+	vec3 perpCw = meVector.perpCwXy();
+	vec3 perpCcw = meVector.perpCcwXy();
+}*/
+
+
+
+/*
+const vec3 perpCwXy()
+{
+	vec3 NegX(-1.0f, +1.0f, +1.0f);
+	return vec3(wall.x * NegX.x, wall.y * NegX.y, wall.z * NegX.z);
+}*/
+
+//*** This is another solution from someone else*****
+/*
+void normalize(float* v)
+{
+	float length = sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+	for (int i = 0; i < 3; i++)
+	{
+		v[i] = v[i] / length;
+	}
 }
 
 
+float* cross_product(float* a, float* b)
+{
+	float result[] =
+	{
+		a[1] * b[2] - a[2] * b[1], 
+		-(a[0] * b[2] - a[2] * b[0]), 
+		a[0] * b[1] * b[0]
+	};
+	normalize(result);
+	return result;
+}
+
+float* calculate_normal(float* a, float* b, float* c)
+{
+	float x[] =
+	{
+		b[0] - a[0],
+		b[1] - a[1],
+		b[2] - a[2],
+	};
+	float y[] =
+	{
+		c[0] - a[0],
+		c[1] - a[1],
+		c[2] - a[2],
+	};
+
+	float* result = cross_product(x, y);
+	return result;
+}*/
+
+glm::vec3 first;
+glm::vec3 second;
+//float result = first.dot(second);
+glm::vec3 wall;
+//const vec3 normal;
+
+//dotProduct
+const int dot()
+{
+	return first.x * second.x + first.y * second.y + first.z * second.z;
+};
+
+//Perpendicular clockwise and conunter clockwise
+const vec3 perpCcwXy()
+{
+
+	vec3 NegY(-1.0f, +1.0f, +1.0f);
+	return vec3(wall.y * NegY.y, wall.x * NegY.x, wall.z * NegY.z);
+};
+const vec3 perpCwXy()
+{
+
+	vec3 NegY(+1.0f, -1.0f, +1.0f);
+	return vec3(wall.y * NegY.y, wall.x * NegY.x, wall.z * NegY.z);
+};
+
 void MeGlWindow::handleBoundaries()
 {
-	
-	vec3 wall = second - first;
-	//vec3 normal = wall.perpCcwXy();
+	const vec3 first = bounaryVerts[0];
+	const vec3 second = bounaryVerts[1];
+	vec3 wall = second - first; //this gets us our perallel vector from the (0,0) to its respective equivelent
+	vec3 normal = wall.perpCcwXy(; //this gives us a (+) or (-) depending on if we are on one side of the boundry or the other. 
 	vec3 respectiveShipPosition = PolyPos - first;
-	//float dotResult = normal.dot(respectiveShipPosition);
-	//qDebug() << dotResult;
+	float dotResult = normal.dot(respectiveShipPosition);
+	qDebug() << dotResult;
 
 
 	
