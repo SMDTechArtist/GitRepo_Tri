@@ -9,6 +9,8 @@
 #include <cassert>
 #include <Qt\qtimer.h>
 #include <ctime>
+#include <Qt/qdebug.h>
+//#include <VectorMath.h>
 
 
 using namespace std;
@@ -394,10 +396,6 @@ const vec3 perpCcw()
 //}
 
 
-
-
-
-
 /*const vec3 Perpendicularity()
 {
 	vec3 meVector (0, 0, 0);
@@ -457,40 +455,52 @@ float* calculate_normal(float* a, float* b, float* c)
 	return result;
 }*/
 
-glm::vec3 first;
-glm::vec3 second;
-//float result = first.dot(second);
-glm::vec3 wall;
+
 //const vec3 normal;
 
 //dotProduct
-const int dot()
-{
-	return first.x * second.x + first.y * second.y + first.z * second.z;
-};
+//float dot()
+//{
+//	return first.x * second.x + first.y * second.y + first.z * second.z;
+//};
 
 //Perpendicular clockwise and conunter clockwise
-const vec3 perpCcwXy()
-{
-
-	vec3 NegY(-1.0f, +1.0f, +1.0f);
-	return vec3(wall.y * NegY.y, wall.x * NegY.x, wall.z * NegY.z);
-};
-const vec3 perpCwXy()
+/*const vec3 perpCcwXy()
 {
 
 	vec3 NegY(+1.0f, -1.0f, +1.0f);
 	return vec3(wall.y * NegY.y, wall.x * NegY.x, wall.z * NegY.z);
-};
+};*/
+/*const vec3 perpCwXy()
+{
+
+	vec3 NegX(-1.0f, +1.0f, +1.0f);
+	return vec3(wall.y * NegX.y, wall.x * NegX.x, wall.z * NegX.z);
+};*/
+
+//glm::vec3 first;
+//glm::vec3 second;
+//float result = first.dot(second);
+//glm::vec3 wall;
 
 void MeGlWindow::handleBoundaries()
 {
 	const vec3 first = bounaryVerts[0];
 	const vec3 second = bounaryVerts[1];
 	vec3 wall = second - first; //this gets us our perallel vector from the (0,0) to its respective equivelent
-	vec3 normal = wall.perpCcwXy(; //this gives us a (+) or (-) depending on if we are on one side of the boundry or the other. 
+	
+	//vec3 normal = wall.perpCcwXy(); //this gives us a (+) or (-) depending on if we are on one side of the boundry or the other. 
+	vec3 NegY(+1.0f, -1.0f, +1.0f);
+	vec3 perpCcwXy(wall.y * NegY.y, wall.x * NegY.x, wall.z * NegY.z);// this gives the Perpendicular Counter Clockwise direction. It swaps x and y and gives the y a negative value. 
+	//vec3 normal = perpCcwXy;
+	vec3 normal(wall.x * perpCcwXy.x + wall.y * perpCcwXy.y + wall.z * perpCcwXy.z); //getting the dot product of wall and perpCcwXy. 
+
+
 	vec3 respectiveShipPosition = PolyPos - first;
-	float dotResult = normal.dot(respectiveShipPosition);
+	vec3 RSP = respectiveShipPosition;
+	
+	//float dotResult = normal.dot(respectiveShipPosition);
+	float dotResult = (RSP.x * normal.x + RSP.y * normal.y + RSP.z * normal.z);
 	qDebug() << dotResult;
 
 
@@ -521,5 +531,5 @@ void MeGlWindow::handleBoundaries()
 	clock.newFram();
 	repaint();
 };*/
-//Help
+
 
