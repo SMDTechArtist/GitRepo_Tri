@@ -18,6 +18,9 @@ using namespace std;
 using glm::vec2;
 using glm::vec3;
 using glm::vec4;
+
+//using std::cout;
+//using std::endl;
 //v1 = rand() % 100;         // v1 in the range 0 to 99
 //v3 = rand() % 30 + 1985;   // v3 in the range 1985-2014
 
@@ -181,9 +184,10 @@ void MeGlWindow::paintGL()
 
 void MeGlWindow::myUpdate()
 {
-	//Math::vec3 velocity(rand() % 100 * 0.00001, rand() % 100 * 0.0001f, +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
+	
 	PolyPos = PolyPos + velocity;
 	repaint();
+	
 
 }
 
@@ -343,6 +347,21 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 	repaint();
 }
 
+void MeGlWindow::handleBoundaries()
+{
+	bool anyCollisions = false;
+	for (uint i = 0; i < NUM_BOUNDARY_VERTS; i++)
+	{
+		vec3& first = bounaryVerts[i];
+		vec3& second = bounaryVerts[(i + 1) % NUM_BOUNDARY_VERTS];
+		vec3 wall = second - first; //this gets us our perallel vector from the (0,0) to its respective equivelent
+
+		vec3 normal = wall.perpCcwXy();
+		vec3 respectivePolyPosition = PolyPos - first;
+		float dotResult = normal.dot(respectivePolyPosition);
+		anyCollisions = anyCollisions || (dotResult < 0);
+		qDebug() << anyCollisions;
+	}
 
 //Math variables
 //Math::vec3 first;
@@ -483,17 +502,7 @@ float* calculate_normal(float* a, float* b, float* c)
 //float result = first.dot(second);
 //Math::vec3 wall;
 
-void MeGlWindow::handleBoundaries()
-{
-	vec3&  first = bounaryVerts[0];
-	vec3& second = bounaryVerts[1];
-	vec3 wall = second - first; //this gets us our perallel vector from the (0,0) to its respective equivelent
-	
-	vec3 normal = wall.perpCcwXy();
-	vec3 respectivePolyPosition = PolyPos - first;
-	float dotResult = normal.dot(respectivePolyPosition);
-	qDebug() << dotResult;
-	
+
 
 	/*//vec3 normal = wall.perpCcwXy(); //this gives us a (+) or (-) depending on if we are on one side of the boundry or the other. 
 	vec3 NegY(+1.0f, -1.0f, +1.0f);
