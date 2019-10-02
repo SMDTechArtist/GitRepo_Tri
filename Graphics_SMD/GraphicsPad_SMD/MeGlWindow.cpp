@@ -10,7 +10,7 @@
 #include <Qt\qtimer.h>
 #include <ctime>
 #include <Qt/qdebug.h>
-//#include <VectorMath.h>
+#include <Vector3D.h>
 
 
 using namespace std;
@@ -21,7 +21,7 @@ using glm::vec4;
 //v1 = rand() % 100;         // v1 in the range 0 to 99
 //v3 = rand() % 30 + 1985;   // v3 in the range 1985-2014
 
-
+using Math::vec3;
 
 
 const GLuint NUM_VERTICES_PER_POLY = 5;
@@ -32,10 +32,10 @@ GLuint programID;
 GLuint shaderID;
 GLuint TriIndexBufferID;
 GLuint boundaryIndexBufferID;
-//glm::vec3 
+//Math::vec3 
 
 const float MOVEMENT_SPEED = 0.1f;
-glm::vec3 velocity;
+Math::vec3 velocity;
 
 
 
@@ -47,30 +47,30 @@ glm::vec3 velocity;
 
 struct Vertex
 {
-	glm::vec3 position;
-	glm::vec3 Color;
+	vec3 position;
+	vec3 Color;
 };
 		
 
 namespace
 {
-	glm::vec3 PolyVerts[] = //was verts
+	vec3 PolyVerts[] = //was verts
 	{
-		glm::vec3(+0.0f, +0.1f, +1.0f),
-		glm::vec3(+0.1f, +0.1f, +1.0f),
-		glm::vec3(+0.15f, +0.0f, +1.0f),
-		glm::vec3(-0.1f, -0.1f, +1.0f),
-		glm::vec3(+0.0f, -0.1f, +1.0f),
+		vec3(+0.0f, +0.1f, +1.0f),
+		vec3(+0.1f, +0.1f, +1.0f),
+		vec3(+0.15f, +0.0f, +1.0f),
+		vec3(-0.1f, -0.1f, +1.0f),
+		vec3(+0.0f, -0.1f, +1.0f),
 	};
 
-	GLushort PolyIndices[] = { 0,1,2,3,4 };
+	//GLushort PolyIndices[] = { 0,1,2,3,4 };
 
-	glm::vec3 bounaryVerts[] =
+	vec3 bounaryVerts[] =
 	{
-		glm::vec3(+0.0f, +1.0f, +0.0f), //0
-		glm::vec3(-1.0f, +0.0f, +0.0f), //1
-		glm::vec3(+0.0f, -1.0f, +0.0f), //2
-		glm::vec3(+1.0f, +0.0f, +0.0f), //3
+		vec3(+0.0f, +1.0f, +0.0f), //0
+		vec3(-1.0f, +0.0f, +0.0f), //1
+		vec3(+0.0f, -1.0f, +0.0f), //2
+		vec3(+1.0f, +0.0f, +0.0f), //3
 
 
 
@@ -86,8 +86,8 @@ namespace
 	GLuint polyVertexBufferID;
 	GLuint boundaryVertexBufferID;
 
-	glm::vec3 transformedVerts[NUM_POLY_VERTS];
-	glm::vec3 PolyPos(+0.0f, 0.0f, +0.0f);
+	vec3 transformedVerts[NUM_POLY_VERTS];
+	vec3 PolyPos(+0.0f, 0.0f, +0.0f);
 
 }
 
@@ -115,9 +115,9 @@ void sendDataToOpenGL()
 	
 
 	
-	glGenBuffers(1, &TriIndexBufferID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, TriIndexBufferID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(PolyIndices), PolyIndices, GL_STATIC_DRAW);
+	//glGenBuffers(1, &TriIndexBufferID);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, TriIndexBufferID);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(PolyIndices), PolyIndices, GL_STATIC_DRAW);
 
 
 	
@@ -138,7 +138,7 @@ void MeGlWindow::paintGL()
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, width(), height());
 
-	vec3 dominatingColor(0.0f, 0.0f, 1.0f);
+	glm::vec3 dominatingColor(0.0f, 0.0f, 1.0f);
 	//vec3 offset(PolyPos.x, PolyPos.y, 0);
 	
 
@@ -159,7 +159,7 @@ void MeGlWindow::paintGL()
 
 	
 	glBindBuffer(GL_ARRAY_BUFFER, polyVertexBufferID);
-	glm::vec3 translatedVerts[NUM_POLY_VERTS];
+	vec3 translatedVerts[NUM_POLY_VERTS];
 	for (unsigned int i = 0; i < NUM_POLY_VERTS; i++)
 	{
 		translatedVerts[i] = PolyVerts[i] + PolyPos;
@@ -181,7 +181,7 @@ void MeGlWindow::paintGL()
 
 void MeGlWindow::myUpdate()
 {
-	//glm::vec3 velocity(rand() % 100 * 0.00001, rand() % 100 * 0.0001f, +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
+	//Math::vec3 velocity(rand() % 100 * 0.00001, rand() % 100 * 0.0001f, +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
 	PolyPos = PolyPos + velocity;
 	repaint();
 
@@ -317,7 +317,7 @@ void MeGlWindow::initializeGL()
 	
 	float floaty = randComponent(); //used for bug checking to see what the value of our RandComponent is. 
 
-	velocity = glm::vec3(randComponent(), randComponent(), +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
+	velocity = vec3(randComponent(), randComponent(), +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
 
 }
 
@@ -345,12 +345,12 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 
 
 //Math variables
-//glm::vec3 first;
-//glm::vec3 second;
-//glm::vec3 vecSubResult = first - second;
+//Math::vec3 first;
+//Math::vec3 second;
+//Math::vec3 vecSubResult = first - second;
 
 //Perpendicularity
-//glm::vec3 meVector;
+//Math::vec3 meVector;
 /*const vec3 perpCwXy()
 {
 	return vec3(y, -x, +0.0);
@@ -478,18 +478,24 @@ float* calculate_normal(float* a, float* b, float* c)
 	return vec3(wall.y * NegX.y, wall.x * NegX.x, wall.z * NegX.z);
 };*/
 
-//glm::vec3 first;
-//glm::vec3 second;
+//Math::vec3 first;
+//Math::vec3 second;
 //float result = first.dot(second);
-//glm::vec3 wall;
+//Math::vec3 wall;
 
 void MeGlWindow::handleBoundaries()
 {
-	const vec3 first = bounaryVerts[0];
-	const vec3 second = bounaryVerts[1];
+	vec3&  first = bounaryVerts[0];
+	vec3& second = bounaryVerts[1];
 	vec3 wall = second - first; //this gets us our perallel vector from the (0,0) to its respective equivelent
 	
-	//vec3 normal = wall.perpCcwXy(); //this gives us a (+) or (-) depending on if we are on one side of the boundry or the other. 
+	vec3 normal = wall.perpCcwXy();
+	vec3 respectivePolyPosition = PolyPos - first;
+	float dotResult = normal.dot(respectivePolyPosition);
+	qDebug() << dotResult;
+	
+
+	/*//vec3 normal = wall.perpCcwXy(); //this gives us a (+) or (-) depending on if we are on one side of the boundry or the other. 
 	vec3 NegY(+1.0f, -1.0f, +1.0f);
 	vec3 perpCcwXy(wall.y * NegY.y, wall.x * NegY.x, wall.z * NegY.z);// this gives the Perpendicular Counter Clockwise direction. It swaps x and y and gives the y a negative value. 
 	//vec3 normal = perpCcwXy;
@@ -501,10 +507,8 @@ void MeGlWindow::handleBoundaries()
 	
 	//float dotResult = normal.dot(respectiveShipPosition);
 	float dotResult = (RSP.x * normal.x + RSP.y * normal.y + RSP.z * normal.z);
-	qDebug() << dotResult;
-
-
-	
+	qDebug() << dotResult;*/
+
 }
 /*void MeGlWindow::keyPressEvent(QKeyEvent* e)
 {

@@ -25,11 +25,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MeGlWindow.h" />
-    <ClInclude Include="VectorMath.h" />
+    <ClInclude Include="Vector3D.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="VertexShaderCode.glsl" />
     <None Include="FragmentShaderCode.glsl" />
-    <None Include="VectorMath.inl" />
   </ItemGroup>
 </Project>
