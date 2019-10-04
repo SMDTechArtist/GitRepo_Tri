@@ -9,7 +9,7 @@
 #include <cassert>
 #include <Qt\qtimer.h>
 #include <ctime>
-#include <Qt/qdebug.h>
+#include <Qt/qDebug.h>
 #include <Vector3D.h>
 
 
@@ -178,7 +178,7 @@ void MeGlWindow::paintGL()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glDrawElements(GL_LINES, 8, GL_UNSIGNED_SHORT, 0);
 
-	
+	handleBoundaries();
 }
 
 
@@ -299,7 +299,7 @@ int randSign()
 
 float randComponent()
 {
-	return rand() % 100 * 0.000001 * randSign();
+	return rand() % 100 * 0.00001 * randSign();
 }
 // depending on what randSign() returns, the random function is X by +1 or -1.
 
@@ -359,7 +359,11 @@ void MeGlWindow::handleBoundaries()
 		vec3 normal = wall.perpCcwXy();
 		vec3 respectivePolyPosition = PolyPos - first;
 		float dotResult = normal.dot(respectivePolyPosition);
-		anyCollisions = anyCollisions || (dotResult < 0);
+		//anyCollisions = anyCollisions || (dotResult < 0);
+		if (anyCollisions || (dotResult < 0))
+		{
+			velocity = vec3(0.0f, 0.0f, 0.0f);
+		}
 		qDebug() << anyCollisions;
 	}
 
