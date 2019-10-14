@@ -27,10 +27,10 @@ using glm::vec4;
 using Math::vec3;
 
 
-const GLuint NUM_VERTICES_PER_POLY = 5;
+const GLuint NUM_VERTICES_PER_SHIP = 5;
 const GLuint NUM_FLOATS_PER_VERTICE = 6;
 const GLuint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
-const GLuint POLYGON_BYTE_SIZE = NUM_VERTICES_PER_POLY * NUM_FLOATS_PER_VERTICE * sizeof(float);
+const GLuint SHIP_BYTE_SIZE = NUM_VERTICES_PER_SHIP * NUM_FLOATS_PER_VERTICE * sizeof(float);
 GLuint programID;
 GLuint shaderID;
 GLuint TriIndexBufferID;
@@ -42,7 +42,7 @@ Math::vec3 velocity;
 
 
 
-//glm::vec2 PolyPos(+0.0f, 0.0f); //Tri 1 position
+//glm::vec2 ShipPos(+0.0f, 0.0f); //Tri 1 position
 //glm::vec2 tri2Pos(+0.1f, 0.1f); // Tri 2 position
 
 
@@ -57,7 +57,7 @@ struct Vertex
 
 namespace
 {
-	vec3 PolyVerts[] = //was verts
+	vec3 ShipVerts[] = //was verts
 	{
 		vec3(+0.0f, +0.1f, +1.0f),
 		vec3(+0.1f, +0.1f, +1.0f),
@@ -66,7 +66,7 @@ namespace
 		vec3(+0.0f, -0.1f, +1.0f),
 	};
 
-	//GLushort PolyIndices[] = { 0,1,2,3,4 };
+	//GLushort ShipIndices[] = { 0,1,2,3,4 };
 
 	vec3 bounaryVerts[] =
 	{
@@ -81,16 +81,16 @@ namespace
 
 	GLushort boundaryIndice[] = { 0, 1, 1, 2, 2, 3, 3, 0 };
 
-	const unsigned int NUM_POLY_VERTS = sizeof(PolyVerts) / sizeof(*PolyVerts);
+	const unsigned int NUM_SHIP_VERTS = sizeof(ShipVerts) / sizeof(*ShipVerts);
 	const unsigned int NUM_BOUNDARY_VERTS = sizeof(bounaryVerts) / sizeof(*bounaryVerts);
 	
 
 	//Making Buffer Variables
-	GLuint polyVertexBufferID;
+	GLuint ShipVertexBufferID;
 	GLuint boundaryVertexBufferID;
 
-	vec3 transformedVerts[NUM_POLY_VERTS];
-	vec3 PolyPos(+0.0f, 0.0f, +0.0f);
+	vec3 transformedVerts[NUM_SHIP_VERTS];
+	vec3 ShipPos(+0.0f, 0.0f, +0.0f);
 
 }
 
@@ -100,9 +100,9 @@ void sendDataToOpenGL()
 	//glEnableVertexAttribArray(0);
 
 	//Buffer for Tri 
-	glGenBuffers(1, &polyVertexBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, polyVertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(PolyVerts), PolyVerts, GL_DYNAMIC_DRAW);
+	glGenBuffers(1, &ShipVertexBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, ShipVertexBufferID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(ShipVerts), ShipVerts, GL_DYNAMIC_DRAW);
 	
 	//Buffer for Boundary 
 	glGenBuffers(1, &boundaryVertexBufferID);
@@ -120,7 +120,7 @@ void sendDataToOpenGL()
 	
 	//glGenBuffers(1, &TriIndexBufferID);
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, TriIndexBufferID);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(PolyIndices), PolyIndices, GL_STATIC_DRAW);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ShipIndices), ShipIndices, GL_STATIC_DRAW);
 
 
 	
@@ -142,7 +142,7 @@ void MeGlWindow::paintGL()
 	glViewport(0, 0, width(), height());
 
 	glm::vec3 dominatingColor(0.0f, 0.0f, 1.0f);
-	//vec3 offset(PolyPos.x, PolyPos.y, 0);
+	//vec3 offset(ShipPos.x, ShipPos.y, 0);
 	
 
 	GLint dominatingColorUniformLocation = glGetUniformLocation(programID, "dominatingColor");
@@ -156,16 +156,16 @@ void MeGlWindow::paintGL()
 
 	
 
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(PolyVerts), NULL, GL_DYNAMIC_DRAW);// this should reattach the PolyVerts buffer to the ARRAY_BUFFER binding point
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(ShipVerts), NULL, GL_DYNAMIC_DRAW);// this should reattach the ShipVerts buffer to the ARRAY_BUFFER binding point
 	
 	
 
 	
-	glBindBuffer(GL_ARRAY_BUFFER, polyVertexBufferID);
-	vec3 translatedVerts[NUM_POLY_VERTS];
-	for (unsigned int i = 0; i < NUM_POLY_VERTS; i++)
+	glBindBuffer(GL_ARRAY_BUFFER, ShipVertexBufferID);
+	vec3 translatedVerts[NUM_SHIP_VERTS];
+	for (unsigned int i = 0; i < NUM_SHIP_VERTS; i++)
 	{
-		translatedVerts[i] = PolyVerts[i] + PolyPos;
+		translatedVerts[i] = ShipVerts[i] + ShipPos;
 	}
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(translatedVerts), translatedVerts);
 	glEnableVertexAttribArray(0);
@@ -185,7 +185,7 @@ void MeGlWindow::paintGL()
 void MeGlWindow::myUpdate()
 {
 	
-	PolyPos = PolyPos + velocity;
+	ShipPos = ShipPos + velocity;
 	repaint();
 	
 
@@ -332,16 +332,16 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 	switch (e->key())
 	{
 	case Qt::Key::Key_W:
-		PolyPos.y += MOVEMENT_SPEED;
+		ShipPos.y += MOVEMENT_SPEED;
 		break;
 	case Qt::Key::Key_S:
-		PolyPos.y -= MOVEMENT_SPEED;
+		ShipPos.y -= MOVEMENT_SPEED;
 		break;
 	case Qt::Key::Key_A:
-		PolyPos.x -= MOVEMENT_SPEED;
+		ShipPos.x -= MOVEMENT_SPEED;
 		break;
 	case Qt::Key::Key_D:
-		PolyPos.x += MOVEMENT_SPEED;
+		ShipPos.x += MOVEMENT_SPEED;
 		break;
 	}
 	repaint();
@@ -357,14 +357,21 @@ void MeGlWindow::handleBoundaries()
 		vec3 wall = second - first; //this gets us our perallel vector from the (0,0) to its respective equivelent
 
 		vec3 normal = wall.perpCcwXy();
-		vec3 respectivePolyPosition = PolyPos - first;
-		float dotResult = normal.dot(respectivePolyPosition);
+		vec3 respectiveShipPosition = ShipPos - first;
+		float dotResult = normal.dot(respectiveShipPosition);
 		//anyCollisions = anyCollisions || (dotResult < 0);
 		if (anyCollisions || (dotResult < 0))
 		{
 			velocity = vec3(0.0f, 0.0f, 0.0f);
 		}
 		qDebug() << anyCollisions;
+
+		/*if (dotResult < 0)
+		{
+			ShipVelocity = ShipVelocity - 2 * ShipVelocity.dot(normal) * normal;
+			ShipPos = oldShipPosition;
+		}*/
+
 	}
 
 //Math variables
@@ -515,7 +522,7 @@ float* calculate_normal(float* a, float* b, float* c)
 	vec3 normal(wall.x * perpCcwXy.x + wall.y * perpCcwXy.y + wall.z * perpCcwXy.z); //getting the dot product of wall and perpCcwXy. 
 
 
-	vec3 respectiveShipPosition = PolyPos - first;
+	vec3 respectiveShipPosition = ShipPos - first;
 	vec3 RSP = respectiveShipPosition;
 	
 	//float dotResult = normal.dot(respectiveShipPosition);

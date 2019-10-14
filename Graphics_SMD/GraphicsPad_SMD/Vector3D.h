@@ -12,6 +12,7 @@
 #include <cassert>
 #include <Qt\qtimer.h>
 #include <ctime>
+#include <cmath>
 
 
 
@@ -49,6 +50,17 @@ namespace Math
 		{
 			return vec3(-y, x);
 		};
+
+		inline float magnitude() const
+		{
+			return sqrt(x * x + y * y + z * z);
+		};
+
+		/*inline vec3 normalized() const
+		{
+			float inverseMagnitude = 1.0f / magnitude();
+			return inverseMagnitude * (*this);
+		};*/
 	};
 	inline vec3 operator+(const vec3& left, const vec3& right)
 	{
@@ -73,6 +85,7 @@ namespace Math
 			scalar * vector.y,
 			scalar * vector.z);
 	};
+
 
 
 
