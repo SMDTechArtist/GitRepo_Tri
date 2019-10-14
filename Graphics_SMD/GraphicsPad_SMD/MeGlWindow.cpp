@@ -11,6 +11,8 @@
 #include <ctime>
 #include <Qt/qDebug.h>
 #include <Vector3D.h>
+#include <Clock.h>
+using Timing::Clock;
 
 
 using namespace std;
@@ -35,6 +37,23 @@ GLuint programID;
 GLuint shaderID;
 GLuint TriIndexBufferID;
 GLuint boundaryIndexBufferID;
+
+/*int main(int argc, char* argv[])
+{
+	LARGE_INTEGER clockFrequency;
+	QueryPerformanceFrequency(&clockFrequency);
+
+	LARGE_INTEGER startTime;
+	LARGE_INTEGER endTime;
+	QueryPerformanceCounter(&startTime);
+	qDebug() << "Hello";
+	QueryPerformanceCounter(&endTime);
+
+	LARGE_INTEGER delta;
+	delta.QuadPart = endTime.QuadPart - startTime.QuadPart;
+
+	float deltaSeconds = ((float)delta.QuadPart) / clockFrequency.QuadPart;
+}*/
 //Math::vec3 
 
 const float MOVEMENT_SPEED = 0.1f;
@@ -75,6 +94,7 @@ namespace
 		vec3(+0.0f, -1.0f, +0.0f), //2
 		vec3(+1.0f, +0.0f, +0.0f), //3
 
+		Clock clock;
 
 
 	};
@@ -185,12 +205,18 @@ void MeGlWindow::paintGL()
 void MeGlWindow::myUpdate()
 {
 	
-	ShipPos = ShipPos + velocity;
-	repaint();
-	handleBoundaries();
 
+	velocity = vec3(0.0f, 0.0f, 0.0f); // May need to move this below the random veriable
+	ShipPos = ShipPos + velocity * clock.timeElapsedLastFrame();
+	repaint();
+	//UpdateVelocity();
+	clock.lap();
+	handleBoundaries();
+	ShipPos += ShipVelocity * clock.lastLapTime();
+	//const float ACCELERATION = 0.3f * clock.lastLapTime();
 
 }
+
 
 
 
@@ -313,6 +339,7 @@ void MeGlWindow::initializeGL()
 	sendDataToOpenGL();
 	installShaders();
 
+	assert()
 
 	connect(&myTimer, SIGNAL(timeout()),
 		this, SLOT(myUpdate()));
@@ -324,6 +351,7 @@ void MeGlWindow::initializeGL()
 
 	velocity = vec3(randComponent(), randComponent(), +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
 
+	
 }
 
 
@@ -348,9 +376,18 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 	repaint();
 }
 
+/*void MyGlWindow::updateVelocity()
+{
+	const float ACCELERATION = 0.3f * clock.lastLapTime();
+
+	vec3 directionToAccelerate(-sin(shipOrientation), cos(shipOrientation));
+	if(GetAsyncKeyState(VK_UP))
+		shipVelocity += directionToAccelerate * ACCELERATION
+}*/
+
 void MeGlWindow::handleBoundaries()
 {
-	bool anyCollisions = false;
+	//bool anyCollisions = false;
 	for (uint i = 0; i < NUM_BOUNDARY_VERTS; i++)
 	{
 		vec3& first = bounaryVerts[i];
@@ -361,16 +398,16 @@ void MeGlWindow::handleBoundaries()
 		vec3 respectiveShipPosition = ShipPos - first;
 		float dotResult = normal.dot(respectiveShipPosition);
 		//anyCollisions = anyCollisions || (dotResult < 0);
-		if (anyCollisions || (dotResult < 0))
+		/*if (anyCollisions || (dotResult < 0))
 		{
 			velocity = vec3(0.0f, 0.0f, 0.0f);
 		}
-		qDebug() << anyCollisions;
+		qDebug() << anyCollisions;*/
 
 		/*if (dotResult < 0)
 		{
 			ShipVelocity = ShipVelocity - 2 * ShipVelocity.dot(normal) * normal;
-			ShipPos = oldShipPosition;
+			ShipPos = oldShipPos;
 		}*/
 
 	}

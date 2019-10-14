@@ -164,6 +164,7 @@
     <ClCompile Include="MeGlWindow_moc.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Clock.h" />
     <ClInclude Include="MeGlWindow.h" />
     <ClInclude Include="Vector3D.h" />
   </ItemGroup>
