@@ -1,8 +1,8 @@
 #include <Clock.h>
+namespace Timing
+{
 
-
-
-bool Clock::initialize()
+	bool Clock::initialize()
 	{
 		bool b = QueryPerformanceFrequency(&timeFrequency);
 		if (!b)
@@ -10,12 +10,12 @@ bool Clock::initialize()
 		return QueryPerformanceCounter(&timeLastFrame);
 	}
 
-bool Clock::shutdown()
+	bool Clock::shutdown()
 	{
 		return false;
 	}
 
-void Clock::newFrame()
+	void Clock::newFrame()
 	{
 		LARGE_INTEGER thisTime;
 		QueryPerformanceCounter(&thisTime);
@@ -24,7 +24,8 @@ void Clock::newFrame()
 		deltaTime = ((float)delta.QuadPart) / timeFrequency.QuadPart;
 		timeLastFrame.QuadPart = thisTime.QuadPart;
 	}
-float Clock::timeElapsedLastFrame() const
+	float Clock::timeElapsedLastFrame() const
 	{
 		return deltaTime;
 	}
+};

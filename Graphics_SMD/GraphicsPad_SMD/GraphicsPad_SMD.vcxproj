@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Clock.cpp" />
     <ClCompile Include="GraphicsPad_SMD.cpp" />
     <ClCompile Include="Mainer.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir);$(ProjectDir)..\Middleware\Qt\Include;$(ProjectDir)..\Middleware\glew\Include;$(ProjectDir)..\Middleware\GLFW\include</AdditionalIncludeDirectories>

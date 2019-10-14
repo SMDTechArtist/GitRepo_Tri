@@ -94,7 +94,7 @@ namespace
 		vec3(+0.0f, -1.0f, +0.0f), //2
 		vec3(+1.0f, +0.0f, +0.0f), //3
 
-		Clock clock;
+		
 
 
 	};
@@ -111,7 +111,7 @@ namespace
 
 	vec3 transformedVerts[NUM_SHIP_VERTS];
 	vec3 ShipPos(+0.0f, 0.0f, +0.0f);
-
+	Clock clock;
 }
 
 void sendDataToOpenGL()
@@ -162,22 +162,14 @@ void MeGlWindow::paintGL()
 	glViewport(0, 0, width(), height());
 
 	glm::vec3 dominatingColor(0.0f, 0.0f, 1.0f);
-	//vec3 offset(ShipPos.x, ShipPos.y, 0);
+
 	
 
 	GLint dominatingColorUniformLocation = glGetUniformLocation(programID, "dominatingColor");
-	//GLint offsetUniformLocation = glGetUniformLocation(programID, "offset");
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
-	//glUniform3fv(offsetUniformLocation, 1, &offset[0]);
-	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
-	//dominatingColor.r = 1;
+
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
-	//glUniform3fv(offsetUniformLocation, 1, &offset[0]);
 
-	
-
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(ShipVerts), NULL, GL_DYNAMIC_DRAW);// this should reattach the ShipVerts buffer to the ARRAY_BUFFER binding point
-	
 	
 
 	
@@ -206,13 +198,13 @@ void MeGlWindow::myUpdate()
 {
 	
 
-	velocity = vec3(0.0f, 0.0f, 0.0f); // May need to move this below the random veriable
-	ShipPos = ShipPos + velocity * clock.timeElapsedLastFrame();
+	//velocity = vec3(0.0f, 0.0f, 0.0f); // May need to move this below the random veriable
+	//ShipPos = ShipPos + velocity * clock.timeElapsedLastFrame();
 	repaint();
 	//UpdateVelocity();
-	clock.lap();
+	//Clock.lap();
 	handleBoundaries();
-	ShipPos += ShipVelocity * clock.lastLapTime();
+	//ShipPos += ShipVelocity * Clock.lastLapTime();
 	//const float ACCELERATION = 0.3f * clock.lastLapTime();
 
 }
@@ -339,7 +331,7 @@ void MeGlWindow::initializeGL()
 	sendDataToOpenGL();
 	installShaders();
 
-	assert()
+	//assert()
 
 	connect(&myTimer, SIGNAL(timeout()),
 		this, SLOT(myUpdate()));
@@ -387,7 +379,7 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 
 void MeGlWindow::handleBoundaries()
 {
-	//bool anyCollisions = false;
+	bool anyCollisions = false;
 	for (uint i = 0; i < NUM_BOUNDARY_VERTS; i++)
 	{
 		vec3& first = bounaryVerts[i];
@@ -398,11 +390,11 @@ void MeGlWindow::handleBoundaries()
 		vec3 respectiveShipPosition = ShipPos - first;
 		float dotResult = normal.dot(respectiveShipPosition);
 		//anyCollisions = anyCollisions || (dotResult < 0);
-		/*if (anyCollisions || (dotResult < 0))
+		if (anyCollisions || (dotResult < 0))
 		{
 			velocity = vec3(0.0f, 0.0f, 0.0f);
 		}
-		qDebug() << anyCollisions;*/
+		qDebug() << anyCollisions;
 
 		/*if (dotResult < 0)
 		{
@@ -411,187 +403,7 @@ void MeGlWindow::handleBoundaries()
 		}*/
 
 	}
-
-//Math variables
-//Math::vec3 first;
-//Math::vec3 second;
-//Math::vec3 vecSubResult = first - second;
-
-//Perpendicularity
-//Math::vec3 meVector;
-/*const vec3 perpCwXy()
-{
-	return vec3(y, -x, +0.0);
-}
-const vec3 perpCcwXy()
-{
-	return vec3(-y, x, +0.0);
-}
-const vec3 perpCw()
-{
-	return meVector.perpCwXy();
-};
-const vec3 perpCcw()
-{
-	return meVector.perpCCwXy();
-};*/
-
-// DotProduct
-//const dotProduct()
-//{
-	//static::dot(first, second, +0.0);
-//}
-//const dot
-//{
-//	return fist.x * second.x + first.y * second.y + fist.z * second.z;
-//}
-
-/*int dot(int first[], int second[])
-{
-	int dotP = 0;
-
-	for (int i = 0; i < sizeof(bounaryVerts); i++)
-		dotP = dotP + first[i] * second[i];
-	return dotP;
-
-	cout << "dot is: ";
-	cout << dot;
-	exit(1);
-}*/
-//const vec3 perpCcwXy()
-//{
-	//return vec3(-y, x, +0.0);
-//}
-
-
-/*const vec3 Perpendicularity()
-{
-	vec3 meVector (0, 0, 0);
-	vec3 perpCw = meVector.perpCwXy();
-	vec3 perpCcw = meVector.perpCcwXy();
-}*/
-
-
-
-/*
-const vec3 perpCwXy()
-{
-	vec3 NegX(-1.0f, +1.0f, +1.0f);
-	return vec3(wall.x * NegX.x, wall.y * NegX.y, wall.z * NegX.z);
-}*/
-
-//*** This is another solution from someone else*****
-/*
-void normalize(float* v)
-{
-	float length = sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-	for (int i = 0; i < 3; i++)
-	{
-		v[i] = v[i] / length;
-	}
 }
 
-
-float* cross_product(float* a, float* b)
-{
-	float result[] =
-	{
-		a[1] * b[2] - a[2] * b[1], 
-		-(a[0] * b[2] - a[2] * b[0]), 
-		a[0] * b[1] * b[0]
-	};
-	normalize(result);
-	return result;
-}
-
-float* calculate_normal(float* a, float* b, float* c)
-{
-	float x[] =
-	{
-		b[0] - a[0],
-		b[1] - a[1],
-		b[2] - a[2],
-	};
-	float y[] =
-	{
-		c[0] - a[0],
-		c[1] - a[1],
-		c[2] - a[2],
-	};
-
-	float* result = cross_product(x, y);
-	return result;
-}*/
-
-
-//const vec3 normal;
-
-//dotProduct
-//float dot()
-//{
-//	return first.x * second.x + first.y * second.y + first.z * second.z;
-//};
-
-//Perpendicular clockwise and conunter clockwise
-/*const vec3 perpCcwXy()
-{
-
-	vec3 NegY(+1.0f, -1.0f, +1.0f);
-	return vec3(wall.y * NegY.y, wall.x * NegY.x, wall.z * NegY.z);
-};*/
-/*const vec3 perpCwXy()
-{
-
-	vec3 NegX(-1.0f, +1.0f, +1.0f);
-	return vec3(wall.y * NegX.y, wall.x * NegX.x, wall.z * NegX.z);
-};*/
-
-//Math::vec3 first;
-//Math::vec3 second;
-//float result = first.dot(second);
-//Math::vec3 wall;
-
-
-
-	/*//vec3 normal = wall.perpCcwXy(); //this gives us a (+) or (-) depending on if we are on one side of the boundry or the other. 
-	vec3 NegY(+1.0f, -1.0f, +1.0f);
-	vec3 perpCcwXy(wall.y * NegY.y, wall.x * NegY.x, wall.z * NegY.z);// this gives the Perpendicular Counter Clockwise direction. It swaps x and y and gives the y a negative value. 
-	//vec3 normal = perpCcwXy;
-	vec3 normal(wall.x * perpCcwXy.x + wall.y * perpCcwXy.y + wall.z * perpCcwXy.z); //getting the dot product of wall and perpCcwXy. 
-
-
-	vec3 respectiveShipPosition = ShipPos - first;
-	vec3 RSP = respectiveShipPosition;
-	
-	//float dotResult = normal.dot(respectiveShipPosition);
-	float dotResult = (RSP.x * normal.x + RSP.y * normal.y + RSP.z * normal.z);
-	qDebug() << dotResult;*/
-
-}
-/*void MeGlWindow::keyPressEvent(QKeyEvent* e)
-{
-	if (e->key() == Qt::Key_W)
-	{
-		Triangle1Position.y += 1;
-	}
-	if (e->key() == Qt::Key_S)
-	{
-		Triangle1Position.y += 1;
-	}
-	if (e->key() == Qt::Key_D)
-	{
-		Triangle1Position.y += 1;
-	}
-	if (e->key() == Qt::Key_A)
-	{
-		Triangle1Position.y += 1;
-	}
-}*/
-
-/*void MeGlWindow::myUpdate()
-{
-	clock.newFram();
-	repaint();
-};*/
 
 
