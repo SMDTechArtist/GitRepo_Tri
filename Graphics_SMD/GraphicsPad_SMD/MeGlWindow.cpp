@@ -178,7 +178,7 @@ void MeGlWindow::paintGL()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glDrawElements(GL_LINES, 8, GL_UNSIGNED_SHORT, 0);
 
-	handleBoundaries();
+	
 }
 
 
@@ -187,7 +187,8 @@ void MeGlWindow::myUpdate()
 	
 	ShipPos = ShipPos + velocity;
 	repaint();
-	
+	handleBoundaries();
+
 
 }
 
