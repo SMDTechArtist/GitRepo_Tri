@@ -56,12 +56,13 @@ namespace Math
 			return sqrt(x * x + y * y + z * z);
 		};
 
-		/*inline vec3 normalized() const
-		{
-			float inverseMagnitude = 1.0f / magnitude();
-			return inverseMagnitude * (*this);
-		};*/
+		//inline vec3 normalized() const
+		//{
+		//	float inverseMagnitude = 1.0f / magnitude();
+		//	return inverseMagnitude * (*this);
+		//};
 	};
+	
 	inline vec3 operator+(const vec3& left, const vec3& right)
 	{
 		return vec3(
@@ -78,13 +79,21 @@ namespace Math
 			left.z - right.z);
 	}
 
+	inline vec3 operator*(const vec3& vector, float scalar)
+	{
+		return vec3(
+			vector.x * scalar,
+			vector.y * scalar,
+			vector.z * scalar);
+	}
+
 	inline vec3 operator*(float scalar, const vec3& vector)
 	{
 		return vec3(
 			scalar * vector.x,
 			scalar * vector.y,
 			scalar * vector.z);
-	};
+	}
 
 
 

@@ -12,13 +12,16 @@
 #include <Qt/qDebug.h>
 #include <Vector3D.h>
 #include <Clock.h>
+#include <Qt\qapplication.h>
+
+
 using Timing::Clock;
 
 
 using namespace std;
 
 using glm::vec2;
-using glm::vec3;
+//using glm::vec3;
 using glm::vec4;
 
 //using std::cout;
@@ -38,7 +41,7 @@ GLuint shaderID;
 GLuint TriIndexBufferID;
 GLuint boundaryIndexBufferID;
 
-/*int main(int argc, char* argv[])
+/*int TEST(int argc, char* argv[])
 {
 	LARGE_INTEGER clockFrequency;
 	QueryPerformanceFrequency(&clockFrequency);
@@ -52,7 +55,12 @@ GLuint boundaryIndexBufferID;
 	LARGE_INTEGER delta;
 	delta.QuadPart = endTime.QuadPart - startTime.QuadPart;
 
-	float deltaSeconds = ((float)delta.QuadPart) / clockFrequency.QuadPart;
+	QApplication application(argc, argv);
+	MeGlWindow meGlWindow;
+	meGlWindow.show();
+	return application.exec();
+
+
 }*/
 //Math::vec3 
 
@@ -111,7 +119,8 @@ namespace
 
 	vec3 transformedVerts[NUM_SHIP_VERTS];
 	vec3 ShipPos(+0.0f, 0.0f, +0.0f);
-	Clock clock;
+	vec3 ShipVelocity;
+	
 }
 
 void sendDataToOpenGL()
@@ -129,19 +138,6 @@ void sendDataToOpenGL()
 	glBindBuffer(GL_ARRAY_BUFFER, boundaryVertexBufferID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(bounaryVerts), bounaryVerts, GL_STATIC_DRAW);
 	
-
-
-	//glEnableVertexAttribArray(0);
-	//glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
-	//glEnableVertexAttribArray(1);
-	
-	
-
-	
-	//glGenBuffers(1, &TriIndexBufferID);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, TriIndexBufferID);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ShipIndices), ShipIndices, GL_STATIC_DRAW);
-
 
 	
 
@@ -196,21 +192,25 @@ void MeGlWindow::paintGL()
 
 void MeGlWindow::myUpdate()
 {
-	
+	Clock clock;
 
 	//velocity = vec3(0.0f, 0.0f, 0.0f); // May need to move this below the random veriable
-	//ShipPos = ShipPos + velocity * clock.timeElapsedLastFrame();
+	//vec3 ShipPos = ShipPos + velocity * clock.timeElapsedLastFrame();
 	ShipPos = ShipPos + velocity;
 	repaint();
 	//UpdateVelocity();
 	//Clock.lap();
 	handleBoundaries();
-	//ShipPos += ShipVelocity * Clock.lastLapTime();
+	//ShipPos += ShipVelocity * clock.lastLapTime();
 	//const float ACCELERATION = 0.3f * clock.lastLapTime();
 
 }
 
-
+bool MeGlWindow::shutdown()
+{
+	Clock clock;
+	return clock.shutdown();
+}
 
 
 string readShaderCode(const char* fileName)
@@ -328,11 +328,15 @@ float randComponent()
 
 void MeGlWindow::initializeGL()
 {
+	Clock clock;
 	glewInit();
 	sendDataToOpenGL();
 	installShaders();
 
-	//assert()
+	GLenum errorCode = glewInit();
+	assert(errorCode == 0);
+	assert(clock.initialize());
+
 
 	connect(&myTimer, SIGNAL(timeout()),
 		this, SLOT(myUpdate()));
