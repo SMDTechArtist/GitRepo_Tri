@@ -21,7 +21,7 @@ using Timing::Clock;
 using namespace std;
 
 using glm::vec2;
-//using glm::vec3;
+using glm::vec3;
 using glm::vec4;
 
 //using std::cout;
@@ -64,7 +64,10 @@ GLuint boundaryIndexBufferID;
 }*/
 //Math::vec3 
 
-const float MOVEMENT_SPEED = 0.1f;
+
+//const float MOVEMENT_SPEED = 0.1f * clock.timeElapsedLastFrame();
+
+
 Math::vec3 velocity;
 
 
@@ -118,8 +121,11 @@ namespace
 	GLuint boundaryVertexBufferID;
 
 	vec3 transformedVerts[NUM_SHIP_VERTS];
+
 	vec3 ShipPos(+0.0f, 0.0f, +0.0f);
-	vec3 ShipVelocity;
+	vec3 ShipVelocity(+0.05f, 0.05f, +0.05f);
+	Clock clock;
+	const float ACCELERATION = 0.1f * clock.timeElapsedLastFrame(); //ACCELERATION was MOVEMENT_SPEED before
 	
 }
 
@@ -193,17 +199,25 @@ void MeGlWindow::paintGL()
 void MeGlWindow::myUpdate()
 {
 	Clock clock;
-
-	//velocity = vec3(0.0f, 0.0f, 0.0f); // May need to move this below the random veriable
-	//vec3 ShipPos = ShipPos + velocity * clock.timeElapsedLastFrame();
-	ShipPos = ShipPos + velocity;
+	clock.newFrame();
+	MeGlWindow QKeyEvent();
+	//updateVelocity();
+	//ShipVelocity = vec3(0.005f, 0.005f, 0.0f); // May need to move this below the random veriable
+	ShipPos = ShipPos + ShipVelocity * clock.timeElapsedLastFrame();
+	//ShipPos = ShipPos + velocity;
 	repaint();
-	//UpdateVelocity();
+	
 	//Clock.lap();
 	handleBoundaries();
 	//ShipPos += ShipVelocity * clock.lastLapTime();
 	//const float ACCELERATION = 0.3f * clock.lastLapTime();
 
+}
+
+bool MeGlWindow::initialize()
+{
+	Clock clock;
+	return clock.initialize();
 }
 
 bool MeGlWindow::shutdown()
@@ -346,32 +360,46 @@ void MeGlWindow::initializeGL()
 	
 	float floaty = randComponent(); //used for bug checking to see what the value of our RandComponent is. 
 
-	velocity = vec3(randComponent(), randComponent(), +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
+	ShipVelocity = vec3(randComponent(), randComponent(), +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
 
 	
 }
 
-
+void MeGlWindow::checkBoundaries()
+{
+	if (ShipPos.x < -1 || ShipPos.x > 1)
+		ShipVelocity.x *= -1;
+	if (ShipPos.y < -1 || ShipPos.y > 1)
+		ShipVelocity.y *= -1;
+}
 
 void MeGlWindow::keyPressEvent(QKeyEvent* e)
 {
 	switch (e->key())
 	{
 	case Qt::Key::Key_W:
-		ShipPos.y += MOVEMENT_SPEED;
+		ShipVelocity.y += ACCELERATION;
 		break;
 	case Qt::Key::Key_S:
-		ShipPos.y -= MOVEMENT_SPEED;
+		ShipVelocity.y -= ACCELERATION;
 		break;
 	case Qt::Key::Key_A:
-		ShipPos.x -= MOVEMENT_SPEED;
+		ShipVelocity.x -= ACCELERATION;
 		break;
 	case Qt::Key::Key_D:
-		ShipPos.x += MOVEMENT_SPEED;
+		ShipVelocity.x += ACCELERATION;
 		break;
 	}
 	repaint();
 }
+
+//void MeGlWindow::checkBoundaries()
+//{
+//	if (ShipPos.x < -1 || ShipPos.x > 1)
+//		ShipVelocity.x *= -1;
+//	if (ShipPos.y < -1 || ShipPos.y > 1)
+//		ShipVelocity.y *= -1;
+//}
 
 /*void MyGlWindow::updateVelocity()
 {
@@ -397,7 +425,7 @@ void MeGlWindow::handleBoundaries()
 		//anyCollisions = anyCollisions || (dotResult < 0);
 		if (anyCollisions || (dotResult < 0))
 		{
-			velocity = vec3(0.0f, 0.0f, 0.0f);
+			ShipVelocity = vec3(0.0f, 0.0f, 0.0f);
 		}
 		qDebug() << anyCollisions;
 

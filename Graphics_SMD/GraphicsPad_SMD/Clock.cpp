@@ -1,4 +1,5 @@
 #include <Clock.h>
+#include <Vector3D.h>
 namespace Timing
 {
 
@@ -7,7 +8,8 @@ namespace Timing
 		bool b = QueryPerformanceFrequency(&timeFrequency);
 		if (!b)
 			return false;
-		return QueryPerformanceCounter(&timeLastFrame);
+		return QueryPerformanceFrequency(&timeLastFrame);
+		
 	}
 
 	bool Clock::shutdown()

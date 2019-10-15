@@ -3,6 +3,7 @@
 #define ENGINE_CLOCK_H
 #include <Windows.h>
 #include <Clock.h>
+#include <Vector3D.h>
 
 namespace Timing
 {
