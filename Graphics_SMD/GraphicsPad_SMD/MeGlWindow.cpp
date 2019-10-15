@@ -200,6 +200,7 @@ void MeGlWindow::myUpdate()
 
 	//velocity = vec3(0.0f, 0.0f, 0.0f); // May need to move this below the random veriable
 	//ShipPos = ShipPos + velocity * clock.timeElapsedLastFrame();
+	ShipPos = ShipPos + velocity;
 	repaint();
 	//UpdateVelocity();
 	//Clock.lap();
