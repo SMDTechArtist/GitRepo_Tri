@@ -23,13 +23,16 @@ using namespace std;
 using glm::vec2;
 using glm::vec3;
 using glm::vec4;
+using glm::normalize;
+using glm::dot;
+
 
 //using std::cout;
 //using std::endl;
 //v1 = rand() % 100;         // v1 in the range 0 to 99
 //v3 = rand() % 30 + 1985;   // v3 in the range 1985-2014
 
-using Math::vec3;
+//using Math::vec3;
 
 
 const GLuint NUM_VERTICES_PER_SHIP = 5;
@@ -338,8 +341,6 @@ float randComponent()
 // depending on what randSign() returns, the random function is X by +1 or -1.
 
 
-
-
 void MeGlWindow::initializeGL()
 {
 	Clock clock;
@@ -409,23 +410,29 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 	if(GetAsyncKeyState(VK_UP))
 		shipVelocity += directionToAccelerate * ACCELERATION
 }*/
-
+glm::vec3 perpCcwXy(float x, float y)
+{
+	return glm::vec3(-y, x, 0.0f);
+}
 void MeGlWindow::handleBoundaries()
 {
 	bool anyCollisions = false;
 	for (uint i = 0; i < NUM_BOUNDARY_VERTS; i++)
 	{
-		vec3& first = bounaryVerts[i];
-		vec3& second = bounaryVerts[(i + 1) % NUM_BOUNDARY_VERTS];
-		vec3 wall = second - first; //this gets us our perallel vector from the (0,0) to its respective equivelent
+		const glm::vec3& first = bounaryVerts[i];
+		const glm::vec3& second = bounaryVerts[(i + 1) % NUM_BOUNDARY_VERTS];
+		
+		glm::vec3 wall = second - first; //this gets us our perallel vector from the (0,0) to its respective equivelent
 
-		vec3 normal = wall.perpCcwXy();
-		vec3 respectiveShipPosition = ShipPos - first;
-		float dotResult = normal.dot(respectiveShipPosition);
+		glm::vec3 normal = perpCcwXy(wall.x, wall.y);
+		glm::vec3 respectiveShipPosition = ShipPos - first;
+
+		float dotResult = glm::dot(respectiveShipPosition, normal);
+		//float dotResult = normal.dot(respectiveShipPosition);
 		//anyCollisions = anyCollisions || (dotResult < 0);
 		if (anyCollisions || (dotResult < 0))
 		{
-			ShipVelocity = vec3(0.0f, 0.0f, 0.0f);
+			ShipVelocity = glm::vec3(0.0f, 0.0f, 0.0f);
 		}
 		qDebug() << anyCollisions;
 

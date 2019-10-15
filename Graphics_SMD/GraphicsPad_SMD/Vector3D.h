@@ -42,6 +42,16 @@ namespace Math
 		{
 			return x * other.x + y * other.y + z * other.z;
 		};
+		
+		//inline float magnitude() const
+		//{
+		//	return sqrt(x * x + y * y + z * z);
+		//};
+		//inline vec3 normalized() const
+		//{
+		//	float inverseMagnitude = 1.0f / magnitude();
+		//	return inverseMagnitude * (*this);
+		//};
 		inline vec3 perpCwXy() const
 		{
 			return vec3(y, -x);
@@ -51,16 +61,9 @@ namespace Math
 			return vec3(-y, x);
 		};
 
-		inline float magnitude() const
-		{
-			return sqrt(x * x + y * y + z * z);
-		};
+		
 
-		//inline vec3 normalized() const
-		//{
-		//	float inverseMagnitude = 1.0f / magnitude();
-		//	return inverseMagnitude * (*this);
-		//};
+
 	};
 	
 	inline vec3 operator+(const vec3& left, const vec3& right)
