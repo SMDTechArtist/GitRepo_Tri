@@ -126,7 +126,8 @@ namespace
 	vec3 transformedVerts[NUM_SHIP_VERTS];
 
 	vec3 ShipPos(+0.0f, 0.0f, +0.0f);
-	vec3 ShipVelocity(+0.05f, 0.05f, +0.05f);
+	vec3 OldShipPos;
+	vec3 ShipVelocity(+0.02f, 0.02f, +0.02f);
 	Clock clock;
 	const float ACCELERATION = 0.1f * clock.timeElapsedLastFrame(); //ACCELERATION was MOVEMENT_SPEED before
 	
@@ -204,10 +205,12 @@ void MeGlWindow::myUpdate()
 	Clock clock;
 	clock.newFrame();
 	MeGlWindow QKeyEvent();
+	OldShipPos = ShipPos;
 	//updateVelocity();
 	//ShipVelocity = vec3(0.005f, 0.005f, 0.0f); // May need to move this below the random veriable
 	ShipPos = ShipPos + ShipVelocity * clock.timeElapsedLastFrame();
 	//ShipPos = ShipPos + velocity;
+	
 	repaint();
 	
 	//Clock.lap();
@@ -454,7 +457,7 @@ void MeGlWindow::handleBoundaries()
 
 		glm::vec3 normal = perpCcwXy(wall.x, wall.y);
 		glm::vec3 respectiveShipPosition = ShipPos - first;
-
+		glm::vec3 normalized = glm::normalize(normal);
 		float dotResult = glm::dot(respectiveShipPosition, normal);
 		//float dotResult = normal.dot(respectiveShipPosition);
 		//anyCollisions = anyCollisions || (dotResult < 0);
@@ -466,8 +469,8 @@ void MeGlWindow::handleBoundaries()
 
 		if (dotResult < 0)
 		{
-			ShipVelocity = ShipVelocity - 2 * glm::dot(ShipVelocity, normal) * normal;
-			//ShipPos = oldShipPos;
+			ShipVelocity = ShipVelocity - 2 * glm::dot(ShipVelocity, normalized) * normalized;
+			ShipPos = OldShipPos;
 		}
 
 	}
