@@ -27,12 +27,6 @@ using glm::normalize;
 using glm::dot;
 
 
-//using std::cout;
-//using std::endl;
-//v1 = rand() % 100;         // v1 in the range 0 to 99
-//v3 = rand() % 30 + 1985;   // v3 in the range 1985-2014
-
-//using Math::vec3;
 
 
 const GLuint NUM_VERTICES_PER_SHIP = 5;
@@ -44,39 +38,9 @@ GLuint shaderID;
 GLuint TriIndexBufferID;
 GLuint boundaryIndexBufferID;
 
-/*int TEST(int argc, char* argv[])
-{
-	LARGE_INTEGER clockFrequency;
-	QueryPerformanceFrequency(&clockFrequency);
-
-	LARGE_INTEGER startTime;
-	LARGE_INTEGER endTime;
-	QueryPerformanceCounter(&startTime);
-	qDebug() << "Hello";
-	QueryPerformanceCounter(&endTime);
-
-	LARGE_INTEGER delta;
-	delta.QuadPart = endTime.QuadPart - startTime.QuadPart;
-
-	QApplication application(argc, argv);
-	MeGlWindow meGlWindow;
-	meGlWindow.show();
-	return application.exec();
-
-
-}*/
-//Math::vec3 
-
-
-//const float MOVEMENT_SPEED = 0.1f * clock.timeElapsedLastFrame();
-
 
 Math::vec3 velocity;
 
-
-
-//glm::vec2 ShipPos(+0.0f, 0.0f); //Tri 1 position
-//glm::vec2 tri2Pos(+0.1f, 0.1f); // Tri 2 position
 
 
 
@@ -107,9 +71,6 @@ namespace
 		vec3(-1.0f, +0.0f, +0.0f), //1
 		vec3(+0.0f, -1.0f, +0.0f), //2
 		vec3(+1.0f, +0.0f, +0.0f), //3
-
-		
-
 
 	};
 
@@ -177,7 +138,6 @@ void MeGlWindow::paintGL()
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
 
 	
-
 	
 	glBindBuffer(GL_ARRAY_BUFFER, ShipVertexBufferID);
 	vec3 translatedVerts[NUM_SHIP_VERTS];
@@ -397,13 +357,6 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 	repaint();
 }
 
-//void MeGlWindow::checkBoundaries()
-//{
-//	if (ShipPos.x < -1 || ShipPos.x > 1)
-//		ShipVelocity.x *= -1;
-//	if (ShipPos.y < -1 || ShipPos.y > 1)
-//		ShipVelocity.y *= -1;
-//}
 
 /*void MyGlWindow::updateVelocity()
 {
@@ -413,6 +366,7 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 	if(GetAsyncKeyState(VK_UP))
 		shipVelocity += directionToAccelerate * ACCELERATION
 }*/
+
 glm::vec3 perpCcwXy(float x, float y)
 {
 	return glm::vec3(-y, x, 0.0f);
