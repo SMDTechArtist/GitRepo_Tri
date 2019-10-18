@@ -101,7 +101,7 @@ namespace
 
 	//GLushort ShipIndices[] = { 0,1,2,3,4 };
 
-	vec3 bounaryVerts[] =
+	vec3 boundaryVerts[] =
 	{
 		vec3(+0.0f, +1.0f, +0.0f), //0
 		vec3(-1.0f, +0.0f, +0.0f), //1
@@ -116,7 +116,7 @@ namespace
 	GLushort boundaryIndice[] = { 0, 1, 1, 2, 2, 3, 3, 0 };
 
 	const unsigned int NUM_SHIP_VERTS = sizeof(ShipVerts) / sizeof(*ShipVerts);
-	const unsigned int NUM_BOUNDARY_VERTS = sizeof(bounaryVerts) / sizeof(*bounaryVerts);
+	const unsigned int NUM_BOUNDARY_VERTS = sizeof(boundaryVerts) / sizeof(*boundaryVerts);
 	
 
 	//Making Buffer Variables
@@ -146,7 +146,7 @@ void sendDataToOpenGL()
 	//Buffer for Boundary 
 	glGenBuffers(1, &boundaryVertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, boundaryVertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(bounaryVerts), bounaryVerts, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(boundaryVerts), boundaryVerts, GL_STATIC_DRAW);
 	
 
 	
@@ -450,8 +450,8 @@ void MeGlWindow::handleBoundaries()
 	bool anyCollisions = false;
 	for (uint i = 0; i < NUM_BOUNDARY_VERTS; i++)
 	{
-		const glm::vec3& first = bounaryVerts[i];
-		const glm::vec3& second = bounaryVerts[(i + 1) % NUM_BOUNDARY_VERTS];
+		const glm::vec3& first = boundaryVerts[i];
+		const glm::vec3& second = boundaryVerts[(i + 1) % NUM_BOUNDARY_VERTS];
 		
 		glm::vec3 wall = second - first; //this gets us our perallel vector from the (0,0) to its respective equivelent
 
