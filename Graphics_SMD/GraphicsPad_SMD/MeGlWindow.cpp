@@ -413,7 +413,35 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 glm::vec3 perpCcwXy(float x, float y)
 {
 	return glm::vec3(-y, x, 0.0f);
+
 }
+
+
+float magnitude(float x, float y, float z)
+{
+	return sqrt(x * x + y * y + z * z);
+}
+
+//float inverseMagnitude(vec3 mag)
+//{
+//	return 1.0f / magnitude(mag.x, mag.y, mag.z);
+//}
+
+
+
+vec3 normalized(vec3 norm)
+{
+	
+	float inverseMagnitude = 1.0f / magnitude(norm.x, norm.y, norm.z);
+	vec3 IM(inverseMagnitude, inverseMagnitude, inverseMagnitude);
+	
+	vec3 normalizing(IM.x * norm.x, IM.y * norm.y, IM.z * norm.z);
+	return normalizing;
+}
+
+
+
+
 void MeGlWindow::handleBoundaries()
 {
 	bool anyCollisions = false;
@@ -430,17 +458,17 @@ void MeGlWindow::handleBoundaries()
 		float dotResult = glm::dot(respectiveShipPosition, normal);
 		//float dotResult = normal.dot(respectiveShipPosition);
 		//anyCollisions = anyCollisions || (dotResult < 0);
-		if (anyCollisions || (dotResult < 0))
-		{
-			ShipVelocity = glm::vec3(0.0f, 0.0f, 0.0f);
-		}
-		qDebug() << anyCollisions;
+		//if (anyCollisions || (dotResult < 0))
+		//{
+		//	ShipVelocity = glm::vec3(0.0f, 0.0f, 0.0f);
+		//}
+		//qDebug() << anyCollisions;
 
-		/*if (dotResult < 0)
+		if (dotResult < 0)
 		{
-			ShipVelocity = ShipVelocity - 2 * ShipVelocity.dot(normal) * normal;
-			ShipPos = oldShipPos;
-		}*/
+			ShipVelocity = ShipVelocity - 2 * glm::dot(ShipVelocity, normal) * normal;
+			//ShipPos = oldShipPos;
+		}
 
 	}
 }
