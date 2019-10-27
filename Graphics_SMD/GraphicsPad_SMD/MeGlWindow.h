@@ -13,26 +13,26 @@
 
 
 
-class QKeyEvent;
+//class QKeyEvent;
 
 class MeGlWindow : public QGLWidget
 {
-	Q_OBJECT
-	QTimer myTimer;
+	//Q_OBJECT
+	//QTimer myTimer;
 protected:
 	void initializeGL();
 	void paintGL();
-	void keyPressEvent(QKeyEvent*); 
-	void handleBoundaries();
-	void checkBoundaries();
+	void sendDataToOpenGL();
+	//void keyPressEvent(QKeyEvent*); 
+	//void handleBoundaries();
+	//void checkBoundaries();
 
 
-private slots:
-	void myUpdate();
+//private slots:
+	//void myUpdate();
 
-public:
-	bool shutdown();
-	bool initialize();
+//public:
+	
 
 };
 

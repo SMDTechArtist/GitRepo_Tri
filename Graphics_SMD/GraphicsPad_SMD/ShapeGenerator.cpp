@@ -1,6 +1,7 @@
 #include "ShapeGenerator.h"
+#include <ShapeData.h>
 #include <glm\glm.hpp>
-#include <Primitives\Vertex.h>
+#include <Vertex.h>
 #define NUM_ARRAY_ELEMENTS(a) sizeof(a) / sizeof(*a)
 
 ShapeData ShapeGenerator::makeTriangle()

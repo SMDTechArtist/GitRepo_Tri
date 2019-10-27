@@ -11,8 +11,8 @@
 #include <ctime>
 #include <Qt/qDebug.h>
 #include <Vector3D.h>
-#include <Vertex.h>
-#include <ShapeGenerator.h>
+#include <Vertex.h> //If act funny add <Primitives/..>
+#include <ShapeGenerator.h> //If act funny add <Primitives/..>
 #include <Qt\qapplication.h>
 
 
@@ -34,32 +34,54 @@ const GLuint NUM_VERTICES_PER_SHIP = 5;
 const GLuint NUM_FLOATS_PER_VERTICE = 6;
 const GLuint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 const GLuint SHIP_BYTE_SIZE = NUM_VERTICES_PER_SHIP * NUM_FLOATS_PER_VERTICE * sizeof(float);
+
 GLuint programID;
 GLuint shaderID;
 GLuint TriIndexBufferID;
 GLuint boundaryIndexBufferID;
 
+glm::vec3 perpCcwXy(float x, float y)
+{
+	return glm::vec3(-y, x, 0.0f);
+
+}
+
+
+float magnitude(float x, float y, float z)
+{
+	return sqrt(x * x + y * y + z * z);
+}
 
 
 
+vec3 normalized(vec3 norm)
+{
 
+	float inverseMagnitude = 1.0f / magnitude(norm.x, norm.y, norm.z);
+	vec3 IM(inverseMagnitude, inverseMagnitude, inverseMagnitude);
 
+	vec3 normalizing(IM.x * norm.x, IM.y * norm.y, IM.z * norm.z);
+	return normalizing;
+}
 
 
 void MeGlWindow::sendDataToOpenGL()
 {
 	ShapeData tri = ShapeGenerator::makeTriangle();
-
+	
 	GLuint vertexBufferID;
+
 	glGenBuffers(1, &vertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
 	glBufferData(GL_ARRAY_BUFFER, tri.vertexBufferSize(), tri.vertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
+
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (char*)(sizeof(float) * 3));
-
+	
 	GLuint indexArrayBufferID;
+
 	glGenBuffers(1, &indexArrayBufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexArrayBufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, tri.indexBufferSize(), tri.indices, GL_STATIC_DRAW);
@@ -67,32 +89,6 @@ void MeGlWindow::sendDataToOpenGL()
 }
 
 
-void sendDataToOpenGL()
-{
-	
-	//glEnableVertexAttribArray(0);
-
-	//Buffer for Tri 
-	glGenBuffers(1, &ShipVertexBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, ShipVertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(ShipVerts), ShipVerts, GL_DYNAMIC_DRAW);
-	
-	//Buffer for Boundary 
-	glGenBuffers(1, &boundaryVertexBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, boundaryVertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(boundaryVerts), boundaryVerts, GL_STATIC_DRAW);
-	
-
-	
-
-	
-	glGenBuffers(1, &boundaryIndexBufferID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, boundaryIndexBufferID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(boundaryIndice), boundaryIndice, GL_STATIC_DRAW);
-
-
-
-}
 
 int debugCount = 0;
 
@@ -101,18 +97,16 @@ void MeGlWindow::paintGL()
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, width(), height());
 
+
 	glm::vec3 dominatingColor(0.0f, 0.0f, 1.0f);
-
-	
-
 	GLint dominatingColorUniformLocation = glGetUniformLocation(programID, "dominatingColor");
 	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
-
-	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
+	
+	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
 
 	
 	
-	glBindBuffer(GL_ARRAY_BUFFER, ShipVertexBufferID);
+	/*glBindBuffer(GL_ARRAY_BUFFER, ShipVertexBufferID);
 	vec3 translatedVerts[NUM_SHIP_VERTS];
 	for (unsigned int i = 0; i < NUM_SHIP_VERTS; i++)
 	{
@@ -128,11 +122,11 @@ void MeGlWindow::paintGL()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glDrawElements(GL_LINES, 8, GL_UNSIGNED_SHORT, 0);
 
-	
+	*/
 }
 
 
-void MeGlWindow::myUpdate()
+/*void MeGlWindow::myUpdate()
 
 	MeGlWindow QKeyEvent();
 
@@ -143,11 +137,31 @@ void MeGlWindow::myUpdate()
 	handleBoundaries();
 
 
+}*/
+
+
+
+bool checkStatus(
+	GLuint objectID,
+	PFNGLGETSHADERIVPROC objectPropertyGetterFunc,
+	PFNGLGETSHADERINFOLOGPROC getInfoLogFunc,
+	GLenum statusType)
+{
+	GLint status;
+	objectPropertyGetterFunc(objectID, statusType, &status);
+	if (status != GL_TRUE)
+	{
+		GLint infoLogLength;
+		objectPropertyGetterFunc(objectID, GL_INFO_LOG_LENGTH, &infoLogLength);
+		GLchar* buffer = new GLchar[infoLogLength];
+		GLsizei bufferSize;
+		getInfoLogFunc(objectID, infoLogLength, &bufferSize, buffer);
+		cout << buffer << endl;
+		delete[] buffer;
+		return false;
+	}
+	return true;
 }
-
-
-}
-
 
 string readShaderCode(const char* fileName)
 {
@@ -238,7 +252,7 @@ void installShaders()
 
 }
 
-int randSign()
+/*int randSign()
 {
 	return rand() % 2 == 0 ? 1 : -1; 
 }
@@ -246,20 +260,20 @@ int randSign()
 float randComponent()
 {
 	return rand() % 100 * 0.00001 * randSign();
-}
-
+}*/
 
 
 void MeGlWindow::initializeGL()
 {
-	Clock clock;
+
 	glewInit();
+	glEnable(GL_DEPTH_TEST);
 	sendDataToOpenGL();
 	installShaders();
 
-	GLenum errorCode = glewInit();
-	assert(errorCode == 0);
-	assert(clock.initialize());
+	/*GLenum errorCode = glewInit();
+	//assert(clock.initialize());
+	//assert(errorCode == 0);
 
 
 	connect(&myTimer, SIGNAL(timeout()),
@@ -270,20 +284,12 @@ void MeGlWindow::initializeGL()
 	
 	float floaty = randComponent(); //used for bug checking to see what the value of our RandComponent is. 
 
-	ShipVelocity = vec3(randComponent(), randComponent(), +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
-
-	
+	//ShipVelocity = vec3(randComponent(), randComponent(), +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
+	*/
 }
 
-void MeGlWindow::checkBoundaries()
-{
-	if (ShipPos.x < -1 || ShipPos.x > 1)
-		ShipVelocity.x *= -1;
-	if (ShipPos.y < -1 || ShipPos.y > 1)
-		ShipVelocity.y *= -1;
-}
 
-void MeGlWindow::keyPressEvent(QKeyEvent* e)
+/*void MeGlWindow::keyPressEvent(QKeyEvent* e)
 {
 	switch (e->key())
 	{
@@ -301,38 +307,10 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 		break;
 	}
 	repaint();
-}
+}*/
 
 
-
-glm::vec3 perpCcwXy(float x, float y)
-{
-	return glm::vec3(-y, x, 0.0f);
-
-}
-
-
-float magnitude(float x, float y, float z)
-{
-	return sqrt(x * x + y * y + z * z);
-}
-
-
-
-vec3 normalized(vec3 norm)
-{
-	
-	float inverseMagnitude = 1.0f / magnitude(norm.x, norm.y, norm.z);
-	vec3 IM(inverseMagnitude, inverseMagnitude, inverseMagnitude);
-	
-	vec3 normalizing(IM.x * norm.x, IM.y * norm.y, IM.z * norm.z);
-	return normalizing;
-}
-
-
-
-
-void MeGlWindow::handleBoundaries()
+/*void MeGlWindow::handleBoundaries()
 {
 	bool anyCollisions = false;
 	for (uint i = 0; i < NUM_BOUNDARY_VERTS; i++)
@@ -355,7 +333,7 @@ void MeGlWindow::handleBoundaries()
 		}
 
 	}
-}
+}*/
 
 
 

@@ -1,9 +1,10 @@
 #pragma once
-#pragma once
-#include <Primitives\ShapeData.h>
-
+#include <ShapeData.h>
 class ShapeGenerator
 {
+
 public:
 	static ShapeData makeTriangle();
+
 };
+
