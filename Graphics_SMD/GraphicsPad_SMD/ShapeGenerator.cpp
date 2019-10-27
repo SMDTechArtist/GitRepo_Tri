@@ -383,7 +383,7 @@ ShapeData ShapeGenerator::makePlaneUnseamedIndices(uint tesselation)
 			// Move to vert right of this one unless it's the last vert,
 			// which we connect to the first vert in the row
 			// the % dimensions at the end accounts for the last row hooking to the first row
-			ret.indices[runner++] = (tesselation * row + col + tesselation + (col + 1 == tesselation ? -tesselation + 1 : 1)) % dimensions;
+			ret.indices[runner++] = (tesselation * row + col + tesselation + (col + 1 == tesselation ? (-1*(tesselation)) + 1 : 1)) % dimensions;
 
 			// Upper right triangle
 			ret.indices[runner++] = tesselation * row + col;
