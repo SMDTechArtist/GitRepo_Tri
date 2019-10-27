@@ -161,8 +161,11 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir);$(ProjectDir)..\Middleware\Qt\Include;$(ProjectDir)..\Middleware\glew\Include;$(ProjectDir)..\Middleware\GLFW\include</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="MeGlWindow.cpp" />
+    <ClCompile Include="ShapeGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ShapeData.h" />
+    <ClInclude Include="ShapeGenerator.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="MeGlWindow.h" />
   </ItemGroup>

@@ -11,11 +11,12 @@
 #include <ctime>
 #include <Qt/qDebug.h>
 #include <Vector3D.h>
-#include <Clock.h>
+#include <Vertex.h>
+#include <ShapeGenerator.h>
 #include <Qt\qapplication.h>
 
 
-using Timing::Clock;
+
 
 
 using namespace std;
@@ -39,60 +40,32 @@ GLuint TriIndexBufferID;
 GLuint boundaryIndexBufferID;
 
 
-Math::vec3 velocity;
 
 
 
 
 
-struct Vertex
+
+void MeGlWindow::sendDataToOpenGL()
 {
-	vec3 position;
-	vec3 Color;
-};
-		
+	ShapeData tri = ShapeGenerator::makeTriangle();
 
-namespace
-{
-	vec3 ShipVerts[] = //was verts
-	{
-		vec3(+0.0f, +0.1f, +1.0f),
-		vec3(+0.1f, +0.1f, +1.0f),
-		vec3(+0.15f, +0.0f, +1.0f),
-		vec3(-0.1f, -0.1f, +1.0f),
-		vec3(+0.0f, -0.1f, +1.0f),
-	};
+	GLuint vertexBufferID;
+	glGenBuffers(1, &vertexBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+	glBufferData(GL_ARRAY_BUFFER, tri.vertexBufferSize(), tri.vertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (char*)(sizeof(float) * 3));
 
-	//GLushort ShipIndices[] = { 0,1,2,3,4 };
-
-	vec3 boundaryVerts[] =
-	{
-		vec3(+0.0f, +1.0f, +0.0f), //0
-		vec3(-1.0f, +0.0f, +0.0f), //1
-		vec3(+0.0f, -1.0f, +0.0f), //2
-		vec3(+1.0f, +0.0f, +0.0f), //3
-
-	};
-
-	GLushort boundaryIndice[] = { 0, 1, 1, 2, 2, 3, 3, 0 };
-
-	const unsigned int NUM_SHIP_VERTS = sizeof(ShipVerts) / sizeof(*ShipVerts);
-	const unsigned int NUM_BOUNDARY_VERTS = sizeof(boundaryVerts) / sizeof(*boundaryVerts);
-	
-
-	//Making Buffer Variables
-	GLuint ShipVertexBufferID;
-	GLuint boundaryVertexBufferID;
-
-	vec3 transformedVerts[NUM_SHIP_VERTS];
-
-	vec3 ShipPos(+0.0f, 0.0f, +0.0f);
-	vec3 OldShipPos;
-	vec3 ShipVelocity(+0.02f, 0.02f, +0.02f);
-	Clock clock;
-	const float ACCELERATION = 0.1f * clock.timeElapsedLastFrame(); //ACCELERATION was MOVEMENT_SPEED before
-	
+	GLuint indexArrayBufferID;
+	glGenBuffers(1, &indexArrayBufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexArrayBufferID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, tri.indexBufferSize(), tri.indices, GL_STATIC_DRAW);
+	tri.cleanup();
 }
+
 
 void sendDataToOpenGL()
 {
@@ -160,13 +133,9 @@ void MeGlWindow::paintGL()
 
 
 void MeGlWindow::myUpdate()
-{
-	Clock clock;
-	clock.newFrame();
-	MeGlWindow QKeyEvent();
-	OldShipPos = ShipPos;
 
-	ShipPos = ShipPos + ShipVelocity * clock.timeElapsedLastFrame();
+	MeGlWindow QKeyEvent();
+
 
 	
 	repaint();
@@ -176,16 +145,7 @@ void MeGlWindow::myUpdate()
 
 }
 
-bool MeGlWindow::initialize()
-{
-	Clock clock;
-	return clock.initialize();
-}
 
-bool MeGlWindow::shutdown()
-{
-	Clock clock;
-	return clock.shutdown();
 }
 
 
