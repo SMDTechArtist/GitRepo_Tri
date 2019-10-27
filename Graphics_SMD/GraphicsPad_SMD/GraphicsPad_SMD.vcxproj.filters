@@ -11,6 +11,9 @@
     <Filter Include="Camera">
       <UniqueIdentifier>{a8d685db-5cee-4aaa-9759-c0be75e0b5dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{d47a0c39-6326-4d18-a58f-6d5ddb8288f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphicsPad_SMD.cpp">
@@ -48,7 +51,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="VertexShaderCode.glsl" />
-    <None Include="FragmentShaderCode.glsl" />
+    <None Include="VertexShaderCode.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="FragmentShaderCode.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

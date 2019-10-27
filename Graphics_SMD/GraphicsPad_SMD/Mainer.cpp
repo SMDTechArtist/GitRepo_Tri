@@ -1,4 +1,3 @@
-#include <iostream>
 #include <Qt\qapplication.h>
 #include <MeGlWindow.h>
 #include <glfw3.h>

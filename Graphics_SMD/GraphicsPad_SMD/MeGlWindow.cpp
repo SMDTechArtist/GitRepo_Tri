@@ -11,6 +11,7 @@
 #include <ctime>
 #include <Qt/qDebug.h>
 #include <Vector3D.h>
+#include <glm\gtc\matrix_transform.hpp>
 #include <Vertex.h> //If act funny add <Primitives/..>
 #include <ShapeGenerator.h> //If act funny add <Primitives/..>
 #include <Qt\qapplication.h>
@@ -26,21 +27,23 @@ using glm::vec3;
 using glm::vec4;
 using glm::normalize;
 using glm::dot;
+using glm::mat4;
 
 
 
 
-const GLuint NUM_VERTICES_PER_SHIP = 5;
+const GLuint NUM_VERTICES_PER_SHIP = 3;
 const GLuint NUM_FLOATS_PER_VERTICE = 6;
 const GLuint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
-const GLuint SHIP_BYTE_SIZE = NUM_VERTICES_PER_SHIP * NUM_FLOATS_PER_VERTICE * sizeof(float);
 
 GLuint programID;
-GLuint shaderID;
-GLuint TriIndexBufferID;
-GLuint boundaryIndexBufferID;
 
-glm::vec3 perpCcwXy(float x, float y)
+GLuint numIndices;
+
+
+
+
+/*glm::vec3 perpCcwXy(float x, float y)
 {
 	return glm::vec3(-y, x, 0.0f);
 
@@ -63,29 +66,32 @@ vec3 normalized(vec3 norm)
 	vec3 normalizing(IM.x * norm.x, IM.y * norm.y, IM.z * norm.z);
 	return normalizing;
 }
-
+*/
 
 void MeGlWindow::sendDataToOpenGL()
 {
-	ShapeData tri = ShapeGenerator::makeTriangle();
+	ShapeData shape = ShapeGenerator::makeCube();
 	
 	GLuint vertexBufferID;
 
 	glGenBuffers(1, &vertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, tri.vertexBufferSize(), tri.vertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-
+	glBufferData(GL_ARRAY_BUFFER, shape.vertexBufferSize(), shape.vertices, GL_STATIC_DRAW);
+	
+	glEnableVertexAttribArray(0); //layout Location
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0);
-	glEnableVertexAttribArray(1);
+	
+	glEnableVertexAttribArray(1); //layout Location
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (char*)(sizeof(float) * 3));
 	
 	GLuint indexArrayBufferID;
 
 	glGenBuffers(1, &indexArrayBufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexArrayBufferID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, tri.indexBufferSize(), tri.indices, GL_STATIC_DRAW);
-	tri.cleanup();
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.indexBufferSize(), shape.indices, GL_STATIC_DRAW);
+	
+	numIndices = shape.numIndices;
+	shape.cleanup();
 }
 
 
@@ -97,15 +103,19 @@ void MeGlWindow::paintGL()
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, width(), height());
 
+	mat4 modelTransformMatrix = glm::translate(mat4(), vec3(0.0f, 0.0f, -3.0f));
+	mat4 projectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
+	
+	GLint modelTransformMatrixUniformLocation = glGetUniformLocation(programID, "modelTransformMatrix");
+	GLint projectionMatrixUniformLocation = glGetUniformLocation(programID, "projectionMatrix");
 
-	glm::vec3 dominatingColor(0.0f, 0.0f, 1.0f);
-	GLint dominatingColorUniformLocation = glGetUniformLocation(programID, "dominatingColor");
-	glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
-	
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
+	glUniformMatrix4fv(modelTransformMatrixUniformLocation, 1, 
+		GL_FALSE, &modelTransformMatrix[0][0]);
+	glUniformMatrix4fv(projectionMatrixUniformLocation, 1,
+		GL_FALSE, &projectionMatrix[0][0]);
 
-	
-	
+	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0);
+
 	/*glBindBuffer(GL_ARRAY_BUFFER, ShipVertexBufferID);
 	vec3 translatedVerts[NUM_SHIP_VERTS];
 	for (unsigned int i = 0; i < NUM_SHIP_VERTS; i++)

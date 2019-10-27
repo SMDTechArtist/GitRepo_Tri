@@ -3,11 +3,11 @@
 out vec4 daColor;
 in vec3 theColor;
 
-uniform vec3 dominatingColor;
+//uniform vec3 dominatingColor;
 
 void main()
 {
-	daColor = vec4(dominatingColor, 1.0);
+	daColor = vec4(theColor, 1.0);
 
 };
 
