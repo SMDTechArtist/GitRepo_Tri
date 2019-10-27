@@ -43,15 +43,6 @@ namespace Math
 			return x * other.x + y * other.y + z * other.z;
 		};
 		
-		//inline float magnitude() const
-		//{
-		//	return sqrt(x * x + y * y + z * z);
-		//};
-		//inline vec3 normalized() const
-		//{
-		//	float inverseMagnitude = 1.0f / magnitude();
-		//	return inverseMagnitude * (*this);
-		//};
 		inline vec3 perpCwXy() const
 		{
 			return vec3(y, -x);
@@ -99,27 +90,6 @@ namespace Math
 	}
 
 
-
-
-	//#include <VectorMath.inl>
-
-
 };
 
-/*class vec3 {
-private:
-	double x, y, z;
-public:
-	vec3(double x = 0, double y = 0, double z = 0) : x(x), y(y), z(z) {
-	}
-	friend ostream& operator << (ostream& s, vec3 v) {
-		return s << v.x << "," << v.y << "," << v.z;
-	}
-
-	double dot(const vec3& a, const vec3& b)
-	{
-		return (b.x, b.y, b.z);
-	}
-
-};*/
 #endif

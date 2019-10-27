@@ -147,8 +147,7 @@ void MeGlWindow::paintGL()
 	}
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(translatedVerts), translatedVerts);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);  // Add late if something doesn't work right. But makes Tri weird right now.
-	glDrawArrays(GL_POLYGON, 0, 5);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0); 
 
 	
 
@@ -166,17 +165,14 @@ void MeGlWindow::myUpdate()
 	clock.newFrame();
 	MeGlWindow QKeyEvent();
 	OldShipPos = ShipPos;
-	//updateVelocity();
-	//ShipVelocity = vec3(0.005f, 0.005f, 0.0f); // May need to move this below the random veriable
+
 	ShipPos = ShipPos + ShipVelocity * clock.timeElapsedLastFrame();
-	//ShipPos = ShipPos + velocity;
+
 	
 	repaint();
-	
-	//Clock.lap();
+
 	handleBoundaries();
-	//ShipPos += ShipVelocity * clock.lastLapTime();
-	//const float ACCELERATION = 0.3f * clock.lastLapTime();
+
 
 }
 
@@ -206,16 +202,7 @@ string readShaderCode(const char* fileName)
 		std::istreambuf_iterator<char>());
 }
 
-/*string checkNumAttribs( GLuint checkAttribs)
-{
-	GLint numAttribs;
-	glGetProgramInterfaceiv(checkAttribs, GL_ACTIVE_ATTRIBUTES, &numAttribs);
 
-	GLenum Properties[] = 
-	{
-		GL_
-	}
-}*/
 
 bool checkShaderStatus(GLuint shaderID)
 {
@@ -293,15 +280,14 @@ void installShaders()
 
 int randSign()
 {
-	return rand() % 2 == 0 ? 1 : -1; // this makes it so that our random number goes into quodrents other then just (+,+)
-	//it says for the random number generated (rand()) do a mod 2 (% 2) if the mod to is == to 0 then return +1 otherwise (?) return -1
+	return rand() % 2 == 0 ? 1 : -1; 
 }
 
 float randComponent()
 {
 	return rand() % 100 * 0.00001 * randSign();
 }
-// depending on what randSign() returns, the random function is X by +1 or -1.
+
 
 
 void MeGlWindow::initializeGL()
@@ -358,14 +344,6 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 }
 
 
-/*void MyGlWindow::updateVelocity()
-{
-	const float ACCELERATION = 0.3f * clock.lastLapTime();
-
-	vec3 directionToAccelerate(-sin(shipOrientation), cos(shipOrientation));
-	if(GetAsyncKeyState(VK_UP))
-		shipVelocity += directionToAccelerate * ACCELERATION
-}*/
 
 glm::vec3 perpCcwXy(float x, float y)
 {
@@ -378,11 +356,6 @@ float magnitude(float x, float y, float z)
 {
 	return sqrt(x * x + y * y + z * z);
 }
-
-//float inverseMagnitude(vec3 mag)
-//{
-//	return 1.0f / magnitude(mag.x, mag.y, mag.z);
-//}
 
 
 
@@ -413,13 +386,7 @@ void MeGlWindow::handleBoundaries()
 		glm::vec3 respectiveShipPosition = ShipPos - first;
 		glm::vec3 normalized = glm::normalize(normal);
 		float dotResult = glm::dot(respectiveShipPosition, normal);
-		//float dotResult = normal.dot(respectiveShipPosition);
-		//anyCollisions = anyCollisions || (dotResult < 0);
-		//if (anyCollisions || (dotResult < 0))
-		//{
-		//	ShipVelocity = glm::vec3(0.0f, 0.0f, 0.0f);
-		//}
-		//qDebug() << anyCollisions;
+
 
 		if (dotResult < 0)
 		{
