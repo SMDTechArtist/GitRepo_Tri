@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="GraphicsPad_SMD.cpp" />
     <ClCompile Include="Mainer.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir);$(ProjectDir)..\Middleware\Qt\Include;$(ProjectDir)..\Middleware\glew\Include;$(ProjectDir)..\Middleware\GLFW\include</AdditionalIncludeDirectories>
@@ -164,6 +165,7 @@
     <ClCompile Include="ShapeGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="ShapeData.h" />
     <ClInclude Include="ShapeGenerator.h" />
     <ClInclude Include="TeapotData.h" />

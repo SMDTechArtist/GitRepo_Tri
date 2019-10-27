@@ -8,6 +8,9 @@
     <Filter Include="Primitives">
       <UniqueIdentifier>{f6380242-452c-4d5d-b86c-8f6f1c4b6308}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{a8d685db-5cee-4aaa-9759-c0be75e0b5dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphicsPad_SMD.cpp">
@@ -21,6 +24,9 @@
     </ClCompile>
     <ClCompile Include="ShapeGenerator.cpp">
       <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -36,6 +42,9 @@
     </ClInclude>
     <ClInclude Include="TeapotData.h">
       <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
