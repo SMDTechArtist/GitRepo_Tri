@@ -103,16 +103,20 @@ void MeGlWindow::paintGL()
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, width(), height());
 
-	mat4 modelTransformMatrix = glm::translate(mat4(), vec3(0.0f, 0.0f, -3.0f));
-	mat4 projectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
+	mat4 veiwToProjection = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
+	mat4 modelToWorld = glm::translate(veiwToProjection, vec3(0.0f, 0.0f, -3.0f));
+	mat4 fullTransformMatrix = glm::rotate(modelToWorld, 54.0f, vec3(1.0f, 0.0f, 0.0f));
 	
-	GLint modelTransformMatrixUniformLocation = glGetUniformLocation(programID, "modelTransformMatrix");
-	GLint projectionMatrixUniformLocation = glGetUniformLocation(programID, "projectionMatrix");
+	
+	//mat4 worldToView = glm::lookAt(camPos, ObjectPos, upVecY);
 
-	glUniformMatrix4fv(modelTransformMatrixUniformLocation, 1, 
-		GL_FALSE, &modelTransformMatrix[0][0]);
-	glUniformMatrix4fv(projectionMatrixUniformLocation, 1,
-		GL_FALSE, &projectionMatrix[0][0]);
+	
+	GLint fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "fullTransformMatrix");
+	
+
+	glUniformMatrix4fv(fullTransformMatrixUniformLocation, 1,
+		GL_FALSE, &fullTransformMatrix[0][0]);
+	
 
 	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0);
 
