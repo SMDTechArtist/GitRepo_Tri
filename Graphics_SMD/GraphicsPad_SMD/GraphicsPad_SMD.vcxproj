@@ -166,6 +166,7 @@
   <ItemGroup>
     <ClInclude Include="ShapeData.h" />
     <ClInclude Include="ShapeGenerator.h" />
+    <ClInclude Include="TeapotData.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="MeGlWindow.h" />
   </ItemGroup>
