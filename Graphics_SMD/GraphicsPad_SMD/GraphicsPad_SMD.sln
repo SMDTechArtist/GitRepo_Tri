@@ -5,11 +5,6 @@ VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsPad_SMD", "GraphicsPad_SMD.vcxproj", "{C8D20EEB-1070-46A9-9A9B-3C50C1B803E4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{098781A3-8CD7-44AC-BB3E-33B00B97BC6A}"
-	ProjectSection(SolutionItems) = preProject
-		Clock.cpp = Clock.cpp
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

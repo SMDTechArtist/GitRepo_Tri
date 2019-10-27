@@ -19,17 +19,12 @@
     <ClCompile Include="MeGlWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MeGlWindow_moc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Clock.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MeGlWindow.h" />
-    <ClInclude Include="Vector3D.h" />
-    <ClInclude Include="Clock.h" />
+    <ClInclude Include="Vertex.h">
+      <Filter>Primatives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="VertexShaderCode.glsl" />

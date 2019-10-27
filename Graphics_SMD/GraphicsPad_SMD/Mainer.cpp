@@ -7,16 +7,10 @@
 int main(int argc, char* argv[])
 {
 	//GLFWwindow* window = glfwCreateWindow();
-	QApplication application(argc, argv);
-	MeGlWindow meGlWindow;
-	if (!meGlWindow.initialize())
-		return -1;
-	meGlWindow.show();
-	int errorCode = application.exec();
-	if (!meGlWindow.shutdown())
-		errorCode |= 1;
-	return errorCode;
-
+	QApplication app(argc, argv);
+	MeGlWindow meWindow;
+	meWindow.show();
+	return app.exec();
 
 
 }
