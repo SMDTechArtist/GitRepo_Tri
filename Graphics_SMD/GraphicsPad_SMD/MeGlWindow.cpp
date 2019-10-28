@@ -16,7 +16,7 @@
 #include <ShapeGenerator.h> //If act funny add <Primitives/..>
 #include <Qt\qapplication.h>
 #include <glm\gtx\transform.hpp>
-
+#include <Camera.h>
 
 
 
@@ -40,7 +40,7 @@ const GLuint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 GLuint programID;
 
 GLuint numIndices;
-
+Camera camera;
 
 
 
@@ -74,19 +74,15 @@ void MeGlWindow::sendDataToOpenGL()
 	ShapeData shape = ShapeGenerator::makeCube();
 	
 	GLuint vertexBufferID;
-
 	glGenBuffers(1, &vertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
 	glBufferData(GL_ARRAY_BUFFER, shape.vertexBufferSize(), shape.vertices, GL_STATIC_DRAW);
-	
 	glEnableVertexAttribArray(0); //layout Location
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0);
-	
 	glEnableVertexAttribArray(1); //layout Location
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (char*)(sizeof(float) * 3));
 	
 	GLuint indexArrayBufferID;
-
 	glGenBuffers(1, &indexArrayBufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexArrayBufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.indexBufferSize(), shape.indices, GL_STATIC_DRAW);
@@ -99,14 +95,15 @@ void MeGlWindow::sendDataToOpenGL()
 	glGenBuffers(1, &transformationMatrixBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, transformationMatrixBufferID);
 
-	/*mat4 projectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
-	
+	mat4 projectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
+
 	mat4 fullTransforms[] =
 	{
-
-		projectionMatrix = glm::translate(vec3(-1.0f, 0.0f, -3.0f)) * glm::rotate(36.0f, vec3(0.0f, 1.0f, 0.0f)),
-		projectionMatrix = glm::translate(vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(126.0f, vec3(0.0f, 1.0f, 0.0f))
+		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(-1.0f, 0.0f, -3.0f)) * glm::rotate(36.0f, vec3(1.0f, 0.0f, 0.0f)),
+		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(126.0f, vec3(0.0f, 1.0f, 0.0f))
 	};
+
+
 	glBufferData(GL_ARRAY_BUFFER, sizeof(fullTransforms), fullTransforms, GL_STATIC_DRAW);
 	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 0));
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 4));
@@ -120,7 +117,7 @@ void MeGlWindow::sendDataToOpenGL()
 	glVertexAttribDivisor(3, 1);
 	glVertexAttribDivisor(4, 1);
 	glVertexAttribDivisor(5, 1);
-	*/
+	
 }
 
 
@@ -132,7 +129,7 @@ void MeGlWindow::paintGL()
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, width(), height());
 
-	GLint fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "fullTransformMatrix");
+	/*GLint fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "fullTransformMatrix");
 	mat4 fullTransformMatrix;
 
 	mat4 projectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
@@ -159,7 +156,8 @@ void MeGlWindow::paintGL()
 	glUniformMatrix4fv(fullTransformMatrixUniformLocation, 1,
 		GL_FALSE, &fullTransformMatrix[0][0]);
 	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0);
-	//glDrawElementsInstanced(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0, 2);
+	*/
+	glDrawElementsInstanced(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0, 2);
 	//mat4 worldToView = glm::lookAt(camPos, ObjectPos, upVecY);
 
 
