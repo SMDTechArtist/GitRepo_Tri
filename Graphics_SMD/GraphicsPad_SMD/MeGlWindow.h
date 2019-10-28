@@ -22,7 +22,9 @@ class MeGlWindow : public QGLWidget
 protected:
 	void initializeGL();
 	void paintGL();
+	void mouseMoveEvent(QMouseEvent*);
 	void sendDataToOpenGL();
+
 
 
 
