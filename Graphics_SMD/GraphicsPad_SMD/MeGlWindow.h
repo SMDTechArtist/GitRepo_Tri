@@ -18,21 +18,19 @@
 class MeGlWindow : public QGLWidget
 {
 	//Q_OBJECT
-	//QTimer myTimer;
+
 protected:
 	void initializeGL();
 	void paintGL();
 	void sendDataToOpenGL();
-	//void keyPressEvent(QKeyEvent*); 
-	//void handleBoundaries();
-	//void checkBoundaries();
+
 
 
 //private slots:
 	//void myUpdate();
 
-//public:
-	
+public:
+	~MeGlWindow();
 
 };
 

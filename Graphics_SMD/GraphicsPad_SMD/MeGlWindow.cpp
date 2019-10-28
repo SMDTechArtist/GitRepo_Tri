@@ -15,6 +15,7 @@
 #include <Vertex.h> //If act funny add <Primitives/..>
 #include <ShapeGenerator.h> //If act funny add <Primitives/..>
 #include <Qt\qapplication.h>
+#include <glm\gtx\transform.hpp>
 
 
 
@@ -92,6 +93,34 @@ void MeGlWindow::sendDataToOpenGL()
 	
 	numIndices = shape.numIndices;
 	shape.cleanup();
+
+
+	GLuint transformationMatrixBufferID;
+	glGenBuffers(1, &transformationMatrixBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, transformationMatrixBufferID);
+
+	/*mat4 projectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
+	
+	mat4 fullTransforms[] =
+	{
+
+		projectionMatrix = glm::translate(vec3(-1.0f, 0.0f, -3.0f)) * glm::rotate(36.0f, vec3(0.0f, 1.0f, 0.0f)),
+		projectionMatrix = glm::translate(vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(126.0f, vec3(0.0f, 1.0f, 0.0f))
+	};
+	glBufferData(GL_ARRAY_BUFFER, sizeof(fullTransforms), fullTransforms, GL_STATIC_DRAW);
+	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 0));
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 4));
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 8));
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 12));
+	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
+	glEnableVertexAttribArray(4);
+	glEnableVertexAttribArray(5);
+	glVertexAttribDivisor(2, 1);
+	glVertexAttribDivisor(3, 1);
+	glVertexAttribDivisor(4, 1);
+	glVertexAttribDivisor(5, 1);
+	*/
 }
 
 
@@ -103,55 +132,40 @@ void MeGlWindow::paintGL()
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, width(), height());
 
-	mat4 veiwToProjection = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
-	mat4 modelToWorld = glm::translate(veiwToProjection, vec3(0.0f, 0.0f, -3.0f));
-	mat4 fullTransformMatrix = glm::rotate(modelToWorld, 54.0f, vec3(1.0f, 0.0f, 0.0f));
-	
-	
-	//mat4 worldToView = glm::lookAt(camPos, ObjectPos, upVecY);
-
-	
 	GLint fullTransformMatrixUniformLocation = glGetUniformLocation(programID, "fullTransformMatrix");
+	mat4 fullTransformMatrix;
+
+	mat4 projectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
 	
+	//Cube1
+	mat4 translationMatrix = glm::translate(vec3(1.0f, 0.0f, -3.75f));
+	mat4 rotationMatrix = glm::rotate(36.0f, vec3(0.0f, 1.0f, 0.0f));
+	
+	fullTransformMatrix = projectionMatrix * translationMatrix * rotationMatrix;
+
 
 	glUniformMatrix4fv(fullTransformMatrixUniformLocation, 1,
 		GL_FALSE, &fullTransformMatrix[0][0]);
-	
-
 	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0);
-
-	/*glBindBuffer(GL_ARRAY_BUFFER, ShipVertexBufferID);
-	vec3 translatedVerts[NUM_SHIP_VERTS];
-	for (unsigned int i = 0; i < NUM_SHIP_VERTS; i++)
-	{
-		translatedVerts[i] = ShipVerts[i] + ShipPos;
-	}
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(translatedVerts), translatedVerts);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0); 
-
 	
+	
+	//Cube2
+	translationMatrix = glm::translate(vec3(-1.0f, 0.0f, -3.0f));
+	rotationMatrix = glm::rotate(36.0f, vec3(1.0f, 0.0f, 0.0f));
 
-	glBindBuffer(GL_ARRAY_BUFFER, boundaryVertexBufferID);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glDrawElements(GL_LINES, 8, GL_UNSIGNED_SHORT, 0);
+	fullTransformMatrix = projectionMatrix * translationMatrix * rotationMatrix;
 
-	*/
+
+	glUniformMatrix4fv(fullTransformMatrixUniformLocation, 1,
+		GL_FALSE, &fullTransformMatrix[0][0]);
+	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0);
+	//glDrawElementsInstanced(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0, 2);
+	//mat4 worldToView = glm::lookAt(camPos, ObjectPos, upVecY);
+
+
+
 }
 
-
-/*void MeGlWindow::myUpdate()
-
-	MeGlWindow QKeyEvent();
-
-
-	
-	repaint();
-
-	handleBoundaries();
-
-
-}*/
 
 
 
@@ -255,12 +269,18 @@ void installShaders()
 		return;
 
 	programID = glCreateProgram();
+
 	glAttachShader(programID, vertexShaderID);
 	glAttachShader(programID, fragmentShaderID);
 	glLinkProgram(programID);
 
+
 	if (!checkProgramStatus(programID))
 		return;
+
+
+	glDeleteShader(vertexShaderID);
+	glDeleteShader(fragmentShaderID);
 
 	glUseProgram(programID);
 
@@ -302,6 +322,11 @@ void MeGlWindow::initializeGL()
 	*/
 }
 
+MeGlWindow::~MeGlWindow()
+{
+	glUseProgram(0);
+	glDeleteProgram(programID);
+}
 
 /*void MeGlWindow::keyPressEvent(QKeyEvent* e)
 {
