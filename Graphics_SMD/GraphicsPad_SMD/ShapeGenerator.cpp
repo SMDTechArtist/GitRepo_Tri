@@ -152,6 +152,7 @@ ShapeData ShapeGenerator::makeCube() {
 
 	return ret;
 }
+
 /*
 ShapeData ShapeGenerator::makeArrow()
 {
@@ -711,7 +712,9 @@ ShapeData ShapeGenerator::makeTorus(uint tesselation)
 	ret.indices = ret2.indices;
 	return ret;
 }
+*/
 
+/*
 ShapeData ShapeGenerator::makeSphere(uint tesselation)
 {
 	ShapeData ret = makePlaneVerts(tesselation);
@@ -739,6 +742,8 @@ ShapeData ShapeGenerator::makeSphere(uint tesselation)
 	}
 	return ret;
 }
+*/
+/*
 
 ShapeData ShapeGenerator::generateNormals(const ShapeData& data)
 {

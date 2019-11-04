@@ -4,7 +4,8 @@
 #include <fstream>
 #include <glfw3.h>
 #include <glm\glm.hpp>
-#include <QtGui/qkeysequence.h>
+#include <QtGui\qkeysequence.h>
+#include <QtGui\qkeyevent>
 #include <Qt\qevent.h>
 #include <cassert>
 #include <Qt\qtimer.h>
@@ -39,9 +40,23 @@ const GLuint NUM_FLOATS_PER_VERTICE = 6;
 const GLuint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 
 GLuint programID;
-
+GLuint teapotNumIndices;
+GLuint arrowNumIndices;
+GLuint planeNumIndices;
 GLuint numIndices;
+GLuint fullTransformUniformLocation;
+
 Camera camera;
+
+GLuint theBufferID;
+
+GLuint teapostVertexArrayObjectID;
+GLuint arrowVertexArrayObjectID;
+GLuint planeVertexArryObjectID;
+GLuint teapotIndexDataByTeOffset;
+GLuint arrowIndexDataByTeOffset;
+GLuint planeIndexDataByTeOffset;
+
 
 
 
@@ -144,6 +159,33 @@ void MeGlWindow::mouseMoveEvent(QMouseEvent* e)
 {
 	camera.mouseUpdate(glm::vec2(e->x(), e->y()));
 	repaint();
+}
+
+void MeGlWindow::keyPressEvent(QKeyEvent* e)
+{
+	switch (e->key())
+	{
+	case Qt::Key::Key_W:
+		camera.moveForward();
+		break;
+	case Qt::Key::Key_S:
+		camera.moveBackward();
+		break;
+	case Qt::Key::Key_A:
+		camera.strafeLeft();
+		break;
+	case Qt::Key::Key_D:
+		camera.strafeRight();
+		break;
+	case Qt::Key::Key_R:
+		camera.moveUp();
+		break;
+	case Qt::Key::Key_F:
+		camera.moveDown();
+		break;
+	}
+	repaint();
+
 }
 
 bool checkStatus(
