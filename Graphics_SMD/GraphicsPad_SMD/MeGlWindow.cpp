@@ -223,7 +223,7 @@ string readShaderCode(const char* fileName)
 		std::istreambuf_iterator<char>());
 }
 
-
+//
 
 bool checkShaderStatus(GLuint shaderID)
 {
