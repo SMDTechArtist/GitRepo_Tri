@@ -17,7 +17,9 @@
 
 class MeGlWindow : public QGLWidget
 {
-	//Q_OBJECT
+	Q_OBJECT
+
+		QTimer myTimer;
 
 protected:
 	void initializeGL();
@@ -29,8 +31,8 @@ protected:
 
 
 
-//private slots:
-	//void myUpdate();
+private slots:
+	void myUpdate();
 
 public:
 	~MeGlWindow();

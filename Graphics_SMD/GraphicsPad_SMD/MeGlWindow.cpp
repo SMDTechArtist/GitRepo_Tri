@@ -139,7 +139,7 @@ void MeGlWindow::paintGL()
 	mat4 fullTransforms[] =
 	{
 		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(-1.0f, 0.0f, -3.0f)) * glm::rotate(36.0f, vec3(1.0f, 0.0f, 0.0f)),
-		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(126.0f, vec3(0.0f, 1.0f, 0.0f))
+		//projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(126.0f, vec3(0.0f, 1.0f, 0.0f))
 	};
 	glBufferData(GL_ARRAY_BUFFER, sizeof(fullTransforms), fullTransforms, GL_DYNAMIC_DRAW);
 	
@@ -150,8 +150,19 @@ void MeGlWindow::paintGL()
 	glDrawElementsInstanced(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0, 2);
 	//mat4 worldToView = glm::lookAt(camPos, ObjectPos, upVecY);
 
+	connect(&myTimer, SIGNAL(timeout()),
+		this, SLOT(myUpdate()));
+	myTimer.start(0);
 
 
+}
+
+void MeGlWindow::myUpdate()
+{
+	cout << "frame!" << endl;
+	//connect(&myTimer, SIGNAL(timeout()),
+	//	this, SLOT(myUpdate()));
+	//myTimer.start(0);
 }
 
 
