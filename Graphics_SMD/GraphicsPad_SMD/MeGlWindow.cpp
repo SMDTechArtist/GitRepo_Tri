@@ -58,12 +58,7 @@ GLuint arrowIndexDataByTeOffset;
 GLuint planeIndexDataByTeOffset;
 
 
-//mat4 cubeRotation = glm::rotate(36.0f, vec3(1.0f, 0.0f, 0.0f));
-const float ROTATION_SPEED = 3.0f;
-mat4 cubeRotation;
-//= cubeRotation + glm::rotate(3.0f, vec3(1.0f, 0.0f, 0.0f));
 
-//glm::rotate(36.0f, vec3(1.0f, 0.0f, 0.0f)
 
 /*glm::vec3 perpCcwXy(float x, float y)
 {
@@ -139,9 +134,8 @@ int debugCount = 0;
 
 void MeGlWindow::paintGL()
 {
-	
 	mat4 projectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
-	
+
 	mat4 fullTransforms[] =
 	{
 		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(-1.0f, 0.0f, -3.0f)) * glm::rotate(36.0f, vec3(1.0f, 0.0f, 0.0f)),
@@ -151,13 +145,12 @@ void MeGlWindow::paintGL()
 	
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, width(), height());
-	
-	
+
+
 	glDrawElementsInstanced(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0, 2);
 	//mat4 worldToView = glm::lookAt(camPos, ObjectPos, upVecY);
 
-	//cout << "frame!" << endl;
-	
+
 
 }
 
@@ -322,10 +315,7 @@ float randComponent()
 	return rand() % 100 * 0.00001 * randSign();
 }*/
 
-float stateRotation()
-{
-	return 36.0f;
-}
+
 void MeGlWindow::initializeGL()
 {
 
@@ -338,23 +328,19 @@ void MeGlWindow::initializeGL()
 	//assert(clock.initialize());
 	//assert(errorCode == 0);
 
-	*/
+
 	connect(&myTimer, SIGNAL(timeout()),
-		this, SLOT(paintGL()));
+		this, SLOT(myUpdate()));
 	myTimer.start(0);
 
-
 	srand(time(0));
-
-
-	/*
+	
 	float floaty = randComponent(); //used for bug checking to see what the value of our RandComponent is. 
 
 	//ShipVelocity = vec3(randComponent(), randComponent(), +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
 	*/
 }
 
-//mat4 rotation = cubeRotation + glm::rotate(3.0f, vec3(1.0f, 0.0f, 0.0f));
 MeGlWindow::~MeGlWindow()
 {
 	glUseProgram(0);

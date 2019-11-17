@@ -13,17 +13,15 @@
 
 
 
-
-class QKeyEvent;
+//class QKeyEvent;
 
 class MeGlWindow : public QGLWidget
 {
-	Q_OBJECT
-	QTimer myTimer;
+	//Q_OBJECT
 
 protected:
 	void initializeGL();
-	//void paintGL();
+	void paintGL();
 	void mouseMoveEvent(QMouseEvent*);
 	void keyPressEvent(QKeyEvent*);
 	void sendDataToOpenGL();
@@ -31,9 +29,8 @@ protected:
 
 
 
-private slots:
+//private slots:
 	//void myUpdate();
-	void paintGL();
 
 public:
 	~MeGlWindow();
