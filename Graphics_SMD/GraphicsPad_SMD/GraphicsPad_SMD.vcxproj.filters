@@ -17,6 +17,9 @@
     <Filter Include="Debug">
       <UniqueIdentifier>{c939de62-5c2c-4d25-95ee-ab9cc636a92a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Clock">
+      <UniqueIdentifier>{76d5d6b1-8fa9-49f2-b99b-749d21087210}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphicsPad_SMD.cpp">
@@ -49,6 +52,9 @@
     <ClCompile Include="MeGlWindow_MOC_.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Clock.cpp">
+      <Filter>Clock</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MeGlWindow.h" />
@@ -70,6 +76,9 @@
     <ClInclude Include="MeWidget.h" />
     <ClInclude Include="DebugSlider.h">
       <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Clock.h">
+      <Filter>Clock</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

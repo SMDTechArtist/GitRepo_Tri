@@ -35,7 +35,7 @@ using glm::mat4;
 
 
 
-const GLuint NUM_VERTICES_PER_SHIP = 3;
+
 const GLuint NUM_FLOATS_PER_VERTICE = 6;
 const GLuint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 
@@ -57,8 +57,12 @@ GLuint teapotIndexDataByTeOffset;
 GLuint arrowIndexDataByTeOffset;
 GLuint planeIndexDataByTeOffset;
 
-
-
+float rotationPos;
+float oldRotationPos;
+const float ROTATION_SPEED = 3.0f;
+glm::vec3 ROTATING_XFront(1.0f, 0.0f, 0.0f);
+glm::vec3 ROTATING_ZSide(0.0f, 1.0f, 0.0f;
+glm::vec3 ROTATING_YTop(0.0f, 0.0f, 1.0f;
 
 /*glm::vec3 perpCcwXy(float x, float y)
 {
@@ -138,7 +142,7 @@ void MeGlWindow::paintGL()
 
 	mat4 fullTransforms[] =
 	{
-		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(-1.0f, 0.0f, -3.0f)) * glm::rotate(36.0f, vec3(1.0f, 0.0f, 0.0f)),
+		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(-1.0f, 0.0f, -4.0f)) * glm::rotate(36.0f, vec3(0.0f, 1.0f, 0.0f)),
 		//projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(126.0f, vec3(0.0f, 1.0f, 0.0f))
 	};
 	glBufferData(GL_ARRAY_BUFFER, sizeof(fullTransforms), fullTransforms, GL_DYNAMIC_DRAW);
@@ -152,7 +156,7 @@ void MeGlWindow::paintGL()
 
 	connect(&myTimer, SIGNAL(timeout()),
 		this, SLOT(myUpdate()));
-	myTimer.start(0);
+	myTimer.start(1);
 
 
 }

@@ -157,6 +157,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Clock.cpp" />
     <ClCompile Include="DebugSlider.cpp" />
     <ClCompile Include="DebugSlider_Moc_.cpp" />
     <ClCompile Include="GraphicsPad_SMD.cpp" />
@@ -171,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Clock.h" />
     <ClInclude Include="DebugSlider.h" />
     <ClInclude Include="MeWidget.h" />
     <ClInclude Include="ShapeData.h" />
