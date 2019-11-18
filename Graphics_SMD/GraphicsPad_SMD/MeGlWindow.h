@@ -36,6 +36,8 @@ private slots:
 
 public:
 	~MeGlWindow();
+	MeWidget();
+
 
 };
 
