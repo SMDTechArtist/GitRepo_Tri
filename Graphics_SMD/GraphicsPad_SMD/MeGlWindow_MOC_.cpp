@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'MeGlWindow.h'
 **
-** Created: Sun Nov 17 19:40:19 2019
+** Created: Sun Nov 17 20:16:25 2019
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.0)
 **
 ** WARNING! All changes made in this file will be lost!

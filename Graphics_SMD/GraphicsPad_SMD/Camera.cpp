@@ -1,5 +1,6 @@
 #include <Camera.h>
 #include <glm\gtx\transform.hpp>
+#include <MeWidget.h>
 
 const float Camera::MOVEMENT_SPEED = 0.1f;
 

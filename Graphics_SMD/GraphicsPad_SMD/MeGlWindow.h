@@ -8,12 +8,13 @@
 #include <Qt\qevent.h>
 #include <cassert>
 #include <Qt\qtimer.h>
+#include<MeWidget.h>
 
 
 
 
 
-//class QKeyEvent;
+class QKeyEvent;
 
 class MeGlWindow : public QGLWidget
 {
@@ -36,7 +37,7 @@ private slots:
 
 public:
 	~MeGlWindow();
-	MeWidget();
+	//MeWidget();
 
 
 };

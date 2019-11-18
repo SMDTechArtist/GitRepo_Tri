@@ -14,6 +14,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{d47a0c39-6326-4d18-a58f-6d5ddb8288f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{c939de62-5c2c-4d25-95ee-ab9cc636a92a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphicsPad_SMD.cpp">
@@ -31,7 +34,19 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
-    <ClCompile Include="MeGlWindow_MOC.cpp">
+    <ClCompile Include="MeWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugSlider.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugSlider_Moc_.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="MeWidget_Moc_.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MeGlWindow_MOC_.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -51,6 +66,10 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="MeWidget.h" />
+    <ClInclude Include="DebugSlider.h">
+      <Filter>Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

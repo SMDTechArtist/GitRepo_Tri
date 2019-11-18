@@ -159,7 +159,7 @@ void MeGlWindow::paintGL()
 
 void MeGlWindow::myUpdate()
 {
-	cout << "frame!" << endl;
+	//cout << "frame!" << endl;
 	//connect(&myTimer, SIGNAL(timeout()),
 	//	this, SLOT(myUpdate()));
 	//myTimer.start(0);
@@ -329,7 +329,7 @@ float randComponent()
 
 void MeGlWindow::initializeGL()
 {
-
+	setMinimumSize(1200, 600);
 	glewInit();
 	glEnable(GL_DEPTH_TEST);
 	sendDataToOpenGL();
