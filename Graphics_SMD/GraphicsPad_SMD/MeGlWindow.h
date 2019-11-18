@@ -35,9 +35,13 @@ protected:
 private slots:
 	void myUpdate();
 
+
+
 public:
 	~MeGlWindow();
 	//MeWidget();
+	//bool shutdown();
+	//bool initialize();
 
 
 };

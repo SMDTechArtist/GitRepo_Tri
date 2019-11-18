@@ -19,6 +19,7 @@ private slots:
 		void sliderValueChanged();
 		
 
+
 public:
 	MeWidget();
 

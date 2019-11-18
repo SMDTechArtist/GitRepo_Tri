@@ -19,6 +19,7 @@
 #include <glm\gtx\transform.hpp>
 #include <Camera.h>
 #include <QtGui/qmouseevent>
+#include <Clock.h>
 
 
 
@@ -34,7 +35,7 @@ using glm::mat4;
 
 
 
-
+using Timing::Clock;
 
 const GLuint NUM_FLOATS_PER_VERTICE = 6;
 const GLuint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
@@ -57,40 +58,18 @@ GLuint teapotIndexDataByTeOffset;
 GLuint arrowIndexDataByTeOffset;
 GLuint planeIndexDataByTeOffset;
 
-float rotationPos;
-float oldRotationPos;
-const float ROTATION_SPEED = 3.0f;
-glm::vec3 ROTATING_XFront(1.0f, 0.0f, 0.0f);
-glm::vec3 ROTATING_ZSide(0.0f, 1.0f, 0.0f;
-glm::vec3 ROTATING_YTop(0.0f, 0.0f, 1.0f;
 
-/*glm::vec3 perpCcwXy(float x, float y)
-{
-	return glm::vec3(-y, x, 0.0f);
-
-}
-
-
-float magnitude(float x, float y, float z)
-{
-	return sqrt(x * x + y * y + z * z);
-}
+glm::mat4 cubeRotation = glm::rotate(36.0f, vec3(0.0f, 1.0f, 0.0f));
+glm::mat4 oldCubeRotation;
 
 
 
-vec3 normalized(vec3 norm)
-{
 
-	float inverseMagnitude = 1.0f / magnitude(norm.x, norm.y, norm.z);
-	vec3 IM(inverseMagnitude, inverseMagnitude, inverseMagnitude);
 
-	vec3 normalizing(IM.x * norm.x, IM.y * norm.y, IM.z * norm.z);
-	return normalizing;
-}
-*/
 
 void MeGlWindow::sendDataToOpenGL()
 {
+	Clock clock;
 	ShapeData shape = ShapeGenerator::makeCube();
 	
 	GLuint vertexBufferID;
@@ -138,11 +117,17 @@ int debugCount = 0;
 
 void MeGlWindow::paintGL()
 {
+	Clock clock;
+	float ROTATION_SPEED = 3.0f * clock.timeElapsedLastFrame();
+	glm::mat4 directionToRotate = glm::rotate(ROTATION_SPEED , vec3(1.0f, 0.0f, 0.0f));
+	oldCubeRotation = cubeRotation;
+	cubeRotation = cubeRotation + directionToRotate;
+
 	mat4 projectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
 
 	mat4 fullTransforms[] =
 	{
-		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(-1.0f, 0.0f, -4.0f)) * glm::rotate(36.0f, vec3(0.0f, 1.0f, 0.0f)),
+		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(-1.0f, 0.0f, -4.0f)) * cubeRotation,
 		//projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(126.0f, vec3(0.0f, 1.0f, 0.0f))
 	};
 	glBufferData(GL_ARRAY_BUFFER, sizeof(fullTransforms), fullTransforms, GL_DYNAMIC_DRAW);
@@ -158,17 +143,38 @@ void MeGlWindow::paintGL()
 		this, SLOT(myUpdate()));
 	myTimer.start(1);
 
+	update();
+
 
 }
+
+
 
 void MeGlWindow::myUpdate()
 {
-	//cout << "frame!" << endl;
-	//connect(&myTimer, SIGNAL(timeout()),
-	//	this, SLOT(myUpdate()));
-	//myTimer.start(0);
+	Clock clock;
+	clock.newFrame();
+	MeGlWindow QKeyEvent();
+	
+	//float ROTATION_SPEED = 3.0f * clock.timeElapsedLastFrame();
+	//glm::mat4 directionToRotate = glm::rotate(ROTATION_SPEED , vec3(0.0f, 1.0f, 0.0f));
+	oldCubeRotation = cubeRotation;
+	cubeRotation += cubeRotation * clock.timeElapsedLastFrame();
+
+	repaint();
 }
 
+//bool MeGlWindow::initialize()
+//{
+//	Clock clock;
+//	return clock.initialize();
+//}
+//
+//bool MeGlWindow::shutdown()
+//{
+//	Clock clock;
+//	return clock.shutdown();
+//}
 
 void MeGlWindow::mouseMoveEvent(QMouseEvent* e)
 {
@@ -202,6 +208,13 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 	repaint();
 
 }
+//float Clock::timeElapsedLastFrame() const
+//{
+//	return deltaTime;
+//}
+
+	
+
 
 bool checkStatus(
 	GLuint objectID,
@@ -331,29 +344,17 @@ float randComponent()
 }*/
 
 
+
 void MeGlWindow::initializeGL()
 {
+	Clock clock;
 	setMinimumSize(1200, 600);
 	glewInit();
 	glEnable(GL_DEPTH_TEST);
 	sendDataToOpenGL();
 	installShaders();
-
-	/*GLenum errorCode = glewInit();
-	//assert(clock.initialize());
-	//assert(errorCode == 0);
-
-
-	connect(&myTimer, SIGNAL(timeout()),
-		this, SLOT(myUpdate()));
-	myTimer.start(0);
-
-	srand(time(0));
 	
-	float floaty = randComponent(); //used for bug checking to see what the value of our RandComponent is. 
 
-	//ShipVelocity = vec3(randComponent(), randComponent(), +0.0f); //Change the num of zeros to slow or speed the velocity of tri1
-	*/
 }
 
 MeGlWindow::~MeGlWindow()
@@ -361,6 +362,8 @@ MeGlWindow::~MeGlWindow()
 	glUseProgram(0);
 	glDeleteProgram(programID);
 }
+
+
 
 /*void MeGlWindow::keyPressEvent(QKeyEvent* e)
 {
