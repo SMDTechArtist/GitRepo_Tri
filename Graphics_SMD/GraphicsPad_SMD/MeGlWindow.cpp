@@ -121,7 +121,22 @@ float ROTATION_SPEED = 30.0f;
 void MeGlWindow::paintGL()
 {
 	Clock clock;
-	
+
+	//Ambiant Light
+	GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLight");
+	vec3 ambientLight(0.3f, 0.3f, 0.3f);
+	glUniform3fv(ambientLightUniformLocation, 1, &ambientLight[0]);
+
+	//Light Position here
+	GLint lightPositionUniformLocation = glGetUniformLocation(programID, "lightPosition");
+	vec3 lightPosition(0.0f, 3.0f, 0.0f);
+	glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
+
+	//camera Position here
+	GLint cameraPosWorldUniformLocation = glGetUniformLocation(programID, "cameraPosition");
+	vec3 cameraPosition = camera.getPosition();
+	glUniform3fv(cameraPosWorldUniformLocation, 1, &cameraPosition[0]);
+
 	//glm::mat4 directionToRotate = glm::rotate(ROTATION_SPEED , vec3(1.0f, 0.0f, 0.0f));
 	//oldCubeRotation = cubeRotation;
 	//cubeRotation = cubeRotation + directionToRotate;

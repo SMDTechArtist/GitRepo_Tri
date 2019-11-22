@@ -56,3 +56,8 @@ void Camera::moveDown()
 {
 	position += -MOVEMENT_SPEED * UP;
 }
+
+glm::vec3 Camera::getPosition() const
+{
+	return position;
+}
