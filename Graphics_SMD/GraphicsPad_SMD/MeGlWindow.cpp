@@ -59,8 +59,7 @@ GLuint arrowIndexDataByTeOffset;
 GLuint planeIndexDataByTeOffset;
 
 
-glm::mat4 cubeRotation = glm::rotate(36.0f, vec3(0.0f, 1.0f, 0.0f));
-glm::mat4 oldCubeRotation;
+
 
 
 
@@ -115,19 +114,23 @@ void MeGlWindow::sendDataToOpenGL()
 
 int debugCount = 0;
 
+float ROTATION_SPEED = 30.0f;
+//glm::mat4 cubeRotation = glm::rotate(36.0f, vec3(1.0f, 0.0f, 0.0f));
+//glm::mat4 oldCubeRotation;
+
 void MeGlWindow::paintGL()
 {
 	Clock clock;
-	float ROTATION_SPEED = 3.0f * clock.timeElapsedLastFrame();
-	glm::mat4 directionToRotate = glm::rotate(ROTATION_SPEED , vec3(1.0f, 0.0f, 0.0f));
-	oldCubeRotation = cubeRotation;
-	cubeRotation = cubeRotation + directionToRotate;
-
+	
+	//glm::mat4 directionToRotate = glm::rotate(ROTATION_SPEED , vec3(1.0f, 0.0f, 0.0f));
+	//oldCubeRotation = cubeRotation;
+	//cubeRotation = cubeRotation + directionToRotate;
+	
 	mat4 projectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
 
 	mat4 fullTransforms[] =
 	{
-		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(-1.0f, 0.0f, -4.0f)) * cubeRotation,
+		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(-1.0f, 0.0f, -4.0f)) * glm::rotate(ROTATION_SPEED , vec3(1.0f, 0.0f, 0.0f)),
 		//projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(126.0f, vec3(0.0f, 1.0f, 0.0f))
 	};
 	glBufferData(GL_ARRAY_BUFFER, sizeof(fullTransforms), fullTransforms, GL_DYNAMIC_DRAW);
@@ -141,11 +144,12 @@ void MeGlWindow::paintGL()
 
 	connect(&myTimer, SIGNAL(timeout()),
 		this, SLOT(myUpdate()));
-	myTimer.start(1);
+	myTimer.start(0);
 
 	update();
 
-
+	clock.newFrame();
+	//MeGlWindow QKeyEvent();
 }
 
 
@@ -153,28 +157,29 @@ void MeGlWindow::paintGL()
 void MeGlWindow::myUpdate()
 {
 	Clock clock;
-	clock.newFrame();
+	ROTATION_SPEED += 0.2f;
+	//clock.newFrame();
 	MeGlWindow QKeyEvent();
 	
 	//float ROTATION_SPEED = 3.0f * clock.timeElapsedLastFrame();
 	//glm::mat4 directionToRotate = glm::rotate(ROTATION_SPEED , vec3(0.0f, 1.0f, 0.0f));
-	oldCubeRotation = cubeRotation;
-	cubeRotation += cubeRotation * clock.timeElapsedLastFrame();
+	//oldCubeRotation = cubeRotation;
+	//cubeRotation += cubeRotation * clock.timeElapsedLastFrame();
 
 	repaint();
 }
 
-//bool MeGlWindow::initialize()
-//{
-//	Clock clock;
-//	return clock.initialize();
-//}
-//
-//bool MeGlWindow::shutdown()
-//{
-//	Clock clock;
-//	return clock.shutdown();
-//}
+bool MeGlWindow::initialize()
+{
+	Clock clock;
+	return clock.initialize();
+}
+
+bool MeGlWindow::shutdown()
+{
+	Clock clock;
+	return clock.shutdown();
+}
 
 void MeGlWindow::mouseMoveEvent(QMouseEvent* e)
 {

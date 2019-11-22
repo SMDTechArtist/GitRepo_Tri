@@ -46,14 +46,14 @@
     <ClCompile Include="DebugSlider_Moc_.cpp">
       <Filter>Debug</Filter>
     </ClCompile>
-    <ClCompile Include="MeWidget_Moc_.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MeGlWindow_MOC_.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Clock.cpp">
       <Filter>Clock</Filter>
+    </ClCompile>
+    <ClCompile Include="MeWidget_Moc_.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
