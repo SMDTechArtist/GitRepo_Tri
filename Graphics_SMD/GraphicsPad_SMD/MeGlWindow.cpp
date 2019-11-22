@@ -143,6 +143,9 @@ void MeGlWindow::paintGL()
 	
 	mat4 projectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
 
+	auto vd = camera.viewDirection;
+	std::cout << vd.x << " " << vd.y << " " << vd.z << std::endl;
+
 	mat4 fullTransforms[] =
 	{
 		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(-1.0f, 0.0f, -4.0f)) * glm::rotate(ROTATION_SPEED , vec3(1.0f, 0.0f, 0.0f)),
@@ -159,7 +162,7 @@ void MeGlWindow::paintGL()
 
 	connect(&myTimer, SIGNAL(timeout()),
 		this, SLOT(myUpdate()));
-	myTimer.start(0);
+	myTimer.start(16);
 
 	update();
 
@@ -198,6 +201,7 @@ bool MeGlWindow::shutdown()
 
 void MeGlWindow::mouseMoveEvent(QMouseEvent* e)
 {
+	std::cout << "you got to move it move it" << std::endl;
 	camera.mouseUpdate(glm::vec2(e->x(), e->y()));
 	repaint();
 }
