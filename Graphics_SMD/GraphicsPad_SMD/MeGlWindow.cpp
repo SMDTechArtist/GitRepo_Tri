@@ -44,7 +44,7 @@ GLuint programID;
 GLuint teapotNumIndices;
 GLuint arrowNumIndices;
 GLuint planeNumIndices;
-GLuint numIndices;
+GLuint cubeNumIndices;
 GLuint fullTransformUniformLocation;
 
 Camera camera;
@@ -58,7 +58,7 @@ GLuint teapotIndexDataByTeOffset;
 GLuint arrowIndexDataByTeOffset;
 GLuint planeIndexDataByTeOffset;
 
-
+float ROTATION_SPEED = 30.0f;
 
 
 
@@ -76,16 +76,16 @@ void MeGlWindow::sendDataToOpenGL()
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
 	glBufferData(GL_ARRAY_BUFFER, shape.vertexBufferSize(), shape.vertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0); //layout Location
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_BYTE_SIZE, 0);
 	glEnableVertexAttribArray(1); //layout Location
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (char*)(sizeof(float) * 3));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_BYTE_SIZE, (char*)(sizeof(float) * 3));
 	
 	GLuint indexArrayBufferID;
 	glGenBuffers(1, &indexArrayBufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexArrayBufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.indexBufferSize(), shape.indices, GL_STATIC_DRAW);
 	
-	numIndices = shape.numIndices;
+	cubeNumIndices = shape.numIndices;
 	shape.cleanup();
 
 
@@ -108,19 +108,66 @@ void MeGlWindow::sendDataToOpenGL()
 	glVertexAttribDivisor(4, 1);
 	glVertexAttribDivisor(5, 1);
 	
+
+
+	/*shape = ShapeGenerator::makeArrow();
+
+	
+	glGenBuffers(1, &vertexBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+	glBufferData(GL_ARRAY_BUFFER, shape.vertexBufferSize(), shape.vertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0); //layout Location
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0);
+	glEnableVertexAttribArray(1); //layout Location
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (char*)(sizeof(float) * 3));
+
+
+	glGenBuffers(1, &indexArrayBufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexArrayBufferID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.indexBufferSize(), shape.indices, GL_STATIC_DRAW);
+
+	arrowNumIndices = shape.numIndices;
+	shape.cleanup();
+
+
+	GLuint transformationMatrixBufferID;
+	glGenBuffers(1, &transformationMatrixBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, transformationMatrixBufferID);
+
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * 2, 0, GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 0));
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 4));
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 8));
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 12));
+	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
+	glEnableVertexAttribArray(4);
+	glEnableVertexAttribArray(5);
+	glVertexAttribDivisor(2, 1);
+	glVertexAttribDivisor(3, 1);
+	glVertexAttribDivisor(4, 1);
+	glVertexAttribDivisor(5, 1);
+	*/
 }
 
 
 
 int debugCount = 0;
 
-float ROTATION_SPEED = 30.0f;
+
 //glm::mat4 cubeRotation = glm::rotate(36.0f, vec3(1.0f, 0.0f, 0.0f));
 //glm::mat4 oldCubeRotation;
 
 void MeGlWindow::paintGL()
 {
 	Clock clock;
+
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	glViewport(0, 0, width(), height());
+
+	auto vd = camera.viewDirection;
+	std::cout << vd.x << " " << vd.y << " " << vd.z << std::endl;
 
 	//Ambiant Light
 	GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLight");
@@ -137,28 +184,40 @@ void MeGlWindow::paintGL()
 	vec3 cameraPosition = camera.getPosition();
 	glUniform3fv(cameraPosWorldUniformLocation, 1, &cameraPosition[0]);
 
-	//glm::mat4 directionToRotate = glm::rotate(ROTATION_SPEED , vec3(1.0f, 0.0f, 0.0f));
-	//oldCubeRotation = cubeRotation;
-	//cubeRotation = cubeRotation + directionToRotate;
 	
 	mat4 projectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
-
-	auto vd = camera.viewDirection;
-	std::cout << vd.x << " " << vd.y << " " << vd.z << std::endl;
-
-	mat4 fullTransforms[] =
-	{
-		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(-1.0f, 0.0f, -4.0f)) * glm::rotate(ROTATION_SPEED , vec3(1.0f, 0.0f, 0.0f)),
-		//projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(126.0f, vec3(0.0f, 1.0f, 0.0f))
-	};
-	glBufferData(GL_ARRAY_BUFFER, sizeof(fullTransforms), fullTransforms, GL_DYNAMIC_DRAW);
+	mat4 worldToViewMatrix = camera.getWorldToViewMatrix();
+	mat4 worldToProjectionMatrix = projectionMatrix * worldToViewMatrix;
+	mat4 fullTransformationMatrix;
 	
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	glViewport(0, 0, width(), height());
 
 
-	glDrawElementsInstanced(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0, 2);
+	mat4 cubeToModelToWorldMatrix =
+		glm::translate(vec3(-1.0f, 0.0f, -4.0f)) *
+		glm::rotate(ROTATION_SPEED, vec3(0.0f, 1.0f, 0.0f));
+	
+	fullTransformationMatrix = worldToProjectionMatrix * cubeToModelToWorldMatrix;
+	glUniformMatrix4fv(fullTransformUniformLocation, 1, GL_FALSE, &fullTransformationMatrix)[0][0]);
+	glDrawElements(GL_TRIANGLES, cubeNumIndices, GL_UNSIGNED_SHORT, 0);
+
+	/*mat4 fullTransforms[] =
+	{
+		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(-1.0f, 0.0f, -4.0f)) * glm::rotate(ROTATION_SPEED , vec3(0.0f, 1.0f, 0.0f)),
+		//projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(126.0f, vec3(0.0f, 1.0f, 0.0f))
+	};*/
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(fullTransforms), fullTransforms, GL_DYNAMIC_DRAW);
+	
+	
+
+
+	//glDrawElementsInstanced(GL_TRIANGLES, cubeNumIndices, GL_UNSIGNED_SHORT, 0, 2);
 	//mat4 worldToView = glm::lookAt(camPos, ObjectPos, upVecY);
+
+	//mat4 arrowModelToWorldMatrix = glm::translate(0.0f, 0.0f, -3.0f);
+	//mat4 fullTransforms[] =
+	//{
+	//	projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(-1.0f, 0.0f, -4.0f)) * glm::rotate(0.0f , vec3(0.0f, 1.0f, 0.0f))
+	//}
 
 	connect(&myTimer, SIGNAL(timeout()),
 		this, SLOT(myUpdate()));
@@ -377,7 +436,7 @@ void MeGlWindow::initializeGL()
 	glEnable(GL_DEPTH_TEST);
 	sendDataToOpenGL();
 	installShaders();
-	
+	fullTransformUniformLocation = glGetUniformLocation(programID, "fullTransformMatrix");
 
 }
 

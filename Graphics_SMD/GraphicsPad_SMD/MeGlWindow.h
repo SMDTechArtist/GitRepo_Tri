@@ -40,6 +40,7 @@ private slots:
 public:
 	~MeGlWindow();
 	//MeWidget();
+
 	bool shutdown();
 	bool initialize();
 
