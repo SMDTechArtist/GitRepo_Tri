@@ -45,7 +45,7 @@ GLuint teapotNumIndices;
 GLuint arrowNumIndices;
 GLuint planeNumIndices;
 GLuint numIndices;
-GLuint fullTransformUniformLocation;
+//GLuint fullTransformUniformLocation;
 
 Camera camera;
 
@@ -69,7 +69,7 @@ GLuint planeIndexDataByTeOffset;
 void MeGlWindow::sendDataToOpenGL()
 {
 	Clock clock;
-	ShapeData shape = ShapeGenerator::makeCube();
+	ShapeData shape = ShapeGenerator::makeArrow();
 	
 	GLuint vertexBufferID;
 	glGenBuffers(1, &vertexBufferID);
@@ -92,6 +92,7 @@ void MeGlWindow::sendDataToOpenGL()
 	GLuint transformationMatrixBufferID;
 	glGenBuffers(1, &transformationMatrixBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, transformationMatrixBufferID);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(fullTransforms), fullTransforms, GL_DYNAMIC_DRAW);
 
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * 2, 0, GL_DYNAMIC_DRAW);
@@ -122,6 +123,14 @@ void MeGlWindow::paintGL()
 {
 	Clock clock;
 
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	glViewport(0, 0, width(), height());
+
+
+	auto vd = camera.viewDirection;
+	std::cout << vd.x << " " << vd.y << " " << vd.z << std::endl;
+
+
 	//Ambiant Light
 	GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLight");
 	vec3 ambientLight(0.3f, 0.3f, 0.3f);
@@ -137,28 +146,17 @@ void MeGlWindow::paintGL()
 	vec3 cameraPosition = camera.getPosition();
 	glUniform3fv(cameraPosWorldUniformLocation, 1, &cameraPosition[0]);
 
-	//glm::mat4 directionToRotate = glm::rotate(ROTATION_SPEED , vec3(1.0f, 0.0f, 0.0f));
-	//oldCubeRotation = cubeRotation;
-	//cubeRotation = cubeRotation + directionToRotate;
-	
+	GLint fullTransformationUniformLocation = glGetUniformLocation(programID, "fullTransformMatrix");
 	mat4 projectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
-
-	auto vd = camera.viewDirection;
-	std::cout << vd.x << " " << vd.y << " " << vd.z << std::endl;
-
 	mat4 fullTransforms[] =
 	{
-		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(-1.0f, 0.0f, -4.0f)) * glm::rotate(ROTATION_SPEED , vec3(1.0f, 0.0f, 0.0f)),
+		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(-1.0f, 0.0f, -3.0f)) * glm::rotate(ROTATION_SPEED, vec3(1.0f, 0.0f, 0.0f)),
 		//projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(126.0f, vec3(0.0f, 1.0f, 0.0f))
 	};
 	glBufferData(GL_ARRAY_BUFFER, sizeof(fullTransforms), fullTransforms, GL_DYNAMIC_DRAW);
-	
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	glViewport(0, 0, width(), height());
-
 
 	glDrawElementsInstanced(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0, 2);
-	//mat4 worldToView = glm::lookAt(camPos, ObjectPos, upVecY);
+	
 
 	connect(&myTimer, SIGNAL(timeout()),
 		this, SLOT(myUpdate()));
@@ -178,11 +176,6 @@ void MeGlWindow::myUpdate()
 	ROTATION_SPEED += 0.2f;
 	//clock.newFrame();
 	MeGlWindow QKeyEvent();
-	
-	//float ROTATION_SPEED = 3.0f * clock.timeElapsedLastFrame();
-	//glm::mat4 directionToRotate = glm::rotate(ROTATION_SPEED , vec3(0.0f, 1.0f, 0.0f));
-	//oldCubeRotation = cubeRotation;
-	//cubeRotation += cubeRotation * clock.timeElapsedLastFrame();
 
 	repaint();
 }
@@ -232,11 +225,6 @@ void MeGlWindow::keyPressEvent(QKeyEvent* e)
 	repaint();
 
 }
-//float Clock::timeElapsedLastFrame() const
-//{
-//	return deltaTime;
-//}
-
 	
 
 
@@ -357,16 +345,6 @@ void installShaders()
 
 }
 
-/*int randSign()
-{
-	return rand() % 2 == 0 ? 1 : -1; 
-}
-
-float randComponent()
-{
-	return rand() % 100 * 0.00001 * randSign();
-}*/
-
 
 
 void MeGlWindow::initializeGL()
@@ -386,8 +364,6 @@ MeGlWindow::~MeGlWindow()
 	glUseProgram(0);
 	glDeleteProgram(programID);
 }
-
-
 
 
 
