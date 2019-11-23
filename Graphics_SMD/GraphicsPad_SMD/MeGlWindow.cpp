@@ -45,7 +45,7 @@ GLuint teapotNumIndices;
 GLuint arrowNumIndices;
 GLuint planeNumIndices;
 GLuint numIndices;
-//GLuint fullTransformUniformLocation;
+GLuint fullTransformUniformLocation;
 
 Camera camera;
 
@@ -69,7 +69,7 @@ GLuint planeIndexDataByTeOffset;
 void MeGlWindow::sendDataToOpenGL()
 {
 	Clock clock;
-	ShapeData shape = ShapeGenerator::makeArrow();
+	ShapeData shape = ShapeGenerator::makeCube();
 	
 	GLuint vertexBufferID;
 	glGenBuffers(1, &vertexBufferID);
@@ -146,15 +146,23 @@ void MeGlWindow::paintGL()
 	vec3 cameraPosition = camera.getPosition();
 	glUniform3fv(cameraPosWorldUniformLocation, 1, &cameraPosition[0]);
 
+	
+	mat4 fullTransformMatrix;
+	mat4 viewToProjectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
+	mat4 worldToViewMatrix = camera.getWorldToViewMatrix();
+	mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
+	mat4 cube1ModelToWorldMatrix = glm::translate(vec3(-1.0f, 0.0f, -3.0f)) *
+		glm::rotate(ROTATION_SPEED, vec3(1.0f, 0.0f, 0.0f));
+
+
+
 	GLint fullTransformationUniformLocation = glGetUniformLocation(programID, "fullTransformMatrix");
-	mat4 projectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
 	mat4 fullTransforms[] =
 	{
-		projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(-1.0f, 0.0f, -3.0f)) * glm::rotate(ROTATION_SPEED, vec3(1.0f, 0.0f, 0.0f)),
-		//projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(126.0f, vec3(0.0f, 1.0f, 0.0f))
+		worldToProjectionMatrix * cube1ModelToWorldMatrix,
+		
 	};
 	glBufferData(GL_ARRAY_BUFFER, sizeof(fullTransforms), fullTransforms, GL_DYNAMIC_DRAW);
-
 	glDrawElementsInstanced(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0, 2);
 	
 
