@@ -5,6 +5,24 @@ VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsPad_SMD", "GraphicsPad_SMD.vcxproj", "{C8D20EEB-1070-46A9-9A9B-3C50C1B803E4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52B61923-4423-4020-BA12-0937D3E94AF7}"
+	ProjectSection(SolutionItems) = preProject
+		Debug\Tmp\Camera.obj = Debug\Tmp\Camera.obj
+		Debug\Tmp\Clock.obj = Debug\Tmp\Clock.obj
+		Debug\Tmp\DebugSlider.obj = Debug\Tmp\DebugSlider.obj
+		Debug\Tmp\DebugSlider_MOC.obj = Debug\Tmp\DebugSlider_MOC.obj
+		Debug\Tmp\DebugSlider_Moc_.obj = Debug\Tmp\DebugSlider_Moc_.obj
+		Debug\Tmp\GraphicsPad_SMD.obj = Debug\Tmp\GraphicsPad_SMD.obj
+		Debug\Tmp\Mainer.obj = Debug\Tmp\Mainer.obj
+		Debug\Tmp\MeGlWindow.obj = Debug\Tmp\MeGlWindow.obj
+		Debug\Tmp\MeGlWindow_Moc.obj = Debug\Tmp\MeGlWindow_Moc.obj
+		Debug\Tmp\MeGlWindow_MOC_.obj = Debug\Tmp\MeGlWindow_MOC_.obj
+		Debug\Tmp\MeWidget.obj = Debug\Tmp\MeWidget.obj
+		Debug\Tmp\MeWidget_MOC.obj = Debug\Tmp\MeWidget_MOC.obj
+		Debug\Tmp\MeWidget_Moc_.obj = Debug\Tmp\MeWidget_Moc_.obj
+		Debug\Tmp\ShapeGenerator.obj = Debug\Tmp\ShapeGenerator.obj
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

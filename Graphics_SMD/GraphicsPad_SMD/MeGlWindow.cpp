@@ -45,7 +45,8 @@ GLuint teapotNumIndices;
 GLuint arrowNumIndices;
 GLuint planeNumIndices;
 GLuint cubeNumIndices;
-GLuint fullTransformUniformLocation;
+GLuint fullTransformationUniformLocation;
+GLuint numIndices;
 
 Camera camera;
 
@@ -69,17 +70,18 @@ float ROTATION_SPEED = 30.0f;
 void MeGlWindow::sendDataToOpenGL()
 {
 	Clock clock;
-	ShapeData shape = ShapeGenerator::makeCube();
-	
+
+	ShapeData shape = ShapeGenerator::makeArrow();
+
 	GLuint vertexBufferID;
 	glGenBuffers(1, &vertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
 	glBufferData(GL_ARRAY_BUFFER, shape.vertexBufferSize(), shape.vertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0); //layout Location
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_BYTE_SIZE, 0);
-	glEnableVertexAttribArray(1); //layout Location
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_BYTE_SIZE, (char*)(sizeof(float) * 3));
-	
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (char*)(sizeof(float) * 3));
+
 	GLuint indexArrayBufferID;
 	glGenBuffers(1, &indexArrayBufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexArrayBufferID);
@@ -89,24 +91,24 @@ void MeGlWindow::sendDataToOpenGL()
 	shape.cleanup();
 
 
-	GLuint transformationMatrixBufferID;
-	glGenBuffers(1, &transformationMatrixBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, transformationMatrixBufferID);
-
-
-	glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * 2, 0, GL_DYNAMIC_DRAW);
-	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 0));
-	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 4));
-	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 8));
-	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 12));
-	glEnableVertexAttribArray(2);
-	glEnableVertexAttribArray(3);
-	glEnableVertexAttribArray(4);
-	glEnableVertexAttribArray(5);
-	glVertexAttribDivisor(2, 1);
-	glVertexAttribDivisor(3, 1);
-	glVertexAttribDivisor(4, 1);
-	glVertexAttribDivisor(5, 1);
+	//GLuint transformationMatrixBufferID;
+	//glGenBuffers(1, &transformationMatrixBufferID);
+	//glBindBuffer(GL_ARRAY_BUFFER, transformationMatrixBufferID);
+	//
+	//
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * 2, 0, GL_DYNAMIC_DRAW);
+	//glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 0));
+	//glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 4));
+	//glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 8));
+	//glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(sizeof(float) * 12));
+	//glEnableVertexAttribArray(2);
+	//glEnableVertexAttribArray(3);
+	//glEnableVertexAttribArray(4);
+	//glEnableVertexAttribArray(5);
+	//glVertexAttribDivisor(2, 1);
+	//glVertexAttribDivisor(3, 1);
+	//glVertexAttribDivisor(4, 1);
+	//glVertexAttribDivisor(5, 1);
 	
 
 
@@ -156,8 +158,6 @@ void MeGlWindow::sendDataToOpenGL()
 int debugCount = 0;
 
 
-//glm::mat4 cubeRotation = glm::rotate(36.0f, vec3(1.0f, 0.0f, 0.0f));
-//glm::mat4 oldCubeRotation;
 
 void MeGlWindow::paintGL()
 {
@@ -185,20 +185,24 @@ void MeGlWindow::paintGL()
 	glUniform3fv(cameraPosWorldUniformLocation, 1, &cameraPosition[0]);
 
 	
-	mat4 projectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
+	mat4 fullTransformMatrix;
+	mat4 viewToProjectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
 	mat4 worldToViewMatrix = camera.getWorldToViewMatrix();
-	mat4 worldToProjectionMatrix = projectionMatrix * worldToViewMatrix;
-	mat4 fullTransformationMatrix;
-	
+	mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
+	mat4 cube1ModelToWorldMatrix =
+		glm::translate(vec3(-1.0f, 0.0f, -3.0f)) *
+		glm::rotate(36.0f, vec3(1.0f, 0.0f, 0.0f));
+	fullTransformMatrix = worldToProjectionMatrix * cube1ModelToWorldMatrix;
+	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
+	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0);
 
-	mat4 cubeToModelToWorldMatrix =
-		glm::translate(vec3(-1.0f, 0.0f, -4.0f)) *
-		glm::rotate(ROTATION_SPEED, vec3(0.0f, 1.0f, 0.0f));
-	
-	fullTransformationMatrix = worldToProjectionMatrix * cubeToModelToWorldMatrix;
-	glUniformMatrix4fv(fullTransformUniformLocation, 1, GL_FALSE, &fullTransformationMatrix)[0][0]);
-	glDrawElements(GL_TRIANGLES, cubeNumIndices, GL_UNSIGNED_SHORT, 0);
+	mat4 cube2ModelToWorldMatrix =
+		glm::translate(vec3(1.0f, 0.0f, -3.75f)) *
+		glm::rotate(126.0f, vec3(0.0f, 1.0f, 0.0f));
+	fullTransformMatrix = worldToProjectionMatrix * cube2ModelToWorldMatrix;
+	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
+	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0);
 
 	/*mat4 fullTransforms[] =
 	{
@@ -336,7 +340,7 @@ string readShaderCode(const char* fileName)
 
 //
 
-bool checkShaderStatus(GLuint shaderID)
+bool MeGlWindow::checkShaderStatus(GLuint shaderID)
 {
 
 	GLint compileStatus;
@@ -357,7 +361,7 @@ bool checkShaderStatus(GLuint shaderID)
 	return true;
 }
 
-bool checkProgramStatus(GLuint programID)
+bool MeGlWindow::checkProgramStatus(GLuint programID)
 {
 
 	GLint linkStatus;
@@ -379,7 +383,7 @@ bool checkProgramStatus(GLuint programID)
 }
 
 
-void installShaders()
+void MeGlWindow::installShaders()
 {
 	GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -436,7 +440,7 @@ void MeGlWindow::initializeGL()
 	glEnable(GL_DEPTH_TEST);
 	sendDataToOpenGL();
 	installShaders();
-	fullTransformUniformLocation = glGetUniformLocation(programID, "fullTransformMatrix");
+	fullTransformationUniformLocation = glGetUniformLocation(programID, "fullTransformMatrix");
 
 }
 

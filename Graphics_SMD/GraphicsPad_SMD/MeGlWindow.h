@@ -21,13 +21,18 @@ class MeGlWindow : public QGLWidget
 	Q_OBJECT
 
 		QTimer myTimer;
+	void sendDataToOpenGL();
+	bool checkShaderStatus(GLuint shaderID);
+	bool checkProgramStatus(GLuint programID);
+	//std::string readShaderCode(const char* fileName);
+	void installShaders();
 
 protected:
 	void initializeGL();
 	void paintGL();
 	void mouseMoveEvent(QMouseEvent*);
 	void keyPressEvent(QKeyEvent*);
-	void sendDataToOpenGL();
+	//void sendDataToOpenGL();
 
 
 
