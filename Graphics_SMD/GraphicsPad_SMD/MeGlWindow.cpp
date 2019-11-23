@@ -389,51 +389,7 @@ MeGlWindow::~MeGlWindow()
 
 
 
-/*void MeGlWindow::keyPressEvent(QKeyEvent* e)
-{
-	switch (e->key())
-	{
-	case Qt::Key::Key_W:
-		ShipVelocity.y += ACCELERATION;
-		break;
-	case Qt::Key::Key_S:
-		ShipVelocity.y -= ACCELERATION;
-		break;
-	case Qt::Key::Key_A:
-		ShipVelocity.x -= ACCELERATION;
-		break;
-	case Qt::Key::Key_D:
-		ShipVelocity.x += ACCELERATION;
-		break;
-	}
-	repaint();
-}*/
 
-
-/*void MeGlWindow::handleBoundaries()
-{
-	bool anyCollisions = false;
-	for (uint i = 0; i < NUM_BOUNDARY_VERTS; i++)
-	{
-		const glm::vec3& first = boundaryVerts[i];
-		const glm::vec3& second = boundaryVerts[(i + 1) % NUM_BOUNDARY_VERTS];
-		
-		glm::vec3 wall = second - first; //this gets us our perallel vector from the (0,0) to its respective equivelent
-
-		glm::vec3 normal = perpCcwXy(wall.x, wall.y);
-		glm::vec3 respectiveShipPosition = ShipPos - first;
-		glm::vec3 normalized = glm::normalize(normal);
-		float dotResult = glm::dot(respectiveShipPosition, normal);
-
-
-		if (dotResult < 0)
-		{
-			ShipVelocity = ShipVelocity - 2 * glm::dot(ShipVelocity, normalized) * normalized;
-			ShipPos = OldShipPos;
-		}
-
-	}
-}*/
 
 
 

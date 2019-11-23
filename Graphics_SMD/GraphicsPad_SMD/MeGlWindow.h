@@ -30,7 +30,7 @@ protected:
 	void sendDataToOpenGL();
 
 
-
+	//
 
 private slots:
 	void myUpdate();
