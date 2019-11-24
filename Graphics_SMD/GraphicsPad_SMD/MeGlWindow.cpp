@@ -99,18 +99,22 @@ void MeGlWindow::sendDataToOpenGL()
 	glBindVertexArray(cubeVertexArrayObjectID);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 	glBindBuffer(GL_ARRAY_BUFFER, theBufferID);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0); //Cube starts at 0
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(sizeof(float) * 3)); //Color data
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(sizeof(float) * 6));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, theBufferID);
 
 	glBindVertexArray(arrowVertexArrayObjectID);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 	glBindBuffer(GL_ARRAY_BUFFER, theBufferID);
 	GLuint arrowByteOffset = cube.vertexBufferSize() + cube.indexBufferSize(); // more goe will require something like this again. 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(arrowByteOffset));
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(arrowByteOffset + sizeof(float) * 3));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(arrowByteOffset + sizeof(float) * 6));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, theBufferID);
 
 	cubeIndexByteOffset = cube.vertexBufferSize();
@@ -148,10 +152,10 @@ void MeGlWindow::paintGL()
 	vec3 ambientLight(0.5f, 0.1f, 0.1f);
 	glUniform3fv(ambientLightUniformLocation, 1, &ambientLight[0]);
 
-//	//Light Position here
-//	GLint lightPositionUniformLocation = glGetUniformLocation(programID, "lightPosition");
-//	vec3 lightPosition(0.0f, 3.0f, 0.0f);
-//	glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
+	//Light Position here
+	GLint lightPositionUniformLocation = glGetUniformLocation(programID, "lightPosition");
+	glm::vec3 lightPosition(0.0f, 1.0f, 0.0f);
+	glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
 
 //	//camera Position here
 //	GLint cameraPosWorldUniformLocation = glGetUniformLocation(programID, "cameraPosition");
@@ -180,7 +184,7 @@ void MeGlWindow::paintGL()
 	glBindVertexArray(arrowVertexArrayObjectID);
 	mat4 arrowModelToWorldMatrix = 
 		glm::translate(vec3(0.0f, 0.0f, -3.0f)) *
-		glm::rotate(36.0f, vec3(1.0f, 0.0f, 0.0f));
+		glm::rotate(36.0f, vec3(1.0f, 1.0f, 0.0f));
 	fullTransformMatrix = worldToProjectionMatrix * arrowModelToWorldMatrix;
 	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
 	glDrawElements(GL_TRIANGLES, arrowNumIndices, GL_UNSIGNED_SHORT, (void*)arrowIndexByteOffset);
