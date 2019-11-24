@@ -166,7 +166,7 @@ void MeGlWindow::paintGL()
 //	glUniform3fv(cameraPosWorldUniformLocation, 1, &cameraPosition[0]);
 
 	
-	mat4 fullTransformMatrix;
+	mat4 modelToProjectionMatrix;
 	mat4 viewToProjectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
 	mat4 worldToViewMatrix = camera.getWorldToViewMatrix();
 	mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
@@ -177,8 +177,8 @@ void MeGlWindow::paintGL()
 	mat4 cube1ModelToWorldMatrix =
 		glm::translate(vec3(-2.0f, 0.0f, -5.0f)) *
 		glm::rotate(ROTATION_SPEED, vec3(1.0f, 0.0f, 0.0f));
-	fullTransformMatrix = worldToProjectionMatrix * cube1ModelToWorldMatrix;
-	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
+	modelToProjectionMatrix = worldToProjectionMatrix * cube1ModelToWorldMatrix;
+	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &modelToProjectionMatrix[0][0]);
 	glUniformMatrix4fv(modelToWorldTransformMatrixUniformLocation, 1, GL_FALSE,
 		&cube1ModelToWorldMatrix[0][0]);
 	glDrawElements(GL_TRIANGLES, cubeNumIndices, GL_UNSIGNED_SHORT, (void*)cubeIndexByteOffset);
@@ -191,8 +191,8 @@ void MeGlWindow::paintGL()
 		glm::translate(vec3(-0.5f, 0.0f, -6.0f)) *
 		glm::rotate(36.0f, vec3(1.0f, 0.0f, 0.0f)) *
 		glm::scale(vec3(4.0f, 0.5f, 4.0f));
-	fullTransformMatrix = worldToProjectionMatrix * arrowModelToWorldMatrix;
-	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
+	modelToProjectionMatrix = worldToProjectionMatrix * arrowModelToWorldMatrix;
+	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &modelToProjectionMatrix[0][0]);
 	glUniformMatrix4fv(modelToWorldTransformMatrixUniformLocation, 1, GL_FALSE,
 		&arrowModelToWorldMatrix[0][0]);
 	glDrawElements(GL_TRIANGLES, arrowNumIndices, GL_UNSIGNED_SHORT, (void*)arrowIndexByteOffset);
@@ -395,7 +395,7 @@ void MeGlWindow::initializeGL()
 	glEnable(GL_DEPTH_TEST);
 	sendDataToOpenGL();
 	installShaders();
-	fullTransformationUniformLocation = glGetUniformLocation(programID, "fullTransformMatrix");
+	fullTransformationUniformLocation = glGetUniformLocation(programID, "modelToProjectionMatrix");
 
 }
 
