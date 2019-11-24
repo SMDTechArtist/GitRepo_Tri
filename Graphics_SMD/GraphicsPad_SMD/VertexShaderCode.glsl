@@ -9,14 +9,14 @@ uniform vec3 ambientLight;
 uniform mat4 modelToProjectionMatrix;
 uniform mat4 modelToWorldMatrix;
 
-out vec3 theNormal;
+out vec3 worldNormal;
 out vec3 thePosition;
 
 void main()
 {
 	vec4 v = vec4(vertexPositionModel, 1.0);
 	gl_Position = modelToProjectionMatrix * v;
-	theNormal = vec3(modelToWorldMatrix * vec4(normalModel, 0.0));
+	worldNormal = vec3(modelToWorldMatrix * vec4(normalModel, 0.0));
 	thePosition = vec3(modelToWorldMatrix * v);
 }
 
