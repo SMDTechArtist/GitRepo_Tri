@@ -157,6 +157,9 @@ void MeGlWindow::paintGL()
 	glm::vec3 lightPosition(0.0f, 1.0f, 0.0f);
 	glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
 
+	GLint modelToWorldTransformMatrixUniformLocation =
+		glGetUniformLocation(programID, "modelToWorldTransformMatrix");
+
 //	//camera Position here
 //	GLint cameraPosWorldUniformLocation = glGetUniformLocation(programID, "cameraPosition");
 //	vec3 cameraPosition = camera.getPosition();
@@ -172,21 +175,26 @@ void MeGlWindow::paintGL()
 	// Cube
 	glBindVertexArray(cubeVertexArrayObjectID);
 	mat4 cube1ModelToWorldMatrix =
-		glm::translate(vec3(-2.0f, 0.0f, -3.0f)) *
+		glm::translate(vec3(-2.0f, 0.0f, -5.0f)) *
 		glm::rotate(ROTATION_SPEED, vec3(1.0f, 0.0f, 0.0f));
 	fullTransformMatrix = worldToProjectionMatrix * cube1ModelToWorldMatrix;
 	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
+	glUniformMatrix4fv(modelToWorldTransformMatrixUniformLocation, 1, GL_FALSE,
+		&cube1ModelToWorldMatrix[0][0]);
 	glDrawElements(GL_TRIANGLES, cubeNumIndices, GL_UNSIGNED_SHORT, (void*)cubeIndexByteOffset);
 
 
 
 	// Arrow
 	glBindVertexArray(arrowVertexArrayObjectID);
-	mat4 arrowModelToWorldMatrix = 
-		glm::translate(vec3(0.0f, 0.0f, -3.0f)) *
-		glm::rotate(36.0f, vec3(1.0f, 1.0f, 0.0f));
+	mat4 arrowModelToWorldMatrix =
+		glm::translate(vec3(-0.5f, 0.0f, -6.0f)) *
+		glm::rotate(36.0f, vec3(1.0f, 0.0f, 0.0f)) *
+		glm::scale(vec3(4.0f, 0.5f, 4.0f));
 	fullTransformMatrix = worldToProjectionMatrix * arrowModelToWorldMatrix;
 	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
+	glUniformMatrix4fv(modelToWorldTransformMatrixUniformLocation, 1, GL_FALSE,
+		&arrowModelToWorldMatrix[0][0]);
 	glDrawElements(GL_TRIANGLES, arrowNumIndices, GL_UNSIGNED_SHORT, (void*)arrowIndexByteOffset);
 	
 
