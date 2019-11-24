@@ -71,7 +71,7 @@ void MeGlWindow::sendDataToOpenGL()
 	Clock clock;
 
 	ShapeData cube = ShapeGenerator::makeCube();
-	ShapeData arrow = ShapeGenerator::makePlane();
+	ShapeData arrow = ShapeGenerator::makeCube();
 
 	glGenBuffers(1, &theBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, theBufferID);
@@ -141,21 +141,22 @@ void MeGlWindow::paintGL()
 	auto vd = camera.viewDirection;glm::rotate(ROTATION_SPEED, vec3(1.0f, 0.0f, 0.0f));
 	std::cout << vd.x << " " << vd.y << " " << vd.z << std::endl;
 
+	//glm::vec3 lightPosition(0.0f, 3.0f, 0.0f);
 
 	//Ambiant Light
 	GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLight");
-	vec3 ambientLight(0.3f, 0.3f, 0.3f);
+	vec3 ambientLight(0.5f, 0.1f, 0.1f);
 	glUniform3fv(ambientLightUniformLocation, 1, &ambientLight[0]);
 
-	//Light Position here
-	GLint lightPositionUniformLocation = glGetUniformLocation(programID, "lightPosition");
-	vec3 lightPosition(0.0f, 3.0f, 0.0f);
-	glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
+//	//Light Position here
+//	GLint lightPositionUniformLocation = glGetUniformLocation(programID, "lightPosition");
+//	vec3 lightPosition(0.0f, 3.0f, 0.0f);
+//	glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
 
-	//camera Position here
-	GLint cameraPosWorldUniformLocation = glGetUniformLocation(programID, "cameraPosition");
-	vec3 cameraPosition = camera.getPosition();
-	glUniform3fv(cameraPosWorldUniformLocation, 1, &cameraPosition[0]);
+//	//camera Position here
+//	GLint cameraPosWorldUniformLocation = glGetUniformLocation(programID, "cameraPosition");
+//	vec3 cameraPosition = camera.getPosition();
+//	glUniform3fv(cameraPosWorldUniformLocation, 1, &cameraPosition[0]);
 
 	
 	mat4 fullTransformMatrix;
