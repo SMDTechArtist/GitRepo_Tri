@@ -71,7 +71,7 @@ void MeGlWindow::sendDataToOpenGL()
 	Clock clock;
 
 	ShapeData cube = ShapeGenerator::makeCube();
-	ShapeData arrow = ShapeGenerator::makeArrow();
+	ShapeData arrow = ShapeGenerator::makePlane();
 
 	glGenBuffers(1, &theBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, theBufferID);
