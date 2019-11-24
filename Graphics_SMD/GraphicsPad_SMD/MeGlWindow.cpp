@@ -145,7 +145,7 @@ void MeGlWindow::paintGL()
 	auto vd = camera.viewDirection;glm::rotate(ROTATION_SPEED, vec3(1.0f, 0.0f, 0.0f));
 	std::cout << vd.x << " " << vd.y << " " << vd.z << std::endl;
 
-	//glm::vec3 lightPosition(0.0f, 3.0f, 0.0f);
+	
 
 	//Ambiant Light
 	GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLight");
@@ -161,6 +161,7 @@ void MeGlWindow::paintGL()
 		glGetUniformLocation(programID, "modelToWorldMatrix");
 
 //	//camera Position here
+//	glm::vec3 lightPosition(0.0f, 3.0f, 0.0f);
 //	GLint cameraPosWorldUniformLocation = glGetUniformLocation(programID, "cameraPosition");
 //	vec3 cameraPosition = camera.getPosition();
 //	glUniform3fv(cameraPosWorldUniformLocation, 1, &cameraPosition[0]);
