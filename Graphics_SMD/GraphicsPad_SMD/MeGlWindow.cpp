@@ -146,31 +146,35 @@ void MeGlWindow::paintGL()
 	std::cout << vd.x << " " << vd.y << " " << vd.z << std::endl;
 
 	
+	//glm::vec3 lightPosition(0.0f, 3.0f, 0.0f);
+
+	mat4 modelToProjectionMatrix;
+	mat4 viewToProjectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
+	mat4 worldToViewMatrix = camera.getWorldToViewMatrix();
+	mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
+
+	GLint modelToWorldMatrixUniformLocation =
+		glGetUniformLocation(programID, "modelToWorldMatrix");
 
 	//Ambiant Light
 	GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLight");
 	vec4 ambientLight(0.5f, 0.1f, 0.1f, 1.0f);
 	glUniform4fv(ambientLightUniformLocation, 1, &ambientLight[0]);
 
+
+	//camera Position here
+	
+	GLint cameraPosWorldUniformLocation = glGetUniformLocation(programID, "cameraPosition");
+	vec3 cameraPosition = camera.getPosition();
+	glUniform3fv(cameraPosWorldUniformLocation, 1, &cameraPosition[0]);
+
 	//Light Position here
 	GLint lightPositionUniformLocation = glGetUniformLocation(programID, "lightPosition");
 	glm::vec3 lightPosition(0.0f, 1.0f, 0.0f);
 	glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
 
-	GLint modelToWorldMatrixUniformLocation =
-		glGetUniformLocation(programID, "modelToWorldMatrix");
-
-//	//camera Position here
-//	glm::vec3 lightPosition(0.0f, 3.0f, 0.0f);
-//	GLint cameraPosWorldUniformLocation = glGetUniformLocation(programID, "cameraPosition");
-//	vec3 cameraPosition = camera.getPosition();
-//	glUniform3fv(cameraPosWorldUniformLocation, 1, &cameraPosition[0]);
-
 	
-	mat4 modelToProjectionMatrix;
-	mat4 viewToProjectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
-	mat4 worldToViewMatrix = camera.getWorldToViewMatrix();
-	mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
+	
 
 
 	// Cube
