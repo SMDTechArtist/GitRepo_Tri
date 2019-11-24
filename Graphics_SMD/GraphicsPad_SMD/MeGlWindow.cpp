@@ -157,8 +157,8 @@ void MeGlWindow::paintGL()
 	glm::vec3 lightPosition(0.0f, 1.0f, 0.0f);
 	glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
 
-	GLint modelToWorldTransformMatrixUniformLocation =
-		glGetUniformLocation(programID, "modelToWorldTransformMatrix");
+	GLint modelToWorldMatrixUniformLocation =
+		glGetUniformLocation(programID, "modelToWorldMatrix");
 
 //	//camera Position here
 //	GLint cameraPosWorldUniformLocation = glGetUniformLocation(programID, "cameraPosition");
@@ -179,7 +179,7 @@ void MeGlWindow::paintGL()
 		glm::rotate(ROTATION_SPEED, vec3(1.0f, 0.0f, 0.0f));
 	modelToProjectionMatrix = worldToProjectionMatrix * cube1ModelToWorldMatrix;
 	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &modelToProjectionMatrix[0][0]);
-	glUniformMatrix4fv(modelToWorldTransformMatrixUniformLocation, 1, GL_FALSE,
+	glUniformMatrix4fv(modelToWorldMatrixUniformLocation, 1, GL_FALSE,
 		&cube1ModelToWorldMatrix[0][0]);
 	glDrawElements(GL_TRIANGLES, cubeNumIndices, GL_UNSIGNED_SHORT, (void*)cubeIndexByteOffset);
 
@@ -193,7 +193,7 @@ void MeGlWindow::paintGL()
 		glm::scale(vec3(4.0f, 0.5f, 4.0f));
 	modelToProjectionMatrix = worldToProjectionMatrix * arrowModelToWorldMatrix;
 	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &modelToProjectionMatrix[0][0]);
-	glUniformMatrix4fv(modelToWorldTransformMatrixUniformLocation, 1, GL_FALSE,
+	glUniformMatrix4fv(modelToWorldMatrixUniformLocation, 1, GL_FALSE,
 		&arrowModelToWorldMatrix[0][0]);
 	glDrawElements(GL_TRIANGLES, arrowNumIndices, GL_UNSIGNED_SHORT, (void*)arrowIndexByteOffset);
 	
