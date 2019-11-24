@@ -149,8 +149,8 @@ void MeGlWindow::paintGL()
 
 	//Ambiant Light
 	GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLight");
-	vec3 ambientLight(0.5f, 0.1f, 0.1f);
-	glUniform3fv(ambientLightUniformLocation, 1, &ambientLight[0]);
+	vec4 ambientLight(0.5f, 0.1f, 0.1f, 1.0f);
+	glUniform4fv(ambientLightUniformLocation, 1, &ambientLight[0]);
 
 	//Light Position here
 	GLint lightPositionUniformLocation = glGetUniformLocation(programID, "lightPosition");
