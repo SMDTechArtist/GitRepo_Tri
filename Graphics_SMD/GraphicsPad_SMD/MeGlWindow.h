@@ -28,6 +28,7 @@ protected:
 	void mouseMoveEvent(QMouseEvent*);
 	void keyPressEvent(QKeyEvent*);
 	void sendDataToOpenGL();
+	//void loadTexture();
 
 
 

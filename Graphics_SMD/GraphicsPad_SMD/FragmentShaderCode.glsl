@@ -8,6 +8,8 @@ uniform vec4 ambientLight;
 uniform vec3 lightPosition;
 uniform vec3 cameraPosition;
 
+uniform sampler2D Tex1;
+
 void main()
 {
 	//Diffuse
@@ -19,7 +21,13 @@ void main()
 	 vec3 reflectedLightVectorWorld = reflect(-lightVector, worldNormal);
 	 vec3 cameraVectorPosition = normalize(cameraPosition - vertexWorldPosition);
 	 float s = dot(reflectedLightVectorWorld, cameraVectorPosition);
-	 vec4 specularLight = vec4(s, s, s, 1);
+	 s = pow(s, 60);
 
-	 daColor = clamp(diffuseLight, 0, 1) + ambientLight + clamp(specularLight, 0, 1);
+	 vec4 specularLight = clamp(vec4(s, s, s, 1), 0, 1);
+
+	 //Texture
+	 vec4 texColor = texture(Tex1, TexCoord);
+	 vec4 ambAndDiff = clamp(diffuseLight, 0, 1) + ambientLight;
+
+	 daColor = ambAndDiff * texColor + clamp(specularLight, 0, 1);
 }

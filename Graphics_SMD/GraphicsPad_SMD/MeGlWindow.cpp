@@ -20,6 +20,8 @@
 #include <Camera.h>
 #include <QtGui/qmouseevent>
 #include <Clock.h>
+#include <Qt\qimagereader.h>
+
 
 
 
@@ -43,8 +45,9 @@ const GLuint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 
 
 GLuint theBufferID;
-
 GLuint programID;
+GLuint TexBufferID;
+
 GLuint cubeNumIndices;
 GLuint arrowNumIndices;
 
@@ -96,6 +99,7 @@ void MeGlWindow::sendDataToOpenGL()
 	glGenVertexArrays(1, &cubeVertexArrayObjectID);
 	glGenVertexArrays(1, &arrowVertexArrayObjectID);
 
+	//geo shape 1
 	glBindVertexArray(cubeVertexArrayObjectID);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -106,19 +110,36 @@ void MeGlWindow::sendDataToOpenGL()
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(sizeof(float) * 6));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, theBufferID);
 
-	glBindVertexArray(arrowVertexArrayObjectID);
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-	glBindBuffer(GL_ARRAY_BUFFER, theBufferID);
-	GLuint arrowByteOffset = cube.vertexBufferSize() + cube.indexBufferSize(); // more goe will require something like this again. 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(arrowByteOffset));
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(arrowByteOffset + sizeof(float) * 3));
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(arrowByteOffset + sizeof(float) * 6));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, theBufferID);
+	// Load Texture file
+	const char* texName = "texture/512_Cat.png";
+	QImage timg =
+		QGLWidget::convertToGLFormat(QImage(texName, "PNG"));
+
+	//Copy file to OpenGL
+	glActiveTexture(GL_TEXTURE);
+	GLuint tid;
+	glGenTextures(1, &tid);
+	glBindTexture(GL_TEXTURE_2D, tid);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, timg.width(),
+		timg.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
+		timg.bits());
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+//	//Geo shape 2
+//	glBindVertexArray(arrowVertexArrayObjectID);
+//	glEnableVertexAttribArray(0);
+//	glEnableVertexAttribArray(1);
+//	glEnableVertexAttribArray(2);
+//	glBindBuffer(GL_ARRAY_BUFFER, theBufferID);
+//	GLuint arrowByteOffset = cube.vertexBufferSize() + cube.indexBufferSize(); // more goe will require something like this again. 
+//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(arrowByteOffset));
+//	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(arrowByteOffset + sizeof(float) * 3));
+//	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(arrowByteOffset + sizeof(float) * 6));
+//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, theBufferID);
 
 	cubeIndexByteOffset = cube.vertexBufferSize();
-	arrowIndexByteOffset = arrowByteOffset + arrow.vertexBufferSize(); 
+//	arrowIndexByteOffset = arrowByteOffset + arrow.vertexBufferSize(); 
 	//More geo witll require another Offset and indexByteOffset. 
 
 	cube.cleanup();
@@ -158,7 +179,7 @@ void MeGlWindow::paintGL()
 
 	//Ambiant Light
 	GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLight");
-	vec4 ambientLight(0.5f, 0.1f, 0.1f, 1.0f);
+	vec4 ambientLight(0.6f, 0.1f, 0.1f, 1.0f);
 	glUniform4fv(ambientLightUniformLocation, 1, &ambientLight[0]);
 
 
@@ -172,9 +193,6 @@ void MeGlWindow::paintGL()
 	GLint lightPositionUniformLocation = glGetUniformLocation(programID, "lightPosition");
 	glm::vec3 lightPosition(0.0f, 1.0f, 0.0f);
 	glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
-
-	
-	
 
 
 	// Cube
@@ -203,6 +221,16 @@ void MeGlWindow::paintGL()
 	glDrawElements(GL_TRIANGLES, arrowNumIndices, GL_UNSIGNED_SHORT, (void*)arrowIndexByteOffset);
 	
 
+
+	//Set the Tex1 sampler uniform to refer to texture unit 0
+	int loc = glGetUniformLocation(programID, "Tex1");
+
+	if (loc >= 0)
+		glUniform1i(loc, 0);
+	else
+		fprintf(stderr, "Uniform variable Tex1 not found !\n");
+
+
 	connect(&myTimer, SIGNAL(timeout()),
 		this, SLOT(myUpdate()));
 	myTimer.start(16);
@@ -213,6 +241,35 @@ void MeGlWindow::paintGL()
 	//MeGlWindow QKeyEvent();
 }
 
+/*
+void MeGlWindow::loadTexture()
+{
+	// Load Texture file
+	const char* texName = "texture/512_Cat.png";
+	QImage timg =
+		QGLWidget::convertToGLFormat(QImage(texName, "PNG"));
+
+	//Copy file to OpenGL
+	glActiveTexture (GL_TEXTURE);
+	GLuint tid;
+	glGenTextures(1, &tid);
+	glBindTexture(GL_TEXTURE_2D, tid);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, timg.width(),
+		timg.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
+		timg.bits());
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	//Set the Tex1 sampler uniform to refer to texture unit 0
+	int loc = glGetUniformLocation(programID, "Tex1");
+
+	if (loc >= 0)
+		glUniform1i(loc, 0);
+	else
+		fprintf(stderr, "Uniform variable Tex1 not found !\n");
+
+}
+*/
 
 
 void MeGlWindow::myUpdate()
@@ -401,7 +458,7 @@ void MeGlWindow::initializeGL()
 	sendDataToOpenGL();
 	installShaders();
 	fullTransformationUniformLocation = glGetUniformLocation(programID, "modelToProjectionMatrix");
-
+	//loadTexture();
 }
 
 MeGlWindow::~MeGlWindow()
