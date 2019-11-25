@@ -7,5 +7,5 @@ struct Vertex
 	glm::vec3 position;
 	glm::vec3 color;
 	glm::vec3 normal;
-	//glm::
+	glm::vec3 texture; // not sure if this is needed. 
 };

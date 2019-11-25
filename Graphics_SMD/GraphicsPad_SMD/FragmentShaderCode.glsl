@@ -3,6 +3,7 @@
 out vec4 daColor;
 in vec3 worldNormal;
 in vec3 vertexWorldPosition;
+in vec2 texCoord;
 
 uniform vec4 ambientLight;
 uniform vec3 lightPosition;
@@ -26,7 +27,7 @@ void main()
 	 vec4 specularLight = clamp(vec4(s, s, s, 1), 0, 1);
 
 	 //Texture
-	 vec4 texColor = texture(Tex1, TexCoord);
+	 vec4 texColor = texture(Tex1, texCoord);
 	 vec4 ambAndDiff = clamp(diffuseLight, 0, 1) + ambientLight;
 
 	 daColor = ambAndDiff * texColor + clamp(specularLight, 0, 1);

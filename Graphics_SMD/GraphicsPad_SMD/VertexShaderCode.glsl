@@ -13,11 +13,11 @@ uniform mat4 modelToWorldMatrix;
 
 out vec3 worldNormal;
 out vec3 vertexWorldPosition;
-out vec2 TexCoord;
+out vec2 texCoord;
 
 void main()
 {
-	TexCoord = VertexTexCoord;
+	texCoord = VertexTexCoord;
 	gl_Position = modelToProjectionMatrix * vertexPositionModel;
 	worldNormal = vec3(modelToWorldMatrix * vec4(normalModel, 0.0));
 	vertexWorldPosition = vec3(modelToWorldMatrix * vertexPositionModel);

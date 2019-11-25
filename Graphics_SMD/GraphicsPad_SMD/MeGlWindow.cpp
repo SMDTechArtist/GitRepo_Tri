@@ -57,8 +57,11 @@ GLuint fullTransformationUniformLocation;
 
 GLuint cubeVertexArrayObjectID;
 GLuint arrowVertexArrayObjectID;
+GLuint textureID;
 GLuint cubeIndexByteOffset;
 GLuint arrowIndexByteOffset;
+GLuint TextureIndexByteOffset;
+
 
 
 
@@ -97,50 +100,29 @@ void MeGlWindow::sendDataToOpenGL()
 	arrowNumIndices = arrow.numIndices;
 
 	glGenVertexArrays(1, &cubeVertexArrayObjectID);
-	glGenVertexArrays(1, &arrowVertexArrayObjectID);
+	//glGenVertexArrays(1, &arrowVertexArrayObjectID);
+	//glGenVertexArrays(1, &textureID);
 
 	//geo shape 1
 	glBindVertexArray(cubeVertexArrayObjectID);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3); // texture Pointer?
 	glBindBuffer(GL_ARRAY_BUFFER, theBufferID);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0); //Cube starts at 0
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(sizeof(float) * 3)); //Color data
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(sizeof(float) * 6));
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(sizeof(float) * 9));//the Texture pointer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, theBufferID);
 
-	// Load Texture file
-	const char* texName = "texture/512_Cat.png";
-	QImage timg =
-		QGLWidget::convertToGLFormat(QImage(texName, "PNG"));
 
-	//Copy file to OpenGL
-	glActiveTexture(GL_TEXTURE);
-	GLuint tid;
-	glGenTextures(1, &tid);
-	glBindTexture(GL_TEXTURE_2D, tid);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, timg.width(),
-		timg.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
-		timg.bits());
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-//	//Geo shape 2
-//	glBindVertexArray(arrowVertexArrayObjectID);
-//	glEnableVertexAttribArray(0);
-//	glEnableVertexAttribArray(1);
-//	glEnableVertexAttribArray(2);
-//	glBindBuffer(GL_ARRAY_BUFFER, theBufferID);
-//	GLuint arrowByteOffset = cube.vertexBufferSize() + cube.indexBufferSize(); // more goe will require something like this again. 
-//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(arrowByteOffset));
-//	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(arrowByteOffset + sizeof(float) * 3));
-//	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(arrowByteOffset + sizeof(float) * 6));
-//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, theBufferID);
+
+	
 
 	cubeIndexByteOffset = cube.vertexBufferSize();
-//	arrowIndexByteOffset = arrowByteOffset + arrow.vertexBufferSize(); 
-	//More geo witll require another Offset and indexByteOffset. 
+	
 
 	cube.cleanup();
 	arrow.cleanup();
@@ -194,6 +176,31 @@ void MeGlWindow::paintGL()
 	glm::vec3 lightPosition(0.0f, 1.0f, 0.0f);
 	glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
 
+	// Load Texture file
+	const char * texName = "texture/512_Cat.png";
+	QImage textureImge =
+		QGLWidget::convertToGLFormat(QImage(texName, "PNG"));
+
+	//Copy file to OpenGL
+	glActiveTexture(GL_TEXTURE);
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureImge.width(),
+		textureImge.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
+		textureImge.bits());
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+
+	//Set the Tex1 sampler uniform to refer to texture unit 0
+	int textureUniformLocation = glGetUniformLocation(programID, "Tex1");
+
+	if (textureUniformLocation >= 0)
+		glUniform1i(textureUniformLocation, 0);
+	else
+		fprintf(stderr, "Uniform variable Tex1 not found !\n");
+
 
 	// Cube
 	glBindVertexArray(cubeVertexArrayObjectID);
@@ -222,14 +229,6 @@ void MeGlWindow::paintGL()
 	
 
 
-	//Set the Tex1 sampler uniform to refer to texture unit 0
-	int loc = glGetUniformLocation(programID, "Tex1");
-
-	if (loc >= 0)
-		glUniform1i(loc, 0);
-	else
-		fprintf(stderr, "Uniform variable Tex1 not found !\n");
-
 
 	connect(&myTimer, SIGNAL(timeout()),
 		this, SLOT(myUpdate()));
@@ -251,9 +250,9 @@ void MeGlWindow::loadTexture()
 
 	//Copy file to OpenGL
 	glActiveTexture (GL_TEXTURE);
-	GLuint tid;
-	glGenTextures(1, &tid);
-	glBindTexture(GL_TEXTURE_2D, tid);
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, timg.width(),
 		timg.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
 		timg.bits());
