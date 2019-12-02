@@ -35,40 +35,36 @@ using glm::normalize;
 using glm::dot;
 using glm::mat4;
 
-
-
 using Timing::Clock;
 
 const uint NUM_VERTICES_PER_TRI = 3;
 const GLuint NUM_FLOATS_PER_VERTICE = 6;
 const GLuint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 
-
 GLuint theBufferID;
 GLuint programID;
-GLuint TexBufferID;
 
 GLuint cubeNumIndices;
 GLuint arrowNumIndices;
+GLuint teapotNumIndices;
+GLuint planeNumIndices;
 
 Camera camera;
 GLuint fullTransformationUniformLocation;
 
-
 GLuint cubeVertexArrayObjectID;
 GLuint arrowVertexArrayObjectID;
-GLuint textureID;
+GLuint teapotVertexArrayObjectID;
+GLuint planeVertexArrayObjectID;
+
+
 GLuint cubeIndexByteOffset;
 GLuint arrowIndexByteOffset;
-GLuint TextureIndexByteOffset;
-
-
+GLuint teapotIndexByteOffset;
+GLuint planeIndexByteOffset;
 
 
 float ROTATION_SPEED = 30.0f;
-
-
-
 
 
 
@@ -77,31 +73,50 @@ void MeGlWindow::sendDataToOpenGL()
 	Clock clock;
 
 	ShapeData cube = ShapeGenerator::makeCube();
-	ShapeData arrow = ShapeGenerator::makeCube();
+	ShapeData arrow = ShapeGenerator::makeArrow();
+	ShapeData teapot = ShapeGenerator::makeTeapot();
+	ShapeData plane = ShapeGenerator::makePlane();
+	
+
+	float shapeBufferVertIndexSize = cube.vertexBufferSize() + cube.indexBufferSize();
+/*
+		+
+		arrow.vertexBufferSize() + arrow.indexBufferSize() +
+		teapot.vertexBufferSize() + teapot.indexBufferSize() +
+		plane.vertexBufferSize() + plane.indexBufferSize();
+*/
 
 	glGenBuffers(1, &theBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, theBufferID);
-	glBufferData(GL_ARRAY_BUFFER, 
-		cube.vertexBufferSize() + cube.indexBufferSize() +
-		arrow.vertexBufferSize() + arrow.indexBufferSize(), 0, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, shapeBufferVertIndexSize, 0, GL_STATIC_DRAW);
 	GLsizeiptr currentOffset = 0;
 	glBufferSubData(GL_ARRAY_BUFFER, currentOffset, cube.vertexBufferSize(), cube.vertices);
 	currentOffset += cube.vertexBufferSize();
 	glBufferSubData(GL_ARRAY_BUFFER, currentOffset, cube.indexBufferSize(), cube.indices);
-	currentOffset += cube.indexBufferSize();
-	glBufferSubData(GL_ARRAY_BUFFER, currentOffset, arrow.vertexBufferSize(), arrow.vertices);
-	currentOffset += arrow.vertexBufferSize();
-	glBufferSubData(GL_ARRAY_BUFFER, currentOffset, arrow.indexBufferSize(), arrow.indices);
+	//currentOffset += cube.indexBufferSize();
+	//glBufferSubData(GL_ARRAY_BUFFER, currentOffset, arrow.vertexBufferSize(), arrow.vertices);
+	//currentOffset += arrow.vertexBufferSize();
+	//glBufferSubData(GL_ARRAY_BUFFER, currentOffset, arrow.indexBufferSize(), arrow.indices);
 	//currentOffset += arrow.indexBufferSize();
+	//glBufferSubData(GL_ARRAY_BUFFER, currentOffset, teapot.vertexBufferSize(), teapot.vertices);
+	//currentOffset += teapot.vertexBufferSize();
+	//glBufferSubData(GL_ARRAY_BUFFER, currentOffset, teapot.indexBufferSize(), teapot.indices);
+	//currentOffset += teapot.indexBufferSize();
+	//glBufferSubData(GL_ARRAY_BUFFER, currentOffset, plane.vertexBufferSize(), plane.vertices);
+	//currentOffset += plane.vertexBufferSize();
+	//glBufferSubData(GL_ARRAY_BUFFER, currentOffset, plane.indexBufferSize(), plane.indices);
+	//currentOffset += plane.indexBufferSize();
 
 	// to add more shapes you will need to repeat the above process
 
 	cubeNumIndices = cube.numIndices;
 	arrowNumIndices = arrow.numIndices;
+	teapotNumIndices = teapot.numIndices;
+	planeNumIndices = plane.numIndices;
 
 	glGenVertexArrays(1, &cubeVertexArrayObjectID);
-	//glGenVertexArrays(1, &arrowVertexArrayObjectID);
-	//glGenVertexArrays(1, &textureID);
+	//glGenVertexArrays(1, &planeVertexArrayObjectID);
+
 
 	//geo shape 1
 	glBindVertexArray(cubeVertexArrayObjectID);
@@ -116,16 +131,28 @@ void MeGlWindow::sendDataToOpenGL()
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(sizeof(float) * 9));//the Texture pointer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, theBufferID);
 
-
-
-
-	
-
 	cubeIndexByteOffset = cube.vertexBufferSize();
-	
+
+	/*
+	//geo Shape 2
+	glBindVertexArray(planeVertexArrayObjectID);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3); // texture Pointer?
+	glBindBuffer(GL_ARRAY_BUFFER, theBufferID);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0); //Plane starts at 0
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(sizeof(float) * 3)); //Color data
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(sizeof(float) * 6));
+	//glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(sizeof(float) * 9));//the Texture pointer
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, theBufferID);
+
+	planeIndexByteOffset = plane.vertexBufferSize();
+	*/
 
 	cube.cleanup();
-	arrow.cleanup();
+	//plane.cleanup();
+
 
 	
 }
@@ -134,8 +161,7 @@ void MeGlWindow::sendDataToOpenGL()
 
 int debugCount = 0;
 
-//glm::mat4 cubeRotation = glm::rotate(36.0f, vec3(1.0f, 0.0f, 0.0f));
-//glm::mat4 oldCubeRotation;
+
 
 void MeGlWindow::paintGL()
 {
@@ -149,7 +175,6 @@ void MeGlWindow::paintGL()
 	std::cout << vd.x << " " << vd.y << " " << vd.z << std::endl;
 
 	
-	//glm::vec3 lightPosition(0.0f, 3.0f, 0.0f);
 
 	mat4 modelToProjectionMatrix;
 	mat4 viewToProjectionMatrix = glm::perspective(60.0f, ((float)width()) / height(), 0.1f, 10.0f);
@@ -161,7 +186,7 @@ void MeGlWindow::paintGL()
 
 	//Ambiant Light
 	GLint ambientLightUniformLocation = glGetUniformLocation(programID, "ambientLight");
-	vec4 ambientLight(0.6f, 0.1f, 0.1f, 1.0f);
+	vec4 ambientLight(0.08f, 0.08f, 0.08f, 1.0f);
 	glUniform4fv(ambientLightUniformLocation, 1, &ambientLight[0]);
 
 
@@ -173,7 +198,7 @@ void MeGlWindow::paintGL()
 
 	//Light Position here
 	GLint lightPositionUniformLocation = glGetUniformLocation(programID, "lightPosition");
-	glm::vec3 lightPosition(0.0f, 1.0f, 0.0f);
+	glm::vec3 lightPosition(0.0f, 0.5f, 0.0f);
 	glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
 
 	// Load Texture file
@@ -196,10 +221,10 @@ void MeGlWindow::paintGL()
 	//Set the Tex1 sampler uniform to refer to texture unit 0
 	int textureUniformLocation = glGetUniformLocation(programID, "Tex1");
 
-	//if (textureUniformLocation >= 0)
-	//	glUniform1i(textureUniformLocation, 0);
-	//else
-	//	fprintf(stderr, "Uniform variable Tex1 not found !\n");
+	if (textureUniformLocation >= 0)
+		glUniform1i(textureUniformLocation, 0);
+	else
+		fprintf(stderr, "Uniform variable Tex1 not found !\n");
 
 
 	// Cube
@@ -214,20 +239,18 @@ void MeGlWindow::paintGL()
 	glDrawElements(GL_TRIANGLES, cubeNumIndices, GL_UNSIGNED_SHORT, (void*)cubeIndexByteOffset);
 
 
-
-	// Arrow
-	glBindVertexArray(arrowVertexArrayObjectID);
-	mat4 arrowModelToWorldMatrix =
-		glm::translate(vec3(-0.5f, 0.0f, -6.0f)) *
-		glm::rotate(36.0f, vec3(1.0f, 0.0f, 0.0f)) *
-		glm::scale(vec3(4.0f, 0.5f, 4.0f));
-	modelToProjectionMatrix = worldToProjectionMatrix * arrowModelToWorldMatrix;
+	/*
+	//plane
+	glBindVertexArray(planeVertexArrayObjectID);
+	mat4 plane1ModelToWorldMatrix =
+		glm::translate(vec3(-2.0f, 0.0f, -5.0f)) *
+		glm::rotate(0.0f, vec3(1.0f, 0.0f, 0.0f));
+	modelToProjectionMatrix = worldToProjectionMatrix * plane1ModelToWorldMatrix;
 	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &modelToProjectionMatrix[0][0]);
 	glUniformMatrix4fv(modelToWorldMatrixUniformLocation, 1, GL_FALSE,
-		&arrowModelToWorldMatrix[0][0]);
-	glDrawElements(GL_TRIANGLES, arrowNumIndices, GL_UNSIGNED_SHORT, (void*)arrowIndexByteOffset);
-	
-
+		&plane1ModelToWorldMatrix[0][0]);
+	glDrawElements(GL_TRIANGLES, planeNumIndices, GL_UNSIGNED_SHORT, (void*)planeIndexByteOffset);
+	*/
 
 
 	connect(&myTimer, SIGNAL(timeout()),
@@ -237,45 +260,14 @@ void MeGlWindow::paintGL()
 	update();
 
 	clock.newFrame();
-	//MeGlWindow QKeyEvent();
-}
-
-/*
-void MeGlWindow::loadTexture()
-{
-	// Load Texture file
-	const char* texName = "texture/512_Cat.png";
-	QImage timg =
-		QGLWidget::convertToGLFormat(QImage(texName, "PNG"));
-
-	//Copy file to OpenGL
-	glActiveTexture (GL_TEXTURE);
-	GLuint textureID;
-	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_2D, textureID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, timg.width(),
-		timg.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
-		timg.bits());
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	//Set the Tex1 sampler uniform to refer to texture unit 0
-	int loc = glGetUniformLocation(programID, "Tex1");
-
-	if (loc >= 0)
-		glUniform1i(loc, 0);
-	else
-		fprintf(stderr, "Uniform variable Tex1 not found !\n");
 
 }
-*/
 
 
 void MeGlWindow::myUpdate()
 {
 	Clock clock;
 	ROTATION_SPEED += 0.2f;
-	//clock.newFrame();
 	MeGlWindow QKeyEvent();
 
 	repaint();
@@ -364,7 +356,7 @@ string readShaderCode(const char* fileName)
 		std::istreambuf_iterator<char>());
 }
 
-//
+
 
 bool checkShaderStatus(GLuint shaderID)
 {
@@ -457,7 +449,7 @@ void MeGlWindow::initializeGL()
 	sendDataToOpenGL();
 	installShaders();
 	fullTransformationUniformLocation = glGetUniformLocation(programID, "modelToProjectionMatrix");
-	//loadTexture();
+	
 }
 
 MeGlWindow::~MeGlWindow()
