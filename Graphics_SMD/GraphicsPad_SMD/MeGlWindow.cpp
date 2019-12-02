@@ -177,7 +177,7 @@ void MeGlWindow::paintGL()
 	glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
 
 	// Load Texture file
-	const char * texName = "texture/512_Cat.png";
+	const char * texName = "z:/1_School/Texture/Cat_Texture_S.png";
 	QImage textureImge =
 		QGLWidget::convertToGLFormat(QImage(texName, "PNG"));
 
@@ -196,10 +196,10 @@ void MeGlWindow::paintGL()
 	//Set the Tex1 sampler uniform to refer to texture unit 0
 	int textureUniformLocation = glGetUniformLocation(programID, "Tex1");
 
-	if (textureUniformLocation >= 0)
-		glUniform1i(textureUniformLocation, 0);
-	else
-		fprintf(stderr, "Uniform variable Tex1 not found !\n");
+	//if (textureUniformLocation >= 0)
+	//	glUniform1i(textureUniformLocation, 0);
+	//else
+	//	fprintf(stderr, "Uniform variable Tex1 not found !\n");
 
 
 	// Cube
